@@ -14,5 +14,7 @@ Route::get('dashboard',[AdminController::class,'dashboard']);
 Route::get('admin-categories',[AdminController::class,'categories']);
 Route::get('admin-logout',[AdminController::class,'logout']);
 Route::post('add-category',[AdminController::class,'addCategory']);
+Route::get('category/delete/{id}',[AdminController::class,'deleteCategory']);
+
 
 
