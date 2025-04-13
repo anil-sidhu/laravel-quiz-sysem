@@ -32,6 +32,11 @@
 </form>
 @else
 <span class="text-green-500 font-bold">Quiz : {{session('quizDetails')->name}}</span>
+<p class="text-green-500 font-bold">Total MCQs : {{$totalMCQs}}
+    @if($totalMCQs>0)
+    <a class="text-yellow-500 text-sm" href="show-quiz/{{session('quizDetails')->id}}">Show MCQs</a>
+    @endif
+</p>
 <h2 class="text-2xl text-center text-gray-800 mb-6 ">Add MCQs </h2>
 <form action="add-mcq" method="post" class="space-y-4">
 <div>
