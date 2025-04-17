@@ -7,11 +7,6 @@
 </head>
 <body>
   <x-user-navbar></x-user-navbar> 
-  @if(session('message'))
-    <div class="text-green-500">
-        {{ session('message') }}
-    </div>
-@endif
   <div class="flex flex-col min-h-screen items-center bg-gray-100">
     <h1 class="text-4xl font-bold text-green-900 p-5" >Check Your Skills</h1>
     <div class="w-full max-w-md">

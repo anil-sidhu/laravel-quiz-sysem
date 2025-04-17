@@ -7,7 +7,9 @@
 </head>
 <body>
     <x-user-navbar ></x-user-navbar>
- 
+    @if(session('message'))
+<p class="text-green-500">{{'message'}}</p>
+@endif
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5">
     <h1 class="text-4xl text-center text-green-800 mb-6 font-bold ">
         {{$quizName}}
@@ -18,9 +20,16 @@
         Good Luck
     </h1>
 
-    <a type="submit" href="/user-signup?page=start-quiz" class=" bg-blue-500 rounded-md px-4 py-2 my-5 text-white" >
+    @if(session('user'))
+        <a type="submit" href="" class=" bg-blue-500 rounded-md px-4 py-2 my-5 text-white" >
+        Start Quiz
+</a>
+@else
+<a type="submit" href="/user-signup-quiz" class=" bg-blue-500 rounded-md px-4 py-2 my-5 text-white" >
         Login/SignUp for Start Quiz
 </a>
+@endif
+  
 
 </div>
 </body>

@@ -40,9 +40,6 @@ class UserController extends Controller
     }
 
     function userSignup(Request $request){
-    $parts = explode('?', url()->previous());
-   return $parts;// "name=anil&role=admin"
-        return 
       $validate = $request->validate([
         'name'=>'required | min:3',
         'email'=>'required | email | unique:users',
@@ -56,10 +53,28 @@ class UserController extends Controller
 
       if($user){
         Session::put('user',$user);
-        return redirect('/')->with('message', 'Success');
-
+        if(Session::has('quiz-url')){
+         
+          $url=Session::get('quiz-url');
+          Session::forget('quiz-url');
+          return redirect($url)->with('message',"user registered successfully");
+        }else{
+          return redirect('/')->with('message',"user registered successfully");
+        }
+        
+        
       }
-    }
+      
+}
 
+
+    function userLogout(){
+      Session::forget('user');
+      return redirect('/');
+    }
+    function userSignupQuiz(){
+     Session::put('quiz-url',url()->previous());
+      return view('user-signup');
+    }
     
 }
