@@ -18,7 +18,7 @@
         Good Luck
     </h1>
 
-    <a type="submit" href="/user-signup" class=" bg-blue-500 rounded-md px-4 py-2 my-5 text-white" >
+    <a type="submit" href="/user-signup?page=start-quiz" class=" bg-blue-500 rounded-md px-4 py-2 my-5 text-white" >
         Login/SignUp for Start Quiz
 </a>
 
