@@ -18,9 +18,9 @@
         Good Luck
     </h1>
 
-    <button type="submit" class=" bg-blue-500 rounded-md px-4 py-2 my-5 text-white" >
+    <a type="submit" href="/user-signup" class=" bg-blue-500 rounded-md px-4 py-2 my-5 text-white" >
         Login/SignUp for Start Quiz
-    </button>
+</a>
 
 </div>
 </body>

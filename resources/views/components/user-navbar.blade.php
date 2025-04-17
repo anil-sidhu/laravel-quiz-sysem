@@ -7,6 +7,8 @@
         <a class="text-green-900 hover:text-blue-500" href="/">Home</a>
             <a class="text-green-900 hover:text-blue-500" href="/admin-categories">Categories</a>
             <a class="text-green-900 hover:text-blue-500" href="">Login</a>
+            <a class="text-green-900 hover:text-blue-500" href="/user-signup">Signup</a>
+
             <a class="text-green-900 hover:text-blue-500" href="/admin-logout">Blog</a>
         </div>
       </div>

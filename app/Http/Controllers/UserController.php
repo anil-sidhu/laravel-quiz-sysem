@@ -34,5 +34,13 @@ class UserController extends Controller
 
     }
 
+    function userSignup(Request $request){
+      $validate = $request->validate([
+        'name'=>'required | min:3',
+        'email'=>'required | email',
+        'password'=>'required | min:3 | confirmed',
+      ]);
+    }
+
     
 }
