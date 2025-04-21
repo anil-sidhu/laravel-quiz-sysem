@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Quiz;
 use App\Models\Mcq;
 use App\Models\User;
+use App\Models\Record;
 
 
 
@@ -111,14 +112,25 @@ function userLoginQuiz(){
  }
 
  function mcq($id,$name){
-  $currentQuiz=[];
-  $currentQuiz['totalMcq']=MCQ::where('quiz_id',Session::get('firstMCQ')->quiz_id)->count();
-  $currentQuiz['currentMcq']=1;
-  $currentQuiz['quizName']=$name;
-  $currentQuiz['quizId']=Session::get('firstMCQ')->quiz_id;
-  Session::put('currentQuiz',$currentQuiz);
-  $mcqData=MCQ::find($id);
- return view('mcq-page',['quizName'=>$name,'mcqData'=>$mcqData]);
+  $record= new Record();
+  $record->user_id=Session::get('user')->id;
+  $record->quiz_id=Session::get('firstMCQ')->quiz_id;
+  $record->status=1;
+  if($record->save()){
+    $currentQuiz=[];
+    $currentQuiz['totalMcq']=MCQ::where('quiz_id',Session::get('firstMCQ')->quiz_id)->count();
+    $currentQuiz['currentMcq']=1;
+    $currentQuiz['quizName']=$name;
+    $currentQuiz['quizId']=Session::get('firstMCQ')->quiz_id;
+    Session::put('currentQuiz',$currentQuiz);
+    $mcqData=MCQ::find($id);
+   return view('mcq-page',['quizName'=>$name,'mcqData'=>$mcqData]); 
+  }else{
+    return "Something went wrong";
+  }
+
+
+  
  }
 
  function submitAndNext($id){
