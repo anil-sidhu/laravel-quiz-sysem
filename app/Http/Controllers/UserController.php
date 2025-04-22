@@ -145,22 +145,29 @@ function userLoginQuiz(){
   ['quiz_id','=',$currentQuiz['quizId']]
   ])->first();
 
-  $mcq_record= new MCQ_Record;
-  $mcq_record->record_id=$currentQuiz['recordId'];
-  $mcq_record->user_id=Session::get('user')->id;
-  $mcq_record->mcq_id=$request->id;
-  $mcq_record->select_answer=$request->option;
-  if($request->option ==  MCQ::find($request->id)->correct_ans)
-  {
-    $mcq_record->is_correct=1;
-  }else{
-    $mcq_record->is_correct=0;
+   $isExist= MCQ_Record::where([
+    ['record_id','=',$currentQuiz['recordId']],
+    ['mcq_id','=',$request->id],
+  ])->count();
+  if($isExist<1){
+    $mcq_record= new MCQ_Record;
+    $mcq_record->record_id=$currentQuiz['recordId'];
+    $mcq_record->user_id=Session::get('user')->id;
+    $mcq_record->mcq_id=$request->id;
+    $mcq_record->select_answer=$request->option;
+    if($request->option ==  MCQ::find($request->id)->correct_ans)
+    {
+      $mcq_record->is_correct=1;
+    }else{
+      $mcq_record->is_correct=0;
+    }
+  
+    if(!$mcq_record->save())
+    {
+      return "something went wrong";
+    }
   }
-
-  if(!$mcq_record->save())
-  {
-    return "something went wrong";
-  }
+ 
  
 
 
@@ -168,7 +175,15 @@ function userLoginQuiz(){
 if($mcqData){
   return view('mcq-page',['quizName'=>$currentQuiz['quizName'],'mcqData'=>$mcqData]);
 }else{
-  return "result Page";
+
+   $resultData=MCQ_record::WithMCQ()->where('record_id',$currentQuiz['recordId'])->get();
+   $correctAnswers=MCQ_record::where([
+    ['record_id','=',$currentQuiz['recordId']],
+    ['is_correct','=',1],
+
+   ])->count();
+
+  return view('quiz-result',['resultData'=>$resultData,'correctAnswers'=>$correctAnswers]);
 }
 
  }
