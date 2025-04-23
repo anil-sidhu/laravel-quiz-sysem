@@ -3,6 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\CheckUserAuth;
+use App\Http\Middleware\CheckAdminAuth;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,6 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->appendToGroup('CheckUserAuth',[
+            CheckUserAuth::class
+        ]);
+        $middleware->appendToGroup('CheckAdminAuth',[
+            CheckAdminAuth::class
+        ]);
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {

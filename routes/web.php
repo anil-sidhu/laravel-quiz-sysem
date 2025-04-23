@@ -17,17 +17,21 @@ Route::get('user-signup-quiz',[UserController::class,'userSignupQuiz']);
 Route::view('user-login','user-login');
 Route::post('user-login',[UserController::class,'userLogin']);
 Route::get('user-login-quiz',[UserController::class,'userLoginQuiz']);
-Route::get('mcq/{id}/{name}',[UserController::class,'mcq']);
-Route::post('submit-next/{id}',[UserController::class,'submitAndNext']);
-Route::get('user-details',[UserController::class,'userDetails']);
 
 
-
+Route::middleware('CheckUserAuth')->group(function(){
+    Route::get('user-details',[UserController::class,'userDetails']);
+    Route::post('submit-next/{id}',[UserController::class,'submitAndNext']);
+    Route::get('mcq/{id}/{name}',[UserController::class,'mcq']);
+});
 
 Route::view('admin-login','admin-login');
 
 Route::post('admin-login',[AdminController::class,'login']);
-Route::get('dashboard',[AdminController::class,'dashboard']);
+
+
+Route::middleware('CheckAdminAuth')->group(function(){
+    Route::get('dashboard',[AdminController::class,'dashboard']);
 Route::get('admin-categories',[AdminController::class,'categories']);
 Route::get('admin-logout',[AdminController::class,'logout']);
 Route::post('add-category',[AdminController::class,'addCategory']);
@@ -37,8 +41,7 @@ Route::post('add-mcq',[AdminController::class,'addMCQs']);
 Route::get('end-quiz',[AdminController::class,'endQuiz']);
 Route::get('show-quiz/{id}/{quizName}',[AdminController::class,'showQuiz']);
 Route::get('quiz-list/{id}/{category}',[AdminController::class,'quizList']);
-
-
+});
 
 
 
