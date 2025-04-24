@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
+
+
 
 use Illuminate\Http\Request;
 use App\Models\Category;
@@ -12,6 +16,8 @@ use App\Models\Mcq;
 use App\Models\User;
 use App\Models\Record;
 use App\Models\MCQ_Record;
+use App\Mail\VerifyUser;
+
 
 
 
@@ -54,6 +60,14 @@ class UserController extends Controller
         'email'=>$request->email,
         'password'=>Hash::make($request->password),
       ]);
+
+      // 
+      
+       $link = Crypt::encryptString($user->email);
+       $link = url('/verify-user/'.$link);
+      Mail::to($user->email)->send(new VerifyUser($link));
+
+      // 
 
       if($user){
         Session::put('user',$user);
@@ -204,4 +218,17 @@ if($mcqData){
   return view('quiz-search',['quizData'=>$quizData,'quiz'=>$request->search]);
  }
     
+ function verifyUser($email){
+ echo $orgEmail = Crypt::decryptString($email);
+ $user= User::where('email',$orgEmail)->first();
+ if($user){
+  $user->active=2;
+
+  if($user->save())
+  {
+    return redirect('/');
+  }
+ }
+
+ }
 }
