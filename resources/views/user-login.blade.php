@@ -36,6 +36,7 @@
         </div>
 
         <button type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white" >Login</button>
+   <a href="user-forgot-password" class="text-green-500">Forgot Password?</a>
     </form>
     </div>
 </div>

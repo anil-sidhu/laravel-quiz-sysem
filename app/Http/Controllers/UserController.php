@@ -17,10 +17,7 @@ use App\Models\User;
 use App\Models\Record;
 use App\Models\MCQ_Record;
 use App\Mail\VerifyUser;
-
-
-
-
+use App\Mail\UserForgotPassword;
 
 
 class UserController extends Controller
@@ -230,5 +227,18 @@ if($mcqData){
   }
  }
 
+ }
+
+
+ function userForgotPassword(Request $request){
+
+  $link = Crypt::encryptString($request->email);
+  $link = url('/user-forgot-password/'.$link);
+ Mail::to($request->email)->send(new UserForgotPassword($link));
+  return redirect("/");
+ }
+
+ function userResetForgotPassword($email){
+  echo $orgEmail = Crypt::decryptString($email);
  }
 }
