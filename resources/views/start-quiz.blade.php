@@ -7,9 +7,11 @@
 </head>
 <body>
     <x-user-navbar ></x-user-navbar>
-    @if(session('message'))
-<p class="text-green-500">{{'message'}}</p>
-@endif
+    @if(session('message-success'))
+    <div>
+        <p class=" text-green-500 font-bold">{{session('message-success')}}</p>
+    </div>
+    @endif
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5">
     <h1 class="text-4xl text-center text-green-800 mb-6 font-bold ">
         {{$quizName}}

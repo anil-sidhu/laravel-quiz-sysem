@@ -72,9 +72,9 @@ class UserController extends Controller
          
           $url=Session::get('quiz-url');
           Session::forget('quiz-url');
-          return redirect($url)->with('message',"user registered successfully");
+          return redirect($url)->with('message-success',"User registered successfully, Please check email to verify account ");
         }else{
-          return redirect('/')->with('message',"user registered successfully");
+          return redirect('/')->with('message-success',"User registered successfully, Please check email to verify account ");
         }
         
         
@@ -101,7 +101,7 @@ class UserController extends Controller
 
      $user= User::where('email',$request->email)->first();
      if(!$user || !Hash::check($request->password,$user->password)){
-      return "User not valid, Please check email and password again";
+      return redirect('user-login')->with('message-error',"User not valid, Please check email and password again");
      }
 
       if($user){
@@ -223,7 +223,8 @@ if($mcqData){
 
   if($user->save())
   {
-    return redirect('/');
+    return redirect('/')->with('message-success',"User verified successfully");
+
   }
  }
 
@@ -235,7 +236,7 @@ if($mcqData){
   $link = Crypt::encryptString($request->email);
   $link = url('/user-forgot-password/'.$link);
  Mail::to($request->email)->send(new UserForgotPassword($link));
-  return redirect("/");
+ return redirect('/')->with('message-success',"Please check email to set new password");
  }
 
  function userResetForgotPassword($email){
@@ -254,7 +255,7 @@ if($mcqData){
   if($user){
     $user->password=Hash::make($request->password);
    if( $user->save()){
-    return redirect('user-login');
+    return redirect('user-login')->with('message-success',"New password is set, Please login with new Password");
    }
   }
 

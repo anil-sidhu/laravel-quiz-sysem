@@ -8,6 +8,11 @@
 <body>
   <x-user-navbar></x-user-navbar> 
   <div class="flex flex-col min-h-screen items-center bg-gray-100">
+    @if(session('message-success'))
+    <div>
+        <p class=" text-green-500 font-bold">{{session('message-success')}}</p>
+    </div>
+    @endif
     <h1 class="text-4xl font-bold text-green-900 p-5" >Check Your Skills</h1>
     <div class="w-full max-w-md">
       <div class="relative">

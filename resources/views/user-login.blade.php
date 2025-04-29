@@ -9,6 +9,19 @@
 <div class=" bg-gray-100 flex items-center justify-center min-h-screen">
     
     <div class=" bg-white p-8 rounded-2xl  shadow-lg w-full max-w-sm">
+
+    @if(session('message-error'))
+    <div>
+        <p class=" text-red-500 font-bold">{{session('message-error')}}</p>
+    </div>
+    @endif
+
+    @if(session('message-success'))
+    <div>
+        <p class=" text-green-500 font-bold">{{session('message-success')}}</p>
+    </div>
+    @endif
+
     <h2 class="text-2xl text-center text-gray-800 mb-6 ">User Login </h2>
     @error('user')
        <div class="text-red-500">{{$message}}</div>
