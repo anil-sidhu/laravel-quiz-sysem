@@ -24,11 +24,12 @@ class UserController extends Controller
 {
     //
     function welcome(){
-        $categories=Category::withCount('quizzes')->get();
+       $categories=Category::withCount('quizzes')->orderBy('quizzes_count','desc')->take(5)->get();
         
-        return view('welcome',['categories'=>$categories]);
+       $quizData=Quiz::withCount('Records')->orderBy('records_count','desc')->take(5)->get();
+        return view('welcome',['categories'=>$categories,'quizData'=>$quizData]);
     }
-
+ 
     function userQuizList($id,$category){
      
         $quizData=Quiz::withCount('Mcq')->where('category_id',$id)->get();

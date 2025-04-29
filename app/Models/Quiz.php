@@ -15,4 +15,8 @@ class Quiz extends Model
         return $this->hasMany(Mcq::class);
     }
 
+    function Records(){
+        return $this->hasMany(Record::class);
+    }
+
 }
