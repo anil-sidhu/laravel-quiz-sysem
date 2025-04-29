@@ -239,6 +239,24 @@ if($mcqData){
  }
 
  function userResetForgotPassword($email){
-  echo $orgEmail = Crypt::decryptString($email);
+   $orgEmail = Crypt::decryptString($email);
+   return view('user-set-forgot-password',['email'=>$orgEmail]);
+ }
+
+ function userSetForgotPassword(Request $request){
+
+  $validate = $request->validate([
+    'email'=>'required | email |',
+    'password'=>'required | min:3 | confirmed',
+  ]);
+
+  $user= User::where('email',$request->email)->first();
+  if($user){
+    $user->password=Hash::make($request->password);
+   if( $user->save()){
+    return redirect('user-login');
+   }
+  }
+
  }
 }
