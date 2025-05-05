@@ -10,6 +10,9 @@
   <div class="flex flex-col min-h-screen items-center bg-gray-100">
     <h1 class="text-4xl font-bold text-green-900 p-5" >Quiz Result</h1>
     <div class="w-200">
+        @if($correctAnswers*100/count($resultData)>70)
+        <a class="text-green-500 font-bold block" href="/certificate">View and download Certificate</a>
+        @endif
         <h1 class="text-2xl text-green-900 text-center my-5">
             {{$correctAnswers}} out of {{count($resultData)}} Correct</h1>
         <ul class="border border-gray-200">

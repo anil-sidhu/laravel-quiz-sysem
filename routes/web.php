@@ -15,6 +15,8 @@ Route::get('user-logout',[UserController::class,'userLogout']);
 Route::get('user-signup-quiz',[UserController::class,'userSignupQuiz']);
 
 Route::get('categories-list',[UserController::class,'categories']);
+Route::get('certificate',[UserController::class,'certificate']);
+
 
 Route::get('user-login',function(){
     if(!session()->has('user')){
