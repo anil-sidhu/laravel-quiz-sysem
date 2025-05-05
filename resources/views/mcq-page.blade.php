@@ -12,7 +12,7 @@
 @endif
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5">
     <h1 class="text-2xl text-center text-green-800 mb-6 font-bold ">
-        {{$quizName}}
+        {{str_replace('-',' ',$quizName)}}
     </h1>
     <h2 class="text-2xl text-center text-green-800 mb-6 font-bold ">
        Question No. {{session('currentQuiz')['totalMcq']}}

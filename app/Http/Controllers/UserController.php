@@ -24,15 +24,15 @@ class UserController extends Controller
 {
     //
     function welcome(){
-       $categories=Category::withCount('quizzes')->orderBy('quizzes_count','desc')->take(5)->get();
+       $categories=Category::withCount('quizzes')->orderBy('quizzes_count','desc')->take(10)->get();
         
-       $quizData=Quiz::withCount('Records')->orderBy('records_count','desc')->take(5)->get();
+       $quizData=Quiz::withCount('Records')->orderBy('records_count','desc')->take(10)->get();
         return view('welcome',['categories'=>$categories,'quizData'=>$quizData]);
     }
 
     function categories(){
 
-        $categories=Category::withCount('quizzes')->orderBy('quizzes_count','desc')->paginate(4);
+        $categories=Category::withCount('quizzes')->orderBy('quizzes_count','desc')->paginate(10);
    return view('categories-list',['categories'=>$categories]);
       }
  

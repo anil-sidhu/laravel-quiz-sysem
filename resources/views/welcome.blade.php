@@ -25,12 +25,21 @@
        </form>
       </div>
     </div>
+    <div class="mt-6">
+  <h2 class="text-2xl font-semibold text-indigo-700">
+    Attempt Quiz and Get Certificate
+  </h2>
+  <a href="#" class="text-sm text-blue-600 hover:underline mt-2 inline-block">
+    Read more →
+  </a>
+</div>
+
     <div class="w-200">
         <h1 class="text-2xl text-green-900 text-center my-5">Top Categories</h1>
         <ul class="border border-gray-200">
         <li class="p-2 font-bold">
                 <ul class="flex justify-between">
-                    <li class="w-30">S. No</li>
+                    <!-- <li class="w-30">S. No</li> -->
                     <li class="w-70">Name</li>
                     <li class="w-70">Quiz Count</li>
                     <li class="w-30">Action</li>
@@ -41,7 +50,7 @@
             @foreach($categories as $key=>$category)
             <li class="even:bg-gray-200 p-2">
                 <ul class="flex justify-between">
-                    <li class="w-30">{{$key+1}}</li>
+                    <!-- <li class="w-30">{{$key+1}}</li> -->
                     <li class="w-70">{{$category->name}}</li>
                     <li class="w-30">{{$category->quizzes_count}}</li>
                     <li class="w-30 flex">
