@@ -13,7 +13,9 @@
             <a class="text-green-900 hover:text-blue-500" href="/user-login">Login</a>
             <a class="text-green-900 hover:text-blue-500" href="/user-signup">Signup</a>
   @endif
-            <a class="text-green-900 hover:text-blue-500" href="/admin-logout">Blog</a>
+            <!-- <a class="text-green-900 hover:text-blue-500" href="/admin-logout">Blog</a> -->
+            <a class="text-green-900 hover:text-blue-500" href="/courses">Course</a>
+
         </div>
       </div>
     </nav>

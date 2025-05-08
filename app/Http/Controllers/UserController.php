@@ -19,6 +19,8 @@ use App\Models\Record;
 use App\Models\MCQ_Record;
 use App\Mail\VerifyUser;
 use App\Mail\UserForgotPassword;
+use App\Models\Tutorial;
+use App\Models\Course;
 
 
 class UserController extends Controller
@@ -292,4 +294,22 @@ if($mcqData){
     );
   
  }
+
+ function topic($c_id,$t_id,$title){
+   $currentTopic= Tutorial::find($t_id);
+   $relatedTopics= Tutorial::where('course_id',$c_id)->get();
+
+  return view('tutorial',['currentTopic'=>$currentTopic,'relatedTopics'=>$relatedTopics]);
+ }
+
+ function courses(){
+  $courses= Course::get();
+  return view('course-list',['courses'=>$courses]);
+ }
+
+ function courseDetails($id,$title){
+  $topics= Tutorial::where('course_id',$id)->get();
+  return view('course-details',['topics'=>$topics]);
+ }
+
 }

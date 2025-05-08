@@ -10,6 +10,10 @@ use App\Models\Category;
 use App\Models\Quiz;
 use App\Models\Mcq;
 use App\Models\User;
+use App\Models\Course;
+use App\Models\Tutorial;
+
+
 
 
 
@@ -176,4 +180,62 @@ class AdminController extends Controller
            return redirect('admin-login');
        }
     }
+
+
+    function addCourseView(){
+        $admin = Session::get('admin');
+       if($admin){
+           return view('add-course',["name"=>$admin->name]);
+       }else{
+           return redirect('admin-login');
+       }
+    }
+
+
+    function addCourse(Request $request){
+        $validation = $request->validate([
+            "title"=>"required",
+            "description"=>"required",
+        ]); 
+        $course = new Course();
+        $course->title= $request->title;
+        $course->description= $request->description;
+
+        if($course->save()){
+            return redirect('/dashboard');
+        }
+    }
+
+    function addTopicView(Request $request){
+        $admin = Session::get('admin');
+        
+       if($admin){
+        $courses= Course::get();
+           return view('add-topic',["name"=>$admin->name,'courses'=>$courses]);
+       }else{
+           return redirect('admin-login');
+       }
+    }
+
+    function addTopic(Request $request){
+        $validation = $request->validate([
+            "title"=>"required",
+            "description"=>"required",
+        ]); 
+        // return $request;
+        $course = new Tutorial();
+        $course->title= $request->title;
+        $course->description= $request->description;
+        $course->keywords= $request->keywords;
+        $course->course_id= $request->course_id;
+        $course->video_link= $request->video_link;
+
+
+
+        if($course->save()){
+            return redirect('/dashboard');
+        }
+    }
+
+    
 }

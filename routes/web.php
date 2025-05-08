@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Tutorialscontroller;
+
 
 
 
@@ -16,7 +18,14 @@ Route::get('user-signup-quiz',[UserController::class,'userSignupQuiz']);
 
 Route::get('categories-list',[UserController::class,'categories']);
 Route::get('certificate',[UserController::class,'certificate']);
-Route::get('download-certificate',[UserController::class,'downloadCertificate']);
+Route::get('courses',[UserController::class,'courses']);
+Route::get('course-details/{c_id}/{c_title}/',[UserController::class,'courseDetails']);
+Route::get('topic/{c_id}/{t_id}/{t_title}/',[UserController::class,'topic']);
+
+
+
+
+
 
 
 Route::get('user-login',function(){
@@ -43,6 +52,7 @@ Route::view('user-forgot-password','user-forgot-password');
 Route::post('user-forgot-password',[UserController::class,'userForgotPassword']);
 Route::get('user-forgot-password/{email}',[UserController::class,'userResetForgotPassword']);
 Route::post('user-set-forgot-password',[UserController::class,'userSetForgotPassword']);
+Route::view('tutorials','create-tutorial');
 
 
 
@@ -50,6 +60,7 @@ Route::middleware('CheckUserAuth')->group(function(){
     Route::get('user-details',[UserController::class,'userDetails']);
     Route::post('submit-next/{id}',[UserController::class,'submitAndNext']);
     Route::get('mcq/{id}/{name}',[UserController::class,'mcq']);
+    Route::get('download-certificate',[UserController::class,'downloadCertificate']);
 });
 
 Route::view('admin-login','admin-login');
@@ -68,6 +79,14 @@ Route::post('add-mcq',[AdminController::class,'addMCQs']);
 Route::get('end-quiz',[AdminController::class,'endQuiz']);
 Route::get('show-quiz/{id}/{quizName}',[AdminController::class,'showQuiz']);
 Route::get('quiz-list/{id}/{category}',[AdminController::class,'quizList']);
+Route::get('add-course',[AdminController::class,'addCourseView']);
+Route::post('add-course',[AdminController::class,'addCourse']);
+
+Route::get('add-topic',[AdminController::class,'addTopicView']);
+Route::post('add-topic',[AdminController::class,'addTopic']);
+
+
+
 });
 
 

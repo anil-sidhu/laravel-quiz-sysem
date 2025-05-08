@@ -9,3 +9,19 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+
+
+.ql-code-block-container {
+    display: block;
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+}
