@@ -20,21 +20,22 @@
 <x-navbar  name={{$name}} ></x-navbar>
     <div class="bg-gray-100 flex flex-col items-center pt-5">
     <div class=" bg-white p-8 rounded-2xl  shadow-lg w-200">
-    <h2 class="text-2xl text-center text-gray-800 mb-6 ">Add Topic </h2>
+    <h2 class="text-2xl text-center text-gray-800 mb-6 ">Edit Topic </h2>
 <!-- Quill Editor Container -->
 
 <!-- Form -->
-<form method="POST" action="/edit-topic">
+<form method="POST" action="/edit-topic/{{$topic->id}}">
     @csrf
 
 
     
     <!-- Hidden input will go here -->
-    <input type="hidden" name="description" id="quillContent">
+    <input type="hidden" name="description" value={{$topic->description}} id="quillContent">
 
     <div>
-            <label for="" class="text-gray-600 mb-1"> Title</label>
+            <label for="" class="text-gray-600 mb-1">Title1</label>
             <input type="text"placeholder="Enter Course name" name="title"
+            value="{{$topic->title}}"
             class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
        @error('title')
        <div class="text-red-500">{{$message}}</div>
@@ -43,6 +44,7 @@
         <div>
             <label for="" class="text-gray-600 mb-1"> Keywords</label>
             <input type="text"placeholder="Enter Course name" name="keywords"
+             value="{{$topic->keywords}}"
             class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
        @error('keywords')
        <div class="text-red-500">{{$message}}</div>
@@ -52,6 +54,7 @@
         <div>
             <label for="" class="text-gray-600 mb-1">Video Link Link </label>
             <input type="text"placeholder="Enter Video Link" name="video_link"
+            value="{{$topic->video_link}}"
             class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
        @error('video_link')
        <div class="text-red-500">{{$message}}</div>
@@ -62,17 +65,20 @@
         <label for="" class="text-gray-600 mb-1">Select Course</label>
 
         <select type="text" name="course_id"
+       
         class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
         @foreach($courses as $course)
-        <option value={{$course->id}} >{{$course->title}}</option>
+        <option  {{$course['id'] == $topic->course_id ? 'selected' : '' }} value={{$course->id}} >{{$course->title}}</option>
         @endforeach
     </select>
     </div>
 
         <label for="" class="text-gray-600 mb-1">Description Title</label>
-    <div id="editor" style="height: 200px;"></div>
+    <div id="editor" style="height: 200px;">
+    {{$topic->description}}
+    </div>
 
-    <button type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white" >Add Topic</button>
+    <button type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white" >Edit Topic</button>
 
 </form>
 </div> 

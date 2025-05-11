@@ -14,7 +14,7 @@
 
 .ql-code-block-container {
     display: block;
-    background-color: #2d2d2d;
+    background-color: #2d2d2d !important;
     color: #f8f8f2;
     padding: 1rem;
     margin: 1rem 0;

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<x-common></x-common>
     <meta charset="UTF-8">
     <title>{{ str_replace('-',' ', $quizName)}}</title>
     @vite('resources/css/app.css')

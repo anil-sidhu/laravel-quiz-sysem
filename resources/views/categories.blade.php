@@ -6,6 +6,7 @@
     @vite('resources/css/app.css')
 </head>
 <body>
+<x-common></x-common>
     <x-navbar  name={{$name}} ></x-navbar>
     @if(session('category'))
     <div class=" bg-green-800 text-white pl-5">{{session('category')}}</div>

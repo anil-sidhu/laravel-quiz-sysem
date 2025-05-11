@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<x-common></x-common>
     <title>User Login</title>
     @vite('resources/css/app.css')
 </head>

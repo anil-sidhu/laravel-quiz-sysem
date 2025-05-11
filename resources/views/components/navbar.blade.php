@@ -10,6 +10,9 @@
             <a class="text-gray-700 hover:text-blue-500" href="">Welcome {{$name}}</a>
             <a class="text-gray-700 hover:text-blue-500" href="/admin-logout">Logout</a>
             <a class="text-gray-700 hover:text-blue-500" href="/add-course">Add Course</a>
+            <a class="text-gray-700 hover:text-blue-500" href="/admin-course">Course</a>
+
+            
             <a class="text-gray-700 hover:text-blue-500" href="/add-topic">Add Topic</a>
 
 
