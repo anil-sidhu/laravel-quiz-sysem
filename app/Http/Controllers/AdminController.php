@@ -237,5 +237,82 @@ class AdminController extends Controller
         }
     }
 
+    function updateTopic(Request $request,$id){
+         $id;
+        //  return $request;
+        $validation = $request->validate([
+            "title"=>"required",
+            "description"=>"required",
+        ]); 
+        // return $request;
+        $topic =  Tutorial::find($id);
+     
+        if($topic){
+           
+            $topic->title= $request->title;
+            $topic->description= $request->description;
+            $topic->keywords= $request->keywords;
+            $topic->course_id= $request->course_id;
+            $topic->video_link= $request->video_link;
+    
+            if($topic->update()){
+                return redirect('/admin-course');
+            }
+           }
+
+       
+    }
+
+    function deleteTopic($id){
+       $topic =  Tutorial::find($id)->delete();
+       if($topic){
+               return redirect('/admin-course');
+          }
+   }
+    function topics($c_id){
+      
+
+       $admin = Session::get('admin');
+        
+       if($admin){
+        $topics= Tutorial::where('course_id',$c_id)->get();
+        return view('topics',['topics'=>$topics,"name"=>$admin->name]);
+       }else{
+           return redirect('admin-login');
+       }
+
+      }
+
+      function editTopic($id){
+        $admin = Session::get('admin');
+        
+        if($admin){
+         $topic= Tutorial::find($id);
+         $courses= Course::get();
+        // return $topic->course_id;
+ 
+         return view('edit-topic',['topic'=>$topic,"name"=>$admin->name,'courses'=>$courses]);
+        }else{
+            return redirect('admin-login');
+        }
+ 
+       }
+      
+
+      function course(){
+       
+        $admin = Session::get('admin');
+        
+        if($admin){
+         $courses= Course::get();
+         return view('admin-course',['courses'=>$courses,"name"=>$admin->name]);
+        }else{
+            return redirect('admin-login');
+        }
+
+       
+       }
+
+       
     
 }
