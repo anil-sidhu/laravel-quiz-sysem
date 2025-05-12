@@ -72,7 +72,7 @@ class UserController extends Controller
       
        $link = Crypt::encryptString($user->email);
        $link = url('/verify-user/'.$link);
-      Mail::to($user->email)->send(new VerifyUser($link));
+      // Mail::to($user->email)->send(new VerifyUser($link));
 
       // 
 

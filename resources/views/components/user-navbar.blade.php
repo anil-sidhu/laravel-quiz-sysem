@@ -1,7 +1,9 @@
 <nav class=" bg-white shadow-md px-4 py-3">
       <div class="flex justify-between item-center">
       <div class="text-2xl text-green-900 hover:text-blue-500 cursor-pointer">
-            Quiz System
+           
+            <img class="h-6" src="{{ asset('img/the_coding_skills.png') }}" alt="Logo">
+
         </div>
         <div class=" space-x-4">
         <a class="text-green-900 hover:text-blue-500" href="/">Home</a>

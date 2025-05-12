@@ -24,8 +24,11 @@
                 <ul class="flex justify-between">
                     <li class="w-30">{{$key+1}}</li>
                     <li class="w-70">{{$topics->title}}</li>
-                    <li class="w-70"><a href="/edit-topic/{{$topics->id}}">Edit</a></li>
-                    <li class="w-70"><a href="/delete-topic/{{$topics->id}}">Delete</a></li>
+                    <li class="w-70">
+                        <a href="/edit-topic/{{$topics->id}}">Edit</a>
+                        <a href="/delete-topic/{{$topics->id}}">Delete</a>
+                    </li>
+                   
                 </ul>
             </li>
             @endforeach

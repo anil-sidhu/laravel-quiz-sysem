@@ -67,7 +67,6 @@ Route::view('admin-login','admin-login');
 
 Route::post('admin-login',[AdminController::class,'login']);
 
-
 Route::middleware('CheckAdminAuth')->group(function(){
     Route::get('dashboard',[AdminController::class,'dashboard']);
 Route::get('admin-categories',[AdminController::class,'categories']);
@@ -85,7 +84,11 @@ Route::post('add-course',[AdminController::class,'addCourse']);
 Route::get('add-topic',[AdminController::class,'addTopicView']);
 Route::post('add-topic',[AdminController::class,'addTopic']);
 
-
+Route::get('admin-course/topics/{c_id}',[AdminController::class,'topics']);
+Route::get('admin-course',[AdminController::class,'course']);
+Route::get('edit-topic/{id}',[AdminController::class,'editTopic']);
+Route::post('edit-topic/{id}',[AdminController::class,'updateTopic']);
+Route::get('delete-topic/{id}',[AdminController::class,'deleteTopic']);
 
 });
 

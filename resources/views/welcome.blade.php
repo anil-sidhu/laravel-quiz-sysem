@@ -3,7 +3,7 @@
 <head>
     <x-common></x-common>
     <meta charset="UTF-8">
-    <title>Quiz System Home Page</title>
+    <title>The Coding Skills | Home Page | Coding, Tutorials, Coding Quiz</title>
     @vite('resources/css/app.css')
 </head>
 <body>
