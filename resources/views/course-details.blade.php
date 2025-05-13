@@ -3,7 +3,9 @@
 <head>
 <x-common></x-common>
     <meta charset="UTF-8">
-    <title>Quiz System Home Page</title>
+    <title>{{$course->title}}</title>
+    <meta name="description" content="{{$course->description}}">
+    <meta name="keywords" content="{{$course->keyword}}">
     @vite('resources/css/app.css')
 </head>
 <body>
@@ -11,7 +13,7 @@
   
    
   <div class="p-8 bg-gray-50 min-h-screen">
-  <h1 class="text-3xl font-bold text-gray-800 mb-6">UI Design Courses</h1>
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">{{$course->title}}</h1>
   
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
     @foreach($topics as $topic)

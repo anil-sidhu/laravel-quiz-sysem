@@ -23,7 +23,7 @@
 <!-- Quill Editor Container -->
 
 <!-- Form -->
-<form method="POST" action="/edit-topic">
+<form method="POST" action="/add-topic"> 
     @csrf
 
 

@@ -309,7 +309,8 @@ if($mcqData){
 
  function courseDetails($id,$title){
   $topics= Tutorial::where('course_id',$id)->get();
-  return view('course-details',['topics'=>$topics]);
+  $course= Course::find($id);
+  return view('course-details',['topics'=>$topics,'title'=>$title,'course'=>$course]);
  }
 
 }
