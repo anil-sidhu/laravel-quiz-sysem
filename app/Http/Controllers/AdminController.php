@@ -218,9 +218,10 @@ class AdminController extends Controller
     }
 
     function addTopic(Request $request){
+
         $validation = $request->validate([
             "title"=>"required | max:100 | min:10",
-            "description"=>"required | max:5000 | min:100",
+            "description"=>"required | max:500000 | min:100",
             "video_link"=>"required",
             "keywords"=>"required | max:500 | min:20",
         ]); 

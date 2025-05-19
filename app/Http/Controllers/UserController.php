@@ -297,7 +297,6 @@ if($mcqData){
       'Content-disposition'=>"attachment;filename=certificate.pdf"
     ]
     );
-  
  }
 
  function topic($c_id,$t_id,$title){
