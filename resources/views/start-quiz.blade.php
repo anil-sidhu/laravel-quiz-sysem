@@ -3,7 +3,7 @@
 <head>
 <x-common></x-common>
     <meta charset="UTF-8">
-    <title>{{ str_replace('-',' ', $quizName)}}</title>
+    <title>{{ str_replace('-',' ', $quizName)}} The Coding Skills | Code Step by Step YouTube Channel Official website | Anil Sidhu</title>
     @vite('resources/css/app.css')
 </head>
 <body>

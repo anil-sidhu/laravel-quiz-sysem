@@ -3,7 +3,9 @@
 <head>
 <x-common></x-common>
     <meta charset="UTF-8">
-    <title>Category : {{str_replace('-',' ', $category)}}</title>
+    <title>{{str_replace('-',' ', $category)}} MCQ Quiz | Code Step by Step YouTube Channel website | theCodingSkills.com | Anil Sidhu</title>
+    <meta name="description" content="{{str_replace('-',' ', $category)}} Quiz , {{str_replace('-',' ', $category)}} objective Questions,   ,structured notes from coding YouTube Channel, and practical code examples to level up your skills in various programming languages and related technologies">
+  <meta name="keywords" content="{{str_replace('-',' ', $category)}} Quiz , {{str_replace('-',' ', $category)}} Interview Questions, {{str_replace('-',' ', $category)}} Latest Questions, programming language MCQs, programming notes pdf, Anil Sidhu, the coding skills">
     @vite('resources/css/app.css')
 </head>
 <body>

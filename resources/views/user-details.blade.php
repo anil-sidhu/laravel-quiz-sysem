@@ -3,7 +3,10 @@
 <head>
 <x-common></x-common>
     <meta charset="UTF-8">
-    <title>User Details Page</title>
+    <title>The Coding Skills User details page | user attempted quiz | Code Step by Step YouTube Channel Official website | theCodingSkills.com</title>
+    <meta name="description" content="User details page theCodingSkills.com structured notes from coding code step by step YouTube Channel, Anil Sidhu">
+  <meta name="keywords" content="Anil Sidhu, Code step by step youtube channel, Programming language MCQs, User details page theCodingSkills.com, The Coding Skills">
+  
     @vite('resources/css/app.css')
 </head>
 <body>

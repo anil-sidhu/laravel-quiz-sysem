@@ -3,7 +3,9 @@
 <head>
 <x-common></x-common>
     <meta charset="UTF-8">
-    <title>Quiz System Home Page</title>
+    <title>{{$currentTopic->title}} | programming  courses | The Coding Skills | Anil Sidhu</title>
+    <meta name="description" content="{{$currentTopic->title}}, {{$currentTopic->keywords}}  notes from coding code step by step YouTube Channel">
+  <meta name="keywords" content="{{$currentTopic->title}}, {{$currentTopic->keywords}}, Anil Sidhu">
     @vite('resources/css/app.css')
 
     <style>
@@ -49,19 +51,32 @@ li {
 span,code{
     background-color:transparent !important
 }
+
+.truncate-2-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+h2.list-heading{
+  font-size:24px; font-weight:200
+}
     </style>
 </head>
 <body>
   <x-user-navbar></x-user-navbar> 
   <div class="flex min-h-screen bg-gray-100">
   <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-md p-6">
-    <h2 class="text-2xl font-bold mb-6 text-blue-600">Playlist Topics</h2>
+  <aside class="w-70 bg-white shadow-md p-6">
+    <h2 class=" text-green-950 list-heading">Playlist Topics</h2>
     <nav class="space-y-4">
 
     @foreach($relatedTopics as $topic)
  
-      <a href="/topic/{{$topic->course_id}}/{{$topic->id}}/{{str_replace(' ', '-',$topic->title)}}" 
+      <a title="{{$topic->title}}" class="truncate-2-lines" href="/topic/{{$topic->course_id}}/{{$topic->id}}/{{str_replace(' ', '-',$topic->title)}}" 
       class="block text-gray-700 hover:text-blue-600 font-medium">{{$topic->title}}</a>
 
     @endforeach
@@ -82,6 +97,20 @@ span,code{
     {!!$currentTopic->description!!}
     </div>
   </main>
+
+  <aside class="w-60 bg-white shadow-md p-6">
+    <h2   class=" text-green-950 list-heading">Related Course </h2>
+    <nav class="space-y-4">
+
+    @foreach($courses as $course)
+
+      <a class="truncate-2-lines" href="/course-details/{{$course->id}}/{{str_replace(' ', '-',$course->title)}}" class="text-green-900 font-bold hover:underline text-sm">{{$course->title}}</a>
+
+    @endforeach
+
+    </nav>
+  </aside>
+
 </div>
 
 <x-footer-user></x-footer-user>

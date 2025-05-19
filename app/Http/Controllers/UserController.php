@@ -27,15 +27,17 @@ class UserController extends Controller
 {
     //
     function welcome(){
-       $categories=Category::withCount('quizzes')->orderBy('quizzes_count','desc')->take(5)->get();
+       $categories=Category::withCount('quizzes')->orderBy('quizzes_count','desc')->take(12)->get();
         
-       $quizData=Quiz::withCount('Records')->orderBy('records_count','desc')->take(5)->get();
-        return view('welcome',['categories'=>$categories,'quizData'=>$quizData]);
+       $quizData=Quiz::withCount('Records')->orderBy('records_count','desc')->take(12)->get();
+       $courses=Course::orderBy('id','desc')->paginate(12);
+
+        return view('welcome',['categories'=>$categories,'quizData'=>$quizData,'courses'=>$courses]);
     }
 
     function categories(){
 
-        $categories=Category::withCount('quizzes')->orderBy('quizzes_count','desc')->paginate(4);
+        $categories=Category::withCount('quizzes')->orderBy('quizzes_count','desc')->paginate(20);
    return view('categories-list',['categories'=>$categories]);
       }
  
@@ -61,10 +63,13 @@ class UserController extends Controller
         'name'=>'required | min:3',
         'email'=>'required | email | unique:users',
         'password'=>'required | min:3 | confirmed',
+        'mobile'=>'required | min:10',
       ]);
+      // return $request;
       $user = User::create([
         'name'=>$request->name,
         'email'=>$request->email,
+        'mobile'=>$request->mobile,
         'password'=>Hash::make($request->password),
       ]);
 
@@ -297,9 +302,10 @@ if($mcqData){
 
  function topic($c_id,$t_id,$title){
    $currentTopic= Tutorial::find($t_id);
+   $courses= Course::get();
    $relatedTopics= Tutorial::where('course_id',$c_id)->get();
 
-  return view('tutorial',['currentTopic'=>$currentTopic,'relatedTopics'=>$relatedTopics]);
+  return view('tutorial',['currentTopic'=>$currentTopic,'relatedTopics'=>$relatedTopics,'courses'=>$courses]);
  }
 
  function courses(){

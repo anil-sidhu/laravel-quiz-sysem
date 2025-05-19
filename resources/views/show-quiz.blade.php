@@ -3,7 +3,7 @@
 <head>
 <x-common></x-common>
     <meta charset="UTF-8">
-    <title>Admin Categories Page</title>
+    <title>Show Quiz Page</title>
     @vite('resources/css/app.css')
 </head>
 <body>

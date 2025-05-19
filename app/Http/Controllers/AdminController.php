@@ -194,8 +194,8 @@ class AdminController extends Controller
 
     function addCourse(Request $request){
         $validation = $request->validate([
-            "title"=>"required",
-            "description"=>"required",
+            "title"=>"required | max:150 | min:10",
+            "description"=>"required | max:500 | min:10",
         ]); 
         $course = new Course();
         $course->title= $request->title;
@@ -219,8 +219,10 @@ class AdminController extends Controller
 
     function addTopic(Request $request){
         $validation = $request->validate([
-            "title"=>"required",
-            "description"=>"required",
+            "title"=>"required | max:100 | min:10",
+            "description"=>"required | max:5000 | min:100",
+            "video_link"=>"required",
+            "keywords"=>"required | max:500 | min:20",
         ]); 
         // return $request;
         $course = new Tutorial();
@@ -229,9 +231,6 @@ class AdminController extends Controller
         $course->keywords= $request->keywords;
         $course->course_id= $request->course_id;
         $course->video_link= $request->video_link;
-
-
-
         if($course->save()){
             return redirect('/dashboard');
         }
@@ -241,8 +240,10 @@ class AdminController extends Controller
          $id;
         //  return $request;
         $validation = $request->validate([
-            "title"=>"required",
-            "description"=>"required",
+            "title"=>"required | max:100 | min:10",
+            "description"=>"required | max:5000 | min:100",
+            "video_link"=>"required",
+            "keywords"=>"required | max:500 | min:20",
         ]); 
         // return $request;
         $topic =  Tutorial::find($id);

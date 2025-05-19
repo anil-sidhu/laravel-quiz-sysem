@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <x-common></x-common>
-    <title>User Signup</title>
+    <title>The Coding Skills User Signup | Code Step by Step YouTube Channel Official website | theCodingSkills.com</title>
+    <meta name="description" content="Signup for coding and programming language MCQs, structured notes from coding code step by step YouTube Channel, Anil Sidhu">
+  <meta name="keywords" content="Anil Sidhu, Code step by step youtube channel, Programming language MCQs, technology quizzes for developers,  The Coding Skills">
+  
     @vite('resources/css/app.css')
 </head>
 <body>
@@ -35,6 +38,15 @@
         </div>
 
         <div>
+            <label for="" class="text-gray-600 mb-1">User Mobile</label>
+            <input type="text"placeholder="Enter User Mobile" name="mobile"
+            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
+       @error('mobile')
+       <div class="text-red-500">{{$message}}</div>
+       @enderror
+        </div>
+
+        <div>
             <label for="" class="text-gray-600 mb-1">Password</label>
             <input type="password"placeholder="Enter User password" name="password"
             class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
@@ -55,5 +67,6 @@
     </form>
     </div>
 </div>
+<x-footer-user></x-footer-user>
 </body>
 </html>

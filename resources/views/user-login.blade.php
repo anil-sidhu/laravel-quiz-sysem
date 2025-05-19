@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <x-common></x-common>
-    <title>User Login</title>
+<title>The Coding Skills User Login | Code Step by Step YouTube Channel Official website | theCodingSkills.com/</title>
+    <meta name="description" content="Login for coding and programming language MCQs, structured notes from coding code step by step YouTube Channel, Anil Sidhu">
+  <meta name="keywords" content="Anil Sidhu, Code step by step youtube channel, Programming language MCQs, technology quizzes for developers, The Coding Skills">
+  
     @vite('resources/css/app.css')
 </head>
 <body>

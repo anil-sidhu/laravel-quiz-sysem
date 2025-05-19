@@ -12,7 +12,6 @@
     <div class=" bg-green-800 text-white pl-5">{{session('category')}}</div>
     @endif
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5">
-
     <div class=" bg-white p-8 rounded-2xl  shadow-lg w-full max-w-sm">
     <h2 class="text-2xl text-center text-gray-800 mb-6 ">Add Category </h2>
     <form action="/add-category" method="post" class="space-y-4">

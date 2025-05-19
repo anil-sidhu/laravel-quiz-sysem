@@ -3,7 +3,10 @@
 <head>
 <x-common></x-common>
     <meta charset="UTF-8">
-    <title>MCQ Page</title>
+    <title> {{ str_replace('-',' ',$quizName) }} | {{$mcqData->question}} | The Coding Skills </title>
+    <meta name="description" content="{{ str_replace('-',' ',$quizName) }} | {{$mcqData->question}} theCodingSkills.com structured notes from coding code step by step YouTube channel">
+  <meta name="keywords" content="{{ str_replace('-',' ',$quizName) }}, {{$mcqData->question}}, Programming language MCQs, Anil sidhu, The Coding Skills">
+  
     @vite('resources/css/app.css')
 </head>
 <body>
