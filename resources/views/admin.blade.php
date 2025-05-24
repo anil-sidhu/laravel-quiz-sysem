@@ -15,6 +15,7 @@
                 <ul class="flex justify-between">
                     <li class="w-30">S. No</li>
                     <li class="w-70">Name</li>
+                    <li class="w-70">Mobile</li>
                     <li class="w-70">Email</li>
 
                 </ul>
@@ -24,7 +25,8 @@
             <li class="even:bg-gray-200 p-2">
                 <ul class="flex justify-between">
                     <li class="w-30">{{$key+1}}</li>
-                    <li class="w-70">{{$user->name}}</li>
+                    <li class="w-30">{{$user->name}}</li>
+                    <li class="w-70">{{$user->mobile}}</li>
                     <li class="w-70">{{$user->email}}</li>
                     
 

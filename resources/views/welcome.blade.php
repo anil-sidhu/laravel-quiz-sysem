@@ -3,9 +3,9 @@
 <head>
     <x-common></x-common>
     <meta charset="UTF-8">
-    <title> | Programming MCQs | Code Step by Step YouTube Channel Video Notes & Code for Developers | Anil Sidhu</title>
-    <meta name="description" content="Find coding and programming language MCQs, structured notes from coding YouTube Channel, and practical code examples to level up your skills in various programming languages and related technologies">
-  <meta name="keywords" content="Anil Sidhu, programming language mcqs, technology quizzes for developers, coding video summaries, programming notes pdf, code snippets library, software development practice, web development mcqs, data science mcqs, the coding skills">
+    <title>Programming Interview Questions, Code & Notes of Step by Step YouTube Channel, Anil Sidhu</title>
+    <meta name="description" content="Find coding & programming MCQs, Interview questions, notes and code for  code step by step YouTube Channel in various programming languages>
+  <meta name="keywords" content="Anil Sidhu, Interview Questions, programming language mcqs, technology quizzes for developers, coding video summaries, programming notes pdf, code snippets library, software development practice, web development mcqs, data science mcqs, the coding skills">
     @vite('resources/css/app.css')
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     </div>
 
-    <h1 class="border-b border-solid text-4xl text-green-900  p-5 pb-2 mb-4 mt-10 font-extralight" >Top Coding Quiz</h1>
+    <h3 class="border-b border-solid text-4xl text-green-900  p-5 pb-2 mb-4 mt-10 font-extralight" >Top Coding Quiz</h3>
 
     <div class="grid sm:grid-cols-3 md:grid-cols-3 gap-4 p-8 font-extralight">
     @foreach($quizData as $item)
@@ -39,7 +39,7 @@
     @endforeach
     </div>
 
-    <h1 class="border-b border-solid text-4xl text-green-900  p-5 pb-2 mb-4 mt-10 font-extralight" >Top Programming Language Courses</h1>
+    <h2 class="border-b border-solid text-4xl text-green-900  p-5 pb-2 mb-4 mt-10 font-extralight" >Top Programming Language Courses</h2>
 
 <div class="grid sm:grid-cols-3 md:grid-cols-3 gap-4 p-8 font-extralight">
 @foreach($courses as $course)
