@@ -4,18 +4,20 @@
             The Coding Skills
         </div>
         <div class=" space-x-4">
-        <a class="text-gray-700 hover:text-blue-500" href="/dashboard">Dashboard</a>
+        @if(isset($name) && $name === 'leadsview')
+            <a class="text-gray-700 hover:text-blue-500" href="/dashboard">Dashboard</a>
+            <a class="text-gray-700 hover:text-blue-500" href="/admin-logout">Logout</a>
+            <a class="text-gray-700 hover:text-blue-500" href="">Welcome {{$name}}</a>
+        @else
+            <a class="text-gray-700 hover:text-blue-500" href="/dashboard">Dashboard</a>
             <a class="text-gray-700 hover:text-blue-500" href="/admin-categories">Categories</a>
             <a class="text-gray-700 hover:text-blue-500" href="/add-quiz">Quiz</a>
             <a class="text-gray-700 hover:text-blue-500" href="">Welcome {{$name}}</a>
             <a class="text-gray-700 hover:text-blue-500" href="/admin-logout">Logout</a>
             <a class="text-gray-700 hover:text-blue-500" href="/add-course">Add Course</a>
             <a class="text-gray-700 hover:text-blue-500" href="/admin-course">Course</a>
-
-            
             <a class="text-gray-700 hover:text-blue-500" href="/add-topic">Add Topic</a>
-
-
+        @endif
         </div>
       </div>
     </nav>

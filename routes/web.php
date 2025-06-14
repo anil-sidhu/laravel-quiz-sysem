@@ -68,28 +68,25 @@ Route::view('admin-login','admin-login');
 Route::post('admin-login',[AdminController::class,'login']);
 
 Route::middleware('CheckAdminAuth')->group(function(){
-    Route::get('dashboard',[AdminController::class,'dashboard']);
-Route::get('admin-categories',[AdminController::class,'categories']);
-Route::get('admin-logout',[AdminController::class,'logout']);
-Route::post('add-category',[AdminController::class,'addCategory']);
-Route::get('category/delete/{id}',[AdminController::class,'deleteCategory']);
-Route::get('add-quiz',[AdminController::class,'addQuiz']);
-Route::post('add-mcq',[AdminController::class,'addMCQs']);
-Route::get('end-quiz',[AdminController::class,'endQuiz']);
-Route::get('show-quiz/{id}/{quizName}',[AdminController::class,'showQuiz']);
-Route::get('quiz-list/{id}/{category}',[AdminController::class,'quizList']);
-Route::get('add-course',[AdminController::class,'addCourseView']);
-Route::post('add-course',[AdminController::class,'addCourse']);
-
-Route::get('add-topic',[AdminController::class,'addTopicView']);
-Route::post('add-topic',[AdminController::class,'addTopic']);
-
-Route::get('admin-course/topics/{c_id}',[AdminController::class,'topics']);
-Route::get('admin-course',[AdminController::class,'course']);
-Route::get('edit-topic/{id}',[AdminController::class,'editTopic']);
-Route::post('edit-topic/{id}',[AdminController::class,'updateTopic']);
-Route::get('delete-topic/{id}',[AdminController::class,'deleteTopic']);
-
+    Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
+    Route::get('admin-logout',[AdminController::class,'logout'])->name('admin-logout');
+    Route::get('admin-categories',[AdminController::class,'categories']);
+    Route::post('add-category',[AdminController::class,'addCategory']);
+    Route::get('category/delete/{id}',[AdminController::class,'deleteCategory']);
+    Route::get('add-quiz',[AdminController::class,'addQuiz']);
+    Route::post('add-mcq',[AdminController::class,'addMCQs']);
+    Route::get('end-quiz',[AdminController::class,'endQuiz']);
+    Route::get('show-quiz/{id}/{quizName}',[AdminController::class,'showQuiz']);
+    Route::get('quiz-list/{id}/{category}',[AdminController::class,'quizList']);
+    Route::get('add-course',[AdminController::class,'addCourseView']);
+    Route::post('add-course',[AdminController::class,'addCourse']);
+    Route::get('add-topic',[AdminController::class,'addTopicView']);
+    Route::post('add-topic',[AdminController::class,'addTopic']);
+    Route::get('admin-course/topics/{c_id}',[AdminController::class,'topics']);
+    Route::get('admin-course',[AdminController::class,'course']);
+    Route::get('edit-topic/{id}',[AdminController::class,'editTopic']);
+    Route::post('edit-topic/{id}',[AdminController::class,'updateTopic']);
+    Route::get('delete-topic/{id}',[AdminController::class,'deleteTopic']);
 });
 
 
