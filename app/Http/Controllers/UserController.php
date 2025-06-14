@@ -48,14 +48,25 @@ class UserController extends Controller
       
     }
 
-    function startQuiz($id,$name){
+    function startQuiz($id, $name) {
+        $quizCount = Mcq::where('quiz_id', $id)->count();
+        $mcqs = Mcq::where('quiz_id', $id)->get();
+        $quizName = $name;
 
-        $quizCount =Mcq::where('quiz_id',$id)->count();
-        $mcqs =Mcq::where('quiz_id',$id)->get();
-        Session::put('firstMCQ',$mcqs[0]);
-        $quizName =$name;
-        return view('start-quiz',['quizName'=>$quizName,'quizCount'=>$quizCount]);
+        if ($mcqs->isEmpty()) {
+            // Show a message or redirect if no MCQs are available
+            return view('start-quiz', [
+                'quizName' => $quizName,
+                'quizCount' => $quizCount,
+                'noQuestions' => true
+            ]);
+        }
 
+        Session::put('firstMCQ', $mcqs[0]);
+        return view('start-quiz', [
+            'quizName' => $quizName,
+            'quizCount' => $quizCount
+        ]);
     }
 
     function userSignup(Request $request){
@@ -64,6 +75,7 @@ class UserController extends Controller
         'email'=>'required | email | unique:users',
         'password'=>'required | min:3 | confirmed',
         'mobile'=>'required | min:10',
+        'interested_in_training' => 'required|in:yes,no',
       ]);
       // return $request;
       $user = User::create([
@@ -71,6 +83,8 @@ class UserController extends Controller
         'email'=>$request->email,
         'mobile'=>$request->mobile,
         'password'=>Hash::make($request->password),
+        'interested_in_training'=>$request->interested_in_training,
+        'leads'=>$request->has('leads') ? true : false,
       ]);
 
       // 
@@ -87,9 +101,9 @@ class UserController extends Controller
          
           $url=Session::get('quiz-url');
           Session::forget('quiz-url');
-          return redirect($url)->with('message-success',"User registered successfully, Please check email to verify account ");
+          return redirect($url)->with('message-success',"User registered successfully");
         }else{
-          return redirect('/')->with('message-success',"User registered successfully, Please check email to verify account ");
+          return redirect('/')->with('message-success',"User registered successfully ");
         }
         
         
