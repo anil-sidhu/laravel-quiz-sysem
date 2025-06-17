@@ -33,4 +33,7 @@
    
 </div>
 <x-footer-user></x-footer-user>
+@if(!session('user'))
+    @include('components.lead-modal', ['closable' => true])
+@endif
 </body>

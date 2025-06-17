@@ -38,5 +38,41 @@
     
     </div>
 </div>
+@if(!session('user'))
+    @include('components.lead-modal')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var modal = document.getElementById('leadModal');
+                var closeBtn = document.getElementById('leadModalClose');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    if (closeBtn) closeBtn.classList.add('hidden'); // Hide close button
+                }
+            }, 5000);
+            // Tab switching logic
+            var tabSignup = document.getElementById('leadTabSignup');
+            var tabLogin = document.getElementById('leadTabLogin');
+            if (tabSignup && tabLogin) {
+                tabSignup.onclick = function() {
+                    document.getElementById('leadSignupForm').classList.remove('hidden');
+                    document.getElementById('leadLoginForm').classList.add('hidden');
+                    this.classList.add('bg-blue-500', 'text-white');
+                    this.classList.remove('bg-gray-200', 'text-blue-700');
+                    tabLogin.classList.remove('bg-blue-500', 'text-white');
+                    tabLogin.classList.add('bg-gray-200', 'text-blue-700');
+                };
+                tabLogin.onclick = function() {
+                    document.getElementById('leadSignupForm').classList.add('hidden');
+                    document.getElementById('leadLoginForm').classList.remove('hidden');
+                    this.classList.add('bg-blue-500', 'text-white');
+                    this.classList.remove('bg-gray-200', 'text-blue-700');
+                    tabSignup.classList.remove('bg-blue-500', 'text-white');
+                    tabSignup.classList.add('bg-gray-200', 'text-blue-700');
+                };
+            }
+        });
+    </script>
+@endif
 </body>
 </html> 
