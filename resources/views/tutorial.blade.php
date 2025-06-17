@@ -114,4 +114,32 @@ h2.list-heading{
 </div>
 
 <x-footer-user></x-footer-user>
+@if(!session('user'))
+    @include('components.lead-modal')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('leadModal').classList.remove('hidden');
+                document.getElementById('leadModalClose').classList.add('hidden'); // Hide close button
+            }, 5000);
+            // Tab switching logic
+            document.getElementById('leadTabSignup').onclick = function() {
+                document.getElementById('leadSignupForm').classList.remove('hidden');
+                document.getElementById('leadLoginForm').classList.add('hidden');
+                this.classList.add('bg-blue-500', 'text-white');
+                this.classList.remove('bg-gray-200', 'text-blue-700');
+                document.getElementById('leadTabLogin').classList.remove('bg-blue-500', 'text-white');
+                document.getElementById('leadTabLogin').classList.add('bg-gray-200', 'text-blue-700');
+            };
+            document.getElementById('leadTabLogin').onclick = function() {
+                document.getElementById('leadSignupForm').classList.add('hidden');
+                document.getElementById('leadLoginForm').classList.remove('hidden');
+                this.classList.add('bg-blue-500', 'text-white');
+                this.classList.remove('bg-gray-200', 'text-blue-700');
+                document.getElementById('leadTabSignup').classList.remove('bg-blue-500', 'text-white');
+                document.getElementById('leadTabSignup').classList.add('bg-gray-200', 'text-blue-700');
+            };
+        });
+    </script>
+@endif
 </body>
