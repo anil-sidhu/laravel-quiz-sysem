@@ -8,35 +8,71 @@
 <body>
     <x-navbar name={{$name}} ></x-navbar>
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5">
-    <div class="w-200">
-        <h1 class="text-2xl text-blue-500">Users List</h1>
-        <ul class="border border-gray-200">
-        <li class="p-2 font-bold">
-                <ul class="flex justify-between">
-                    <li class="w-30">S. No</li>
-                    <li class="w-70">Name</li>
-                    <li class="w-70">Mobile</li>
-                    <li class="w-70">Email</li>
-
-                </ul>
-            </li>
-
-            @foreach($users as $key=>$user)
-            <li class="even:bg-gray-200 p-2">
-                <ul class="flex justify-between">
-                    <li class="w-30">{{$key+1}}</li>
-                    <li class="w-30">{{$user->name}}</li>
-                    <li class="w-70">{{$user->mobile}}</li>
-                    <li class="w-70">{{$user->email}}</li>
-                    
-
-                </ul>
-            </li>
-            @endforeach
-        </ul>
-    </div>
-    <div>
-        {{$users->links()}}
+    <div class="w-full max-w-6xl mx-auto mt-8">
+        <h1 class="text-2xl text-blue-700 font-bold mb-4">Users List</h1>
+        <form method="get" class="mb-4 flex items-center gap-2">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, email, mobile..." class="px-3 py-2 border border-gray-300 rounded-lg w-64">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Search</button>
+        </form>
+        <div class="overflow-x-auto rounded-lg shadow">
+        <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+                <tr class="bg-gray-100 text-gray-700 text-sm">
+                    <th class="p-2 border-b cursor-pointer">S. No</th>
+                    <th class="p-2 border-b cursor-pointer">
+                        <a href="?sort=name&direction={{ $sort == 'name' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Name @if($sort=='name')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                    </th>
+                    <th class="p-2 border-b cursor-pointer">
+                        <a href="?sort=mobile&direction={{ $sort == 'mobile' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Mobile @if($sort=='mobile')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                    </th>
+                    <th class="p-2 border-b cursor-pointer">
+                        <a href="?sort=email&direction={{ $sort == 'email' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Email @if($sort=='email')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                    </th>
+                    <th class="p-2 border-b cursor-pointer">
+                        <a href="?sort=passing_year&direction={{ $sort == 'passing_year' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Passing Year @if($sort=='passing_year')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                    </th>
+                    <th class="p-2 border-b cursor-pointer">
+                        <a href="?sort=interested_in_training&direction={{ $sort == 'interested_in_training' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Training @if($sort=='interested_in_training')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                    </th>
+                    <th class="p-2 border-b cursor-pointer">
+                        <a href="?sort=leads&direction={{ $sort == 'leads' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Call @if($sort=='leads')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                    </th>
+                    <th class="p-2 border-b cursor-pointer">
+                        <a href="?sort=call_sent&direction={{ $sort == 'call_sent' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Call Sent @if($sort=='call_sent')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($users as $key=>$user)
+                <tr class="even:bg-gray-50 hover:bg-blue-50 text-sm">
+                    <td class="p-2 border-b">{{ ($users->currentPage()-1)*$users->perPage() + $key + 1 }}</td>
+                    <td class="p-2 border-b">{{ $user->name }}</td>
+                    <td class="p-2 border-b">{{ $user->mobile }}</td>
+                    <td class="p-2 border-b">{{ $user->email }}</td>
+                    <td class="p-2 border-b">{{ $user->passing_year ? \Carbon\Carbon::parse($user->passing_year)->format('Y-m-d') : '-' }}</td>
+                    <td class="p-2 border-b">{{ $user->interested_in_training == 'yes' ? 'Yes' : 'No' }}</td>
+                    <td class="p-2 border-b">{{ $user->leads ? 'Yes' : 'No' }}</td>
+                    <td class="p-2 border-b text-center">
+                        <form method="post" action="{{ route('admin.toggleCallSent', $user->id) }}">
+                            @csrf
+                            <button type="submit" class="px-2 py-1 rounded {{ $user->call_sent ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-700' }}">
+                                {{ $user->call_sent ? 'Sent' : 'Mark as Sent' }}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        </div>
+        <div class="flex justify-between items-center mt-4">
+            <div class="text-gray-700 text-sm">
+                Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} users
+            </div>
+            <div class="pagination_admin">
+                {{ $users->links() }}
+            </div>
+        </div>
     </div>
 </div>
 </body>

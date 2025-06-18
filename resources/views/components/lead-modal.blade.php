@@ -17,12 +17,12 @@
 <div id="leadModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white rounded-2xl shadow-lg w-full relative" style="max-width: 460px;">
         <button id="leadModalClose" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none hidden">&times;</button>
-        <div class="p-6">
-            <h2 class="text-2xl font-bold text-center text-blue-700 mb-2">Unlock Your Learning Journey!</h2>
-            <p class="text-center text-gray-700 mb-4">Sign up or log in to access exclusive content, personalized training, and get a free call from our experts!<br>
-                <span class="text-green-700 font-semibold">Select <u>"Interested in training"</u> and <u>"I would like to receive call from training"</u> for a free consultation and special offers!</span>
+        <div class="p-6 pt-[6px]">
+            <h2 class="text-[16px] font-bold text-center text-blue-700 mb-2">Unlock Your Learning Journey!</h2>
+            <!-- <p class="text-center text-gray-700 mb-4">Sign up or log in to access exclusive content, personalized training, and get a free call from our experts!<br>
+                <span class="text-green-700 font-semibold">Select <u>"Interested in training"</u> and <u>"I would like to receive call from training"</u> for a free consultation and special offers!</span> -->
             </p>
-            <div class="flex justify-center mb-4">
+            <div class="flex justify-center mb-2">
                 <button id="leadTabSignup" class="px-4 py-2 rounded-l-xl bg-blue-500 text-white font-semibold focus:outline-none">Signup</button>
                 <button id="leadTabLogin" class="px-4 py-2 rounded-r-xl bg-gray-200 text-blue-700 font-semibold focus:outline-none">Login</button>
             </div>
@@ -42,7 +42,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var closable = @json($closable ?? true);
         var showDelay = window.location.pathname.startsWith('/topic/') ? 5000 : 15000;
-        if (closable && localStorage.getItem('leadModalClosed')) return;
+        if (closable && sessionStorage.getItem('leadModalClosed')) return;
         setTimeout(function() {
             var modal = document.getElementById('leadModal');
             var closeBtn = document.getElementById('leadModalClose');
@@ -56,7 +56,7 @@
         if (closable && closeBtn) {
             closeBtn.onclick = function() {
                 document.getElementById('leadModal').classList.add('hidden');
-                localStorage.setItem('leadModalClosed', '1');
+                sessionStorage.setItem('leadModalClosed', '1');
             };
         }
         // Tab switching logic
@@ -93,7 +93,7 @@
         var signupForm = document.getElementById('modalSignupForm');
         if (signupForm) {
             // Real-time error clearing
-            ['name','email','mobile','password','password_confirmation','interested_in_training','leads'].forEach(function(field) {
+            ['name','email','mobile','password','password_confirmation','interested_in_training','leads','passing_year'].forEach(function(field) {
                 var el = document.getElementById('modal_' + field);
                 if (el) {
                     el.addEventListener('input', function() {
@@ -113,7 +113,7 @@
                 document.getElementById('modalSignupSpinner').style.display = 'inline-block';
                 document.getElementById('modalSignupError').innerHTML = '';
                 // Clear all field errors
-                ['name','email','mobile','password','password_confirmation','interested_in_training','leads'].forEach(function(field) {
+                ['name','email','mobile','password','password_confirmation','interested_in_training','leads','passing_year'].forEach(function(field) {
                     var err = document.getElementById('error_' + field);
                     if (err) err.innerHTML = '';
                 });

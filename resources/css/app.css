@@ -25,3 +25,7 @@
     overflow-x: auto;
     white-space: pre;
 }
+
+.pagination_admin p{
+  display: none;
+}
