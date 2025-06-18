@@ -46,13 +46,44 @@ class AdminController extends Controller
 
     }
 
-    function dashboard(){
+    function dashboard(Request $request){
         $admin = Session::get('admin');
         if($admin){
-
-            $users= $users= User::where('interested_in_training','yes')
-                        ->orWhere('leads', 1) -> orderBy('id','desc')->paginate(10);
-            return view('admin',["name"=>$admin->name,'users'=>$users]);
+            $query = User::query();
+            // Only users interested in training or leads
+            $query->where(function($q) {
+                $q->where('interested_in_training', 'yes')
+                  ->orWhere('leads', 1);
+            });
+            // Search
+            $search = $request->input('search');
+            if ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%$search%")
+                      ->orWhere('email', 'like', "%$search%")
+                      ->orWhere('mobile', 'like', "%$search%")
+                      ->orWhere('passing_year', 'like', "%$search%")
+                      ->orWhere('interested_in_training', 'like', "%$search%")
+                      ->orWhere('leads', 'like', "%$search%")
+                      ->orWhere('call_sent', 'like', "%$search%") ;
+                });
+            }
+            // Sorting
+            $sort = $request->input('sort', 'id');
+            $direction = $request->input('direction', 'desc');
+            $allowedSorts = ['id','name','email','mobile','passing_year','interested_in_training','leads','call_sent'];
+            if (!in_array($sort, $allowedSorts)) $sort = 'id';
+            if (!in_array($direction, ['asc','desc'])) $direction = 'desc';
+            $query->orderBy($sort, $direction);
+            // Pagination
+            $users = $query->paginate(10)->appends($request->all());
+            return view('admin', [
+                "name" => $admin->name,
+                'users' => $users,
+                'search' => $search,
+                'sort' => $sort,
+                'direction' => $direction
+            ]);
         }else{
             return redirect('admin-login');
         }
@@ -317,6 +348,11 @@ class AdminController extends Controller
        
        }
 
-       
-    
+    public function toggleCallSent($userId)
+    {
+        $user = \App\Models\User::findOrFail($userId);
+        $user->call_sent = !$user->call_sent;
+        $user->save();
+        return back();
+    }
 }
