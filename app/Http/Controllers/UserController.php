@@ -85,6 +85,7 @@ class UserController extends Controller
         'password'=>Hash::make($request->password),
         'interested_in_training'=>$request->interested_in_training,
         'leads'=>$request->has('leads') ? true : false,
+        'passing_year' => $request->passing_year,
       ]);
 
       // 
