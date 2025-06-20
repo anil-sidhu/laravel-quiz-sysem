@@ -24,6 +24,7 @@ class User extends Authenticatable
         'mobile',
         'interested_in_training',
         'leads',
+        'passing_year',
     ];
 
     /**
@@ -46,6 +47,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'passing_year' => 'date',
         ];
     }
 }
