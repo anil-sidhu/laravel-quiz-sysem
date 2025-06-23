@@ -32,7 +32,12 @@
     </div>
     <div class="mb-1">
         <label for="modal_passing_year" class="text-gray-600 mb-1">Passing Year (optional)</label>
-        <input type="date" id="modal_passing_year" name="passing_year" class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">
+        <select id="modal_passing_year" name="passing_year" class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">
+            <option value="">Select year</option>
+            @for($y = date('Y'); $y >= date('Y')-13; $y--)
+                <option value="{{$y}}">{{$y}}</option>
+            @endfor
+        </select>
         <div id="error_passing_year" class="input-error"></div>
     </div>
     <div class="mb-1">

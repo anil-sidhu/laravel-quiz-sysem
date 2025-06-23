@@ -49,7 +49,7 @@
                     <td class="p-2 border-b">{{ $user->name }}</td>
                     <td class="p-2 border-b">{{ $user->mobile }}</td>
                     <td class="p-2 border-b">{{ $user->email }}</td>
-                    <td class="p-2 border-b">{{ $user->passing_year ? \Carbon\Carbon::parse($user->passing_year)->format('Y-m-d') : '-' }}</td>
+                    <td class="p-2 border-b">{{ $user->passing_year ? substr($user->passing_year, 0, 4) : '-' }}</td>
                     <td class="p-2 border-b">{{ $user->interested_in_training == 'yes' ? 'Yes' : 'No' }}</td>
                     <td class="p-2 border-b">{{ $user->leads ? 'Yes' : 'No' }}</td>
                     <td class="p-2 border-b text-center">
