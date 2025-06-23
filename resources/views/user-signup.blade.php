@@ -84,7 +84,12 @@
 
         <div>
             <label for="passing_year" class="text-gray-600 mb-1">Passing Year (optional)</label>
-            <input type="date" id="passing_year" name="passing_year" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none" value="{{ old('passing_year') }}">
+            <select id="passing_year" name="passing_year" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
+                <option value="">Select year</option>
+                @for($y = date('Y'); $y >= date('Y')-13; $y--)
+                    <option value="{{$y}}" {{ old('passing_year') == $y ? 'selected' : '' }}>{{$y}}</option>
+                @endfor
+            </select>
             @error('passing_year')
             <div class="input-error">{{$message}}</div>
             @enderror
