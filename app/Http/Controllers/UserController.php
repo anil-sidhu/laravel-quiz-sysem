@@ -77,8 +77,11 @@ class UserController extends Controller
         'mobile'=>'required | min:10',
         'interested_in_training' => 'required|in:yes,no',
       ]);
-      // return $request;
-      $user = User::create([
+
+      // Check if user needs phone verification
+      $needsPhoneVerification = $request->interested_in_training === 'yes' || $request->has('leads');
+
+      $userData = [
         'name'=>$request->name,
         'email'=>$request->email,
         'mobile'=>$request->mobile,
@@ -86,31 +89,46 @@ class UserController extends Controller
         'interested_in_training'=>$request->interested_in_training,
         'leads'=>$request->has('leads') ? true : false,
         'passing_year' => $request->passing_year,
-      ]);
+      ];
 
-      // 
-      
-       $link = Crypt::encryptString($user->email);
-       $link = url('/verify-user/'.$link);
-      // Mail::to($user->email)->send(new VerifyUser($link));
+      if ($needsPhoneVerification) {
+        // Generate OTP for users who need phone verification
+        $otp = rand(100000, 999999);
+        $otpExpiresAt = now()->addMinutes(10);
+        $userData['otp_code'] = $otp;
+        $userData['otp_expires_at'] = $otpExpiresAt;
 
-      // 
+        $user = User::create($userData);
 
-      if($user){
-        Session::put('user',$user);
-        if(Session::has('quiz-url')){
-         
-          $url=Session::get('quiz-url');
-          Session::forget('quiz-url');
-          return redirect($url)->with('message-success',"User registered successfully");
-        }else{
-          return redirect('/')->with('message-success',"User registered successfully ");
+        // Send OTP via Fast2SMS
+        try {
+          $sms = app(\App\Services\Fast2SMSService::class);
+          $sms->sendOtp($user->mobile, $otp);
+        } catch (\Exception $e) {
+          // Optionally handle SMS failure
         }
-        
-        
+
+        // Store user id in session for verification
+        session(['signup_user_id' => $user->id]);
+        session(['signup_otp_attempts' => 0]);
+
+        // Redirect to OTP verification page
+        return redirect('/user-signup-verify');
+      } else {
+        // No phone verification needed, directly create user and log them in
+        $user = User::create($userData);
+
+        // Log in user directly
+        Session::put('user', $user);
+        if (Session::has('quiz-url')) {
+          $url = Session::get('quiz-url');
+          Session::forget('quiz-url');
+          return redirect($url)->with('message-success', "User registered successfully");
+        } else {
+          return redirect('/')->with('message-success', "User registered successfully");
+        }
       }
-      
-}
+    }
 
 
     function userLogout(){
@@ -132,6 +150,31 @@ class UserController extends Controller
      $user= User::where('email',$request->email)->first();
      if(!$user || !Hash::check($request->password,$user->password)){
       return redirect('user-login')->with('message-error',"User not valid, Please check email and password again");
+     }
+
+     // Check if user needs mobile verification but hasn't completed it
+     $needsVerification = ($user->interested_in_training === 'yes' || $user->leads == true) && is_null($user->mobile_verified_at);
+     
+     if($needsVerification){
+       // Generate new OTP and send it
+       $otp = rand(100000, 999999);
+       $user->otp_code = $otp;
+       $user->otp_expires_at = now()->addMinutes(10);
+       $user->save();
+
+       try {
+         $sms = app(\App\Services\Fast2SMSService::class);
+         $sms->sendOtp($user->mobile, $otp);
+       } catch (\Exception $e) {
+         // Optionally handle SMS failure
+       }
+
+       // Store user id in session for verification
+       session(['login_user_id' => $user->id]);
+       session(['login_otp_attempts' => 0]);
+       session(['login_redirect_url' => Session::has('quiz-url') ? Session::get('quiz-url') : '/']);
+
+       return redirect('/user-login-verify')->with('message-info', 'Please verify your mobile number to complete login.');
      }
 
       if($user){
@@ -332,5 +375,165 @@ if($mcqData){
   $course= Course::find($id);
   return view('course-details',['topics'=>$topics,'title'=>$title,'course'=>$course]);
  }
+
+    // Show OTP verification form
+    public function showSignupOtpForm()
+    {
+        if (!session('signup_user_id')) {
+            return redirect('/user-signup');
+        }
+        return view('user-signup-verify');
+    }
+
+    // Handle OTP verification
+    public function verifySignupOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|digits:6',
+        ]);
+        $userId = session('signup_user_id');
+        $user = User::find($userId);
+        if (!$user) {
+            return redirect('/user-signup')->with('message-error', 'Session expired. Please sign up again.');
+        }
+        // Limit attempts
+        $attempts = session('signup_otp_attempts', 0) + 1;
+        session(['signup_otp_attempts' => $attempts]);
+        if ($attempts > 5) {
+            session()->forget(['signup_user_id', 'signup_otp_attempts']);
+            return redirect('/user-signup')->with('message-error', 'Too many attempts. Please sign up again.');
+        }
+        if ((string)$user->otp_code !== (string)$request->otp || now()->gt($user->otp_expires_at)) {
+            return back()->with('message-error', 'Invalid or expired OTP.')->withInput();
+        }
+        // Mark as verified
+        $user->mobile_verified_at = now();
+        $user->otp_code = null;
+        $user->otp_expires_at = null;
+        $user->save();
+        session()->forget(['signup_user_id', 'signup_otp_attempts']);
+        // Log in user
+        Session::put('user', $user);
+        return redirect('/')->with('message-success', 'Mobile verified and signup complete!');
+    }
+
+    // Resend OTP
+    public function resendSignupOtp(Request $request)
+    {
+        $userId = session('signup_user_id');
+        $user = User::find($userId);
+        if (!$user) {
+            if ($request->ajax()) {
+                return response('Session expired. Please sign up again.', 419);
+            }
+            return redirect('/user-signup');
+        }
+        $otp = rand(100000, 999999);
+        $user->otp_code = $otp;
+        $user->otp_expires_at = now()->addMinutes(10);
+        $user->save();
+        try {
+            $sms = app(\App\Services\Fast2SMSService::class);
+            $result = $sms->sendOtp($user->mobile, $otp);
+            if (isset($result['return']) && !$result['return'] && isset($result['message']) && str_contains(strtolower($result['message'][0] ?? ''), 'spamming')) {
+                if ($request->ajax()) {
+                    return response('You have reached the maximum number of OTP requests allowed per hour. Please try again later.', 429);
+                }
+                return back()->with('message-error', 'You have reached the maximum number of OTP requests allowed per hour. Please try again later.');
+            }
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response('Failed to resend OTP. Please try again later.', 500);
+            }
+            // Optionally handle SMS failure
+        }
+        session(['signup_otp_attempts' => 0]);
+        if ($request->ajax()) {
+            return response('OTP resent successfully.', 200);
+        }
+        return back()->with('message-success', 'OTP resent successfully.');
+    }
+
+    // Show OTP verification form for login
+    public function showLoginOtpForm()
+    {
+        if (!session('login_user_id')) {
+            return redirect('/user-login');
+        }
+        return view('user-login-verify');
+    }
+
+    // Handle OTP verification for login
+    public function verifyLoginOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|digits:6',
+        ]);
+        $userId = session('login_user_id');
+        $user = User::find($userId);
+        if (!$user) {
+            return redirect('/user-login')->with('message-error', 'Session expired. Please login again.');
+        }
+        // Limit attempts
+        $attempts = session('login_otp_attempts', 0) + 1;
+        session(['login_otp_attempts' => $attempts]);
+        if ($attempts > 5) {
+            session()->forget(['login_user_id', 'login_otp_attempts', 'login_redirect_url']);
+            return redirect('/user-login')->with('message-error', 'Too many attempts. Please login again.');
+        }
+        if ((string)$user->otp_code !== (string)$request->otp || now()->gt($user->otp_expires_at)) {
+            return back()->with('message-error', 'Invalid or expired OTP.')->withInput();
+        }
+        // Mark as verified
+        $user->mobile_verified_at = now();
+        $user->otp_code = null;
+        $user->otp_expires_at = null;
+        $user->save();
+        
+        // Get redirect URL and clean up session
+        $redirectUrl = session('login_redirect_url', '/');
+        session()->forget(['login_user_id', 'login_otp_attempts', 'login_redirect_url']);
+        
+        // Log in user
+        Session::put('user', $user);
+        return redirect($redirectUrl)->with('message-success', 'Mobile verified and login complete!');
+    }
+
+    // Resend OTP for login
+    public function resendLoginOtp(Request $request)
+    {
+        $userId = session('login_user_id');
+        $user = User::find($userId);
+        if (!$user) {
+            if ($request->ajax()) {
+                return response('Session expired. Please login again.', 419);
+            }
+            return redirect('/user-login');
+        }
+        $otp = rand(100000, 999999);
+        $user->otp_code = $otp;
+        $user->otp_expires_at = now()->addMinutes(10);
+        $user->save();
+        try {
+            $sms = app(\App\Services\Fast2SMSService::class);
+            $result = $sms->sendOtp($user->mobile, $otp);
+            if (isset($result['return']) && !$result['return'] && isset($result['message']) && str_contains(strtolower($result['message'][0] ?? ''), 'spamming')) {
+                if ($request->ajax()) {
+                    return response('You have reached the maximum number of OTP requests allowed per hour. Please try again later.', 429);
+                }
+                return back()->with('message-error', 'You have reached the maximum number of OTP requests allowed per hour. Please try again later.');
+            }
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response('Failed to resend OTP. Please try again later.', 500);
+            }
+            // Optionally handle SMS failure
+        }
+        session(['login_otp_attempts' => 0]);
+        if ($request->ajax()) {
+            return response('OTP resent successfully.', 200);
+        }
+        return back()->with('message-success', 'OTP resent successfully.');
+    }
 
 }

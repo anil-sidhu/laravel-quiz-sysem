@@ -25,6 +25,10 @@ class User extends Authenticatable
         'interested_in_training',
         'leads',
         'passing_year',
+        'user_status',
+        'otp_code',
+        'otp_expires_at',
+        'mobile_verified_at',
     ];
 
     /**

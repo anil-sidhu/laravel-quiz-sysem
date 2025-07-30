@@ -65,13 +65,13 @@ class AdminController extends Controller
                       ->orWhere('passing_year', 'like', "%$search%")
                       ->orWhere('interested_in_training', 'like', "%$search%")
                       ->orWhere('leads', 'like', "%$search%")
-                      ->orWhere('call_sent', 'like', "%$search%") ;
+                      ->orWhere('user_status', 'like', "%$search%") ;
                 });
             }
             // Sorting
             $sort = $request->input('sort', 'id');
             $direction = $request->input('direction', 'desc');
-            $allowedSorts = ['id','name','email','mobile','passing_year','interested_in_training','leads','call_sent'];
+            $allowedSorts = ['id','name','email','mobile','passing_year','interested_in_training','leads','user_status'];
             if (!in_array($sort, $allowedSorts)) $sort = 'id';
             if (!in_array($direction, ['asc','desc'])) $direction = 'desc';
             $query->orderBy($sort, $direction);
@@ -348,11 +348,14 @@ class AdminController extends Controller
        
        }
 
-    public function toggleCallSent($userId)
+    public function updateUserStatus(Request $request, $userId)
     {
-        $user = \App\Models\User::findOrFail($userId);
-        $user->call_sent = !$user->call_sent;
+        $request->validate([
+            'user_status' => 'required|in:Not Interested,Interested,Joined,Follow up Required',
+        ]);
+        $user = User::findOrFail($userId);
+        $user->user_status = $request->user_status;
         $user->save();
-        return back();
+        return back()->with('success', 'User status updated successfully.');
     }
 }

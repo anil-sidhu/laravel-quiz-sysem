@@ -19,7 +19,10 @@
     @foreach($topics as $topic)
      <div class="bg-white p-5 rounded-2xl shadow hover:shadow-md transition">
       <h2 class="font-extralight text-2xl  text-gray-800 mb-2">{{$topic->title}}</h2>
-      <a href="/topic/{{$topic->course_id}}/{{$topic->id}}/{{str_replace(' ', '-',$topic->title)}}" class="text-green-900 hover:underline text-sm font-medium">Read More</a>
+      <div class="flex justify-between items-center mb-2 text-xs">
+        <a href="/topic/{{$topic->course_id}}/{{$topic->id}}/{{str_replace(' ', '-',$topic->title)}}" class="text-green-900 hover:underline text-sm font-medium">Read More</a>
+        <span class="text-gray-500">Uploaded on: {{ $topic->created_at ? $topic->created_at->format('Y-m-d') : '-' }}</span>
+      </div>
     </div>
     @endforeach
    

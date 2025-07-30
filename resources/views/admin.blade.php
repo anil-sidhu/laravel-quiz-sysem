@@ -31,14 +31,17 @@
                     <th class="p-2 border-b cursor-pointer">
                         <a href="?sort=passing_year&direction={{ $sort == 'passing_year' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Passing Year @if($sort=='passing_year')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer">
+                    <th class="p-2 border-b cursor-pointer w-[5%]">
                         <a href="?sort=interested_in_training&direction={{ $sort == 'interested_in_training' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Training @if($sort=='interested_in_training')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer">
+                    <th class="p-2 border-b cursor-pointer w-[5%]">
                         <a href="?sort=leads&direction={{ $sort == 'leads' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Call @if($sort=='leads')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
                     <th class="p-2 border-b cursor-pointer">
-                        <a href="?sort=call_sent&direction={{ $sort == 'call_sent' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Call Sent @if($sort=='call_sent')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                        User Status
+                    </th>
+                    <th class="p-2 border-b cursor-pointer w-[10%]">
+                        <a href="?sort=created_at&direction={{ $sort == 'created_at' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Signup Date @if($sort=='created_at')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
                 </tr>
             </thead>
@@ -53,13 +56,17 @@
                     <td class="p-2 border-b">{{ $user->interested_in_training == 'yes' ? 'Yes' : 'No' }}</td>
                     <td class="p-2 border-b">{{ $user->leads ? 'Yes' : 'No' }}</td>
                     <td class="p-2 border-b text-center">
-                        <form method="post" action="{{ route('admin.toggleCallSent', $user->id) }}">
+                        <form method="post" action="{{ route('admin.updateUserStatus', $user->id) }}" class="flex items-center gap-2">
                             @csrf
-                            <button type="submit" class="px-2 py-1 rounded {{ $user->call_sent ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-700' }}">
-                                {{ $user->call_sent ? 'Sent' : 'Mark as Sent' }}
-                            </button>
+                            <select name="user_status" class="border rounded px-2 py-1" onchange="this.form.submit()">
+                                <option value="Not Interested" {{ $user->user_status == 'Not Interested' ? 'selected' : '' }}>Not Interested</option>
+                                <option value="Interested" {{ $user->user_status == 'Interested' ? 'selected' : '' }}>Interested</option>
+                                <option value="Joined" {{ $user->user_status == 'Joined' ? 'selected' : '' }}>Joined</option>
+                                <option value="Follow up Required" {{ $user->user_status == 'Follow up Required' ? 'selected' : '' }}>Follow up Required</option>
+                            </select>
                         </form>
                     </td>
+                    <td class="p-2 border-b">{{ $user->created_at ? $user->created_at->format('Y-m-d') : '-' }}</td>
                 </tr>
                 @endforeach
             </tbody>

@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->date('passing_year')->nullable()->after('mobile');
+            $table->string('otp_code')->nullable()->after('user_status');
+            $table->timestamp('otp_expires_at')->nullable()->after('otp_code');
+            $table->timestamp('mobile_verified_at')->nullable()->after('otp_expires_at');
         });
     }
 
@@ -22,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('passing_year');
+            $table->dropColumn(['otp_code', 'otp_expires_at', 'mobile_verified_at']);
         });
     }
-};
+}; 

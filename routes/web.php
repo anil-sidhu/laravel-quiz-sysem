@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Tutorialscontroller;
-
+use Illuminate\Support\Facades\Artisan;
 
 
 
@@ -15,6 +15,9 @@ Route::get('start-quiz/{id}/{name}',[UserController::class,'startQuiz']);
 Route::post('user-signup',[UserController::class,'userSignup']);
 Route::get('user-logout',[UserController::class,'userLogout']);
 Route::get('user-signup-quiz',[UserController::class,'userSignupQuiz']);
+Route::get('user-signup-verify', [UserController::class, 'showSignupOtpForm']);
+Route::post('user-signup-verify', [UserController::class, 'verifySignupOtp']);
+Route::post('user-signup-verify/resend', [UserController::class, 'resendSignupOtp']);
 
 Route::get('categories-list',[UserController::class,'categories']);
 Route::get('certificate',[UserController::class,'certificate']);
@@ -46,6 +49,9 @@ Route::get('user-signup',function(){
 Route::post('user-login',[UserController::class,'userLogin']);
 Route::get('user-login-quiz',[UserController::class,'userLoginQuiz']);
 Route::get('search-quiz',[UserController::class,'searchQuiz']);
+Route::get('user-login-verify', [UserController::class, 'showLoginOtpForm']);
+Route::post('user-login-verify', [UserController::class, 'verifyLoginOtp']);
+Route::post('user-login-verify/resend', [UserController::class, 'resendLoginOtp']);
 
 Route::get('verify-user/{email}',[UserController::class,'verifyUser']);
 Route::view('user-forgot-password','user-forgot-password');
@@ -87,11 +93,32 @@ Route::middleware('CheckAdminAuth')->group(function(){
     Route::get('edit-topic/{id}',[AdminController::class,'editTopic']);
     Route::post('edit-topic/{id}',[AdminController::class,'updateTopic']);
     Route::get('delete-topic/{id}',[AdminController::class,'deleteTopic']);
-    Route::post('admin/users/{user}/toggle-call-sent', [AdminController::class, 'toggleCallSent'])->name('admin.toggleCallSent');
+    Route::post('admin/users/{user}/update-status', [AdminController::class, 'updateUserStatus'])->name('admin.updateUserStatus');
 });
 
+// Migration route for cPanel (remove after running)
+Route::get('/run-specific-migrations', function () {
+    try {
+        // Run the specific migration by path
+        Artisan::call('migrate', [
+            '--path' => 'database/migrations',
+            '--force' => true
+        ]);
+        
+        $output = Artisan::output();
+        return '<h1>Migrations ran successfully!</h1><pre>' . $output . '</pre>';
+    } catch (Exception $e) {
+        return '<h1>Migration Failed!</h1><pre>' . $e->getMessage() . '</pre>';
+    }
+});
 
-
-
-
-
+// Check migration status
+Route::get('/check-migrations', function () {
+    try {
+        Artisan::call('migrate:status');
+        $output = Artisan::output();
+        return '<h1>Migration Status</h1><pre>' . $output . '</pre>';
+    } catch (Exception $e) {
+        return '<h1>Error!</h1><pre>' . $e->getMessage() . '</pre>';
+    }
+});

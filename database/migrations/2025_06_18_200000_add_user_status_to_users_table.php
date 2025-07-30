@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('interested_in_training')->nullable();
-            $table->boolean('leads')->default(false);
+            // Remove call_sent if it exists
+            if (Schema::hasColumn('users', 'call_sent')) {
+                $table->dropColumn('call_sent');
+            }
+            // Add user_status
+            $table->enum('user_status', ['Not Interested', 'Interested', 'Joined', 'Follow up Required'])->default('Not Interested')->after('leads');
         });
     }
 
@@ -23,7 +27,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['interested_in_training', 'leads']);
+            $table->dropColumn('user_status');
+            // Optionally, you could re-add call_sent here if needed
         });
     }
-};
+}; 
