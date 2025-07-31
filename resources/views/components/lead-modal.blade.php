@@ -127,13 +127,23 @@
                     body: formData
                 })
                 .then(async response => {
-                    document.getElementById('modalSignupBtn').disabled = false;
+                    
                     document.getElementById('modalSignupSpinner').style.display = 'none';
                     if (response.ok) {
-                        document.getElementById('modalSignupError').innerHTML = '<span style="color: #16a34a;">Signup successful! Redirecting...</span>';
-                        setTimeout(function() {
-                            location.reload();
-                        }, 2000);
+                        let data = await response.json();
+                        if (data.redirect) {
+                            // OTP verification required - redirect to OTP page
+                            document.getElementById('modalSignupError').innerHTML = '<span style="color: #16a34a;">' + data.message + ' Redirecting...</span>';
+                            setTimeout(function() {
+                                window.location.href = data.redirect;
+                            }, 2000);
+                        } else {
+                            // Normal signup success - reload page
+                            document.getElementById('modalSignupError').innerHTML = '<span style="color: #16a34a;">Signup successful! Redirecting...</span>';
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        }
                     } else {
                         let data = await response.json();
                         let msg = '';

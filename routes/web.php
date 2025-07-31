@@ -24,6 +24,9 @@ Route::get('certificate',[UserController::class,'certificate']);
 Route::get('courses',[UserController::class,'courses']);
 Route::get('course-details/{c_id}/{c_title}/',[UserController::class,'courseDetails']);
 Route::get('topic/{c_id}/{t_id}/{t_title}/',[UserController::class,'topic']);
+Route::get('about-me', function() {
+    return view('about-me');
+});
 
 
 
@@ -120,5 +123,53 @@ Route::get('/check-migrations', function () {
         return '<h1>Migration Status</h1><pre>' . $output . '</pre>';
     } catch (Exception $e) {
         return '<h1>Error!</h1><pre>' . $e->getMessage() . '</pre>';
+    }
+});
+
+// Clear route cache
+Route::get('/clear-route-cache', function () {
+    try {
+        Artisan::call('route:clear');
+        $output = Artisan::output();
+        return '<h1>Route Cache Cleared Successfully!</h1><pre>' . $output . '</pre>';
+    } catch (Exception $e) {
+        return '<h1>Route Cache Clear Failed!</h1><pre>' . $e->getMessage() . '</pre>';
+    }
+});
+
+// Clear all cache (config, route, view, application)
+Route::get('/clear-all-cache', function () {
+    try {
+        Artisan::call('route:clear');
+        Artisan::call('config:clear');
+        Artisan::call('view:clear');
+        Artisan::call('cache:clear');
+        
+        $output = "Route cache cleared\nConfig cache cleared\nView cache cleared\nApplication cache cleared";
+        return '<h1>All Cache Cleared Successfully!</h1><pre>' . $output . '</pre>';
+    } catch (Exception $e) {
+        return '<h1>Cache Clear Failed!</h1><pre>' . $e->getMessage() . '</pre>';
+    }
+});
+
+// Clear config cache
+Route::get('/clear-config-cache', function () {
+    try {
+        Artisan::call('config:clear');
+        $output = Artisan::output();
+        return '<h1>Config Cache Cleared Successfully!</h1><pre>' . $output . '</pre>';
+    } catch (Exception $e) {
+        return '<h1>Config Cache Clear Failed!</h1><pre>' . $e->getMessage() . '</pre>';
+    }
+});
+
+// Clear view cache
+Route::get('/clear-view-cache', function () {
+    try {
+        Artisan::call('view:clear');
+        $output = Artisan::output();
+        return '<h1>View Cache Cleared Successfully!</h1><pre>' . $output . '</pre>';
+    } catch (Exception $e) {
+        return '<h1>View Cache Clear Failed!</h1><pre>' . $e->getMessage() . '</pre>';
     }
 });

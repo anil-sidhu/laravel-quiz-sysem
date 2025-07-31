@@ -65,13 +65,14 @@ class AdminController extends Controller
                       ->orWhere('passing_year', 'like', "%$search%")
                       ->orWhere('interested_in_training', 'like', "%$search%")
                       ->orWhere('leads', 'like', "%$search%")
-                      ->orWhere('user_status', 'like', "%$search%") ;
+                      ->orWhere('user_status', 'like', "%$search%")
+                      ->orWhereRaw("CASE WHEN mobile_verified_at IS NOT NULL THEN 'verified' ELSE 'not verified' END LIKE ?", ["%$search%"]);
                 });
             }
             // Sorting
             $sort = $request->input('sort', 'id');
             $direction = $request->input('direction', 'desc');
-            $allowedSorts = ['id','name','email','mobile','passing_year','interested_in_training','leads','user_status'];
+            $allowedSorts = ['id','name','email','mobile','passing_year','mobile_verified_at','interested_in_training','leads','user_status'];
             if (!in_array($sort, $allowedSorts)) $sort = 'id';
             if (!in_array($direction, ['asc','desc'])) $direction = 'desc';
             $query->orderBy($sort, $direction);

@@ -112,6 +112,15 @@ class UserController extends Controller
         session(['signup_user_id' => $user->id]);
         session(['signup_otp_attempts' => 0]);
 
+        // Handle AJAX vs regular requests
+        if ($request->ajax()) {
+          return response()->json([
+            'success' => true,
+            'redirect' => '/user-signup-verify',
+            'message' => 'OTP sent to your mobile. Please verify to complete signup.'
+          ]);
+        }
+
         // Redirect to OTP verification page
         return redirect('/user-signup-verify');
       } else {
@@ -120,6 +129,15 @@ class UserController extends Controller
 
         // Log in user directly
         Session::put('user', $user);
+        
+        // Handle AJAX vs regular requests
+        if ($request->ajax()) {
+          return response()->json([
+            'success' => true,
+            'message' => 'User registered successfully!'
+          ]);
+        }
+
         if (Session::has('quiz-url')) {
           $url = Session::get('quiz-url');
           Session::forget('quiz-url');

@@ -31,6 +31,9 @@
                     <th class="p-2 border-b cursor-pointer">
                         <a href="?sort=passing_year&direction={{ $sort == 'passing_year' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Passing Year @if($sort=='passing_year')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
+                    <th class="p-2 border-b cursor-pointer">
+                        <a href="?sort=mobile_verified_at&direction={{ $sort == 'mobile_verified_at' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">OTP Verified @if($sort=='mobile_verified_at')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                    </th>
                     <th class="p-2 border-b cursor-pointer w-[5%]">
                         <a href="?sort=interested_in_training&direction={{ $sort == 'interested_in_training' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Training @if($sort=='interested_in_training')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
@@ -53,6 +56,13 @@
                     <td class="p-2 border-b">{{ $user->mobile }}</td>
                     <td class="p-2 border-b">{{ $user->email }}</td>
                     <td class="p-2 border-b">{{ $user->passing_year ? substr($user->passing_year, 0, 4) : '-' }}</td>
+                    <td class="p-2 border-b text-center">
+                        @if($user->mobile_verified_at)
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Verified</span>
+                        @else
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Not Verified</span>
+                        @endif
+                    </td>
                     <td class="p-2 border-b">{{ $user->interested_in_training == 'yes' ? 'Yes' : 'No' }}</td>
                     <td class="p-2 border-b">{{ $user->leads ? 'Yes' : 'No' }}</td>
                     <td class="p-2 border-b text-center">
