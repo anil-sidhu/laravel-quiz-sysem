@@ -24,12 +24,6 @@
         class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">
         <div id="error_password" class="input-error"></div>
     </div>
-    <div class="relative mb-1">
-        <label for="modal_password_confirmation" class="text-gray-600 mb-1">Confirm Password</label>
-        <input type="password" id="modal_password_confirmation" placeholder="Confirm User password" name="password_confirmation"
-        class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">
-        <div id="error_password_confirmation" class="input-error"></div>
-    </div>
     <div class="mb-1">
         <label for="modal_passing_year" class="text-gray-600 mb-1">Passing Year (optional)</label>
         <select id="modal_passing_year" name="passing_year" class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">

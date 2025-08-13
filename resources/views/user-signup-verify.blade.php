@@ -29,6 +29,18 @@
         </form>
         <div class="text-sm text-gray-500 mt-4 text-center">Attempts left: {{ 5 - (session('signup_otp_attempts', 0)) }} / 5</div>
         <div id="resendError" class="text-red-600 text-center mt-2" style="display:none;"></div>
+        
+        <!-- Back to Signup Link -->
+        <div class="mt-6 text-center">
+            <a href="/user-signup?reset=true" class="text-blue-600 hover:text-blue-800 underline text-sm">
+                ← Back to Signup (Change Phone Number)
+            </a>
+        </div>
+        
+        <script>
+            // Mark that user has visited OTP page
+            sessionStorage.setItem('fromOtpPage', 'true');
+        </script>
     </div>
 </div>
 <x-footer-user></x-footer-user>

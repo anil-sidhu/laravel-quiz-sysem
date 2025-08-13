@@ -16,35 +16,32 @@
         <p class=" text-green-500 font-bold">{{session('message-success')}}</p>
     </div>
     @endif
-    <h1 class="border-b border-solid text-4xl text-green-900  p-5 pb-2 mb-4 mt-10 font-extralight" >Test Skills with MCQs</h1>
+    <h1 class="border-b border-solid text-2xl sm:text-3xl md:text-4xl text-green-900 p-4 sm:p-5 pb-2 mb-4 mt-6 sm:mt-10 font-extralight text-center px-4" >Test Skills with MCQs</h1>
     
-    <div class="grid sm:grid-cols-3 md:grid-cols-4 gap-4 p-8 font-extralight text-2xl">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 sm:p-8 font-extralight text-lg sm:text-xl md:text-2xl">
     @foreach($categories as $key=>$category)
-    <a class="p-6 text-center border md:w-40 lg:w-60 rounded-lg transition duration-300 hover:bg-green-900 hover:text-white cursor-pointer"href="user-quiz-list/{{$category->id}}/{{str_replace(' ','-',$category->name)}}">
-    
+    <a class="p-4 sm:p-6 text-center border w-full min-h-[80px] sm:min-h-[100px] flex items-center justify-center rounded-lg transition duration-300 hover:bg-green-900 hover:text-white cursor-pointer" href="user-quiz-list/{{$category->id}}/{{str_replace(' ','-',$category->name)}}">
     {{$category->name}}
-</a>
+    </a>
     @endforeach
 
     </div>
 
-    <h3 class="border-b border-solid text-4xl text-green-900  p-5 pb-2 mb-4 mt-10 font-extralight" >Top Coding Quiz</h3>
+    <h3 class="border-b border-solid text-2xl sm:text-3xl md:text-4xl text-green-900 p-4 sm:p-5 pb-2 mb-4 mt-6 sm:mt-10 font-extralight text-center px-4" >Top Coding Quiz</h3>
 
-    <div class="grid sm:grid-cols-3 md:grid-cols-3 gap-4 p-8 font-extralight">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 sm:p-8 font-extralight">
     @foreach($quizData as $item)
-
-    <a href="/start-quiz/{{$item->id}}/{{str_replace(' ','-',$item->name)}}" class="p-6 text-center  md:w-60 lg:w-80  border rounded-lg transition duration-300 bg-green-900 text-white hover:bg-gray-100 hover:text-green-900 cursor-pointer">
+    <a href="/start-quiz/{{$item->id}}/{{str_replace(' ','-',$item->name)}}" class="p-4 sm:p-6 text-center w-full min-h-[80px] sm:min-h-[100px] flex items-center justify-center border rounded-lg transition duration-300 bg-green-900 text-white hover:bg-gray-100 hover:text-green-900 cursor-pointer">
     {{$item->name}}
-                        </a>
+    </a>
     @endforeach
     </div>
 
-    <h2 class="border-b border-solid text-4xl text-green-900  p-5 pb-2 mb-4 mt-10 font-extralight" >Top Programming Language Courses</h2>
+    <h2 class="border-b border-solid text-2xl sm:text-3xl md:text-4xl text-green-900 p-4 sm:p-5 pb-2 mb-4 mt-6 sm:mt-10 font-extralight text-center px-4" >Top Programming Language Courses</h2>
 
-<div class="grid sm:grid-cols-3 md:grid-cols-3 gap-4 p-8 font-extralight">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 sm:p-8 font-extralight">
 @foreach($courses as $course)
-
-<a href="/course-details/{{$course->id}}/{{str_replace(' ', '-',$course->title)}}" class="p-6 text-center  md:w-60 lg:w-80  border rounded-lg transition duration-300 bg-green-900 text-white hover:bg-gray-100 hover:text-green-900 cursor-pointer">
+<a href="/course-details/{{$course->id}}/{{str_replace(' ', '-',$course->title)}}" class="p-4 sm:p-6 text-center w-full min-h-[80px] sm:min-h-[100px] flex items-center justify-center border rounded-lg transition duration-300 bg-green-900 text-white hover:bg-gray-100 hover:text-green-900 cursor-pointer">
     {{$course->title}}
 </a>
 @endforeach

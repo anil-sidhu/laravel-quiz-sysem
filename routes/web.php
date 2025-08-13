@@ -36,14 +36,22 @@ Route::get('about-me', function() {
 
 Route::get('user-login',function(){
     if(!session()->has('user')){
-       return view('user-login');
+        // Clear login session if coming from OTP page
+        if(request('reset')){
+            session()->forget(['login_user_id', 'login_otp_attempts', 'login_redirect_url']);
+        }
+        return view('user-login');
     }else{
         return redirect('/');
     }
 });
 Route::get('user-signup',function(){
     if(!session()->has('user')){
-       return view('user-signup');
+        // Clear signup session if coming from OTP page
+        if(request('reset')){
+            session()->forget(['signup_user_id', 'signup_otp_attempts']);
+        }
+        return view('user-signup');
     }else{
         return redirect('/');
     }

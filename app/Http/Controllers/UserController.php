@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Str;
 use Spatie\Browsershot\Browsershot;
 
 
@@ -73,7 +75,7 @@ class UserController extends Controller
       $validate = $request->validate([
         'name'=>'required | min:3',
         'email'=>'required | email | unique:users',
-        'password'=>'required | min:3 | confirmed',
+        'password'=>'required | min:3',
         'mobile'=>'required | min:10',
         'interested_in_training' => 'required|in:yes,no',
       ]);
@@ -118,7 +120,7 @@ class UserController extends Controller
             'success' => true,
             'redirect' => '/user-signup-verify',
             'message' => 'OTP sent to your mobile. Please verify to complete signup.'
-          ]);
+          ])->withCookie('remember_token', $user->remember_token, 2628000);
         }
 
         // Redirect to OTP verification page
@@ -126,6 +128,14 @@ class UserController extends Controller
       } else {
         // No phone verification needed, directly create user and log them in
         $user = User::create($userData);
+
+        // Set remember me token for new users
+        $rememberToken = Str::random(60);
+        $user->remember_token = $rememberToken;
+        $user->save();
+        
+        // Set cookie that expires in 5 years
+        Cookie::queue('remember_token', $rememberToken, 2628000); // 5 years in minutes
 
         // Log in user directly
         Session::put('user', $user);
@@ -135,7 +145,7 @@ class UserController extends Controller
           return response()->json([
             'success' => true,
             'message' => 'User registered successfully!'
-          ]);
+          ])->withCookie('remember_token', $user->remember_token, 2628000);
         }
 
         if (Session::has('quiz-url')) {
@@ -150,7 +160,19 @@ class UserController extends Controller
 
 
     function userLogout(){
+      // Clear session
       Session::forget('user');
+      
+      // Clear remember token from user
+      if(Session::has('user')) {
+        $user = Session::get('user');
+        $user->remember_token = null;
+        $user->save();
+      }
+      
+      // Clear remember token cookie
+      Cookie::queue(Cookie::forget('remember_token'));
+      
       return redirect('/');
     }
     function userSignupQuiz(){
@@ -167,6 +189,12 @@ class UserController extends Controller
 
      $user= User::where('email',$request->email)->first();
      if(!$user || !Hash::check($request->password,$user->password)){
+      if($request->ajax()) {
+        return response()->json([
+          'success' => false,
+          'message' => 'User not valid, Please check email and password again'
+        ], 422);
+      }
       return redirect('user-login')->with('message-error',"User not valid, Please check email and password again");
      }
 
@@ -192,11 +220,35 @@ class UserController extends Controller
        session(['login_otp_attempts' => 0]);
        session(['login_redirect_url' => Session::has('quiz-url') ? Session::get('quiz-url') : '/']);
 
+       if($request->ajax()) {
+         return response()->json([
+           'success' => true,
+           'redirect' => '/user-login-verify',
+           'message' => 'Please verify your mobile number to complete login.'
+         ]);
+       }
+
        return redirect('/user-login-verify')->with('message-info', 'Please verify your mobile number to complete login.');
      }
 
       if($user){
         Session::put('user',$user);
+        
+        // Set remember me cookie for 5 years (forever)
+        $rememberToken = Str::random(60);
+        $user->remember_token = $rememberToken;
+        $user->save();
+        
+        // Set cookie that expires in 5 years
+        Cookie::queue('remember_token', $rememberToken, 2628000); // 5 years in minutes
+        
+        if($request->ajax()) {
+          return response()->json([
+            'success' => true,
+            'message' => 'Login successful!'
+          ])->withCookie('remember_token', $rememberToken, 2628000);
+        }
+        
         if(Session::has('quiz-url')){
          
           $url=Session::get('quiz-url');

@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CheckUserAuth;
 use App\Http\Middleware\CheckAdminAuth;
+use App\Http\Middleware\CheckRememberToken;
 
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -19,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->appendToGroup('CheckAdminAuth',[
             CheckAdminAuth::class
+        ]);
+        
+        // Add remember token check to web middleware group (runs on all web requests)
+        $middleware->appendToGroup('web', [
+            CheckRememberToken::class
         ]);
         //
     })

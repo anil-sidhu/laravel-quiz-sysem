@@ -29,6 +29,7 @@ class User extends Authenticatable
         'otp_code',
         'otp_expires_at',
         'mobile_verified_at',
+        'remember_token',
     ];
 
     /**

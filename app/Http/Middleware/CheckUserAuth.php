@@ -5,6 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\User;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cookie;
 
 class CheckUserAuth
 {
@@ -15,9 +18,22 @@ class CheckUserAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!session('user')){
-            return redirect('user-login');
+        // Check if user is already logged in via session
+        if(session('user')){
+            return $next($request);
         }
-        return $next($request);
+        
+        // Check for remember token cookie
+        $rememberToken = $request->cookie('remember_token');
+        if($rememberToken) {
+            $user = User::where('remember_token', $rememberToken)->first();
+            if($user) {
+                // Log user in automatically
+                Session::put('user', $user);
+                return $next($request);
+            }
+        }
+        
+        return redirect('user-login');
     }
 }

@@ -4,7 +4,10 @@
 <x-common></x-common>
     <title>The Coding Skills User Signup | Code Step by Step YouTube Channel Official website | theCodingSkills.com</title>
     <meta name="description" content="Signup for coding and programming language MCQs, structured notes from coding code step by step YouTube Channel, Anil Sidhu">
-  <meta name="keywords" content="Anil Sidhu, Code step by step youtube channel, Programming language MCQs, technology quizzes for developers,  The Coding Skills">
+    <meta name="keywords" content="Anil Sidhu, Code step by step youtube channel, Programming language MCQs, technology quizzes for developers,  The Coding Skills">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
   
     @vite('resources/css/app.css')
     <style>
@@ -44,6 +47,12 @@
     
     <div class=" bg-white p-8 rounded-2xl  shadow-lg w-full max-w-sm">
     <h2 class="text-2xl text-center text-gray-800 mb-6 ">User Signup </h2>
+    
+    <div id="resetNotification" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg" style="display: none;">
+        <p class="text-blue-800 text-sm">
+            <strong>Note:</strong> Phone number field has been cleared. You can enter a new number.
+        </p>
+    </div>
     <!-- @if ($errors->any())
         <div class="mb-4 input-error">
             <ul>
@@ -76,7 +85,10 @@
         <div>
             <label for="mobile" class="text-gray-600 mb-1">User Mobile</label>
             <input type="text" id="mobile" placeholder="Enter User Mobile" name="mobile"
-            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none" value="{{ old('mobile') }}">
+            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none" 
+            value="{{ old('mobile') }}" 
+            autocomplete="off" 
+            data-lpignore="true">
        @error('mobile')
        <div class="input-error">{{$message}}</div>
        @enderror
@@ -106,14 +118,6 @@
             <div class="input-error">{{$message}}</div>
             @enderror
         </div>
-        <div class="relative">
-            <label for="password_confirmation" class="text-gray-600 mb-1">Confirm Password</label>
-            <input type="password" id="password_confirmation" placeholder="Confirm User password" name="password_confirmation"
-            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
-            <span class="password-toggle" onclick="togglePassword('password_confirmation', this)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-.274.832-.64 1.624-1.09 2.354M15.54 15.54A8.963 8.963 0 0112 17c-4.478 0-8.268-2.943-9.542-7a9.014 9.014 0 012.042-3.362M9.88 9.88a3 3 0 014.24 4.24"/></svg>
-            </span>
-        </div>
 
         <div>
             <label for="interested_in_training" class="text-gray-600 mb-1">Interested in Training</label>
@@ -136,6 +140,10 @@
             Signup
             <span id="signupSpinner" class="spinner" style="display:none;"></span>
         </button>
+        
+        <div class="text-center mt-4">
+            <a href="user-login" class="text-blue-600 text-sm sm:text-base hover:underline">Already have an account? Login</a>
+        </div>
     </form>
     </div>
 </div>
@@ -159,6 +167,87 @@
         var spinner = document.getElementById('signupSpinner');
         btn.disabled = true;
         spinner.style.display = 'inline-block';
+    });
+
+    // Check if user is coming back from OTP page (browser back button or direct link)
+    document.addEventListener('DOMContentLoaded', function() {
+        const fromOtpPage = sessionStorage.getItem('fromOtpPage');
+        const isResetParam = window.location.search.includes('reset=true');
+        
+        if (fromOtpPage || isResetParam) {
+            // Clear the mobile field immediately
+            const mobileField = document.getElementById('mobile');
+            if (mobileField) {
+                // Multiple methods to clear the field
+                mobileField.value = '';
+                mobileField.defaultValue = '';
+                mobileField.setAttribute('value', '');
+                
+                // Also clear any browser autofill
+                mobileField.setAttribute('autocomplete', 'off');
+                mobileField.setAttribute('data-lpignore', 'true');
+                
+                // Force a re-render
+                mobileField.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            
+            // Show notification
+            const notification = document.getElementById('resetNotification');
+            if (notification) {
+                notification.style.display = 'block';
+            }
+            
+            // Focus on mobile field
+            if (mobileField) {
+                mobileField.focus();
+            }
+            
+            // Clear the session storage flag
+            sessionStorage.removeItem('fromOtpPage');
+            
+            // Update URL to remove reset parameter
+            if (isResetParam) {
+                const url = new URL(window.location);
+                url.searchParams.delete('reset');
+                window.history.replaceState({}, '', url);
+            }
+        }
+    });
+
+    // Additional check on page load to handle browser cache
+    window.addEventListener('pageshow', function(event) {
+        // Check if page is loaded from cache (back/forward navigation)
+        if (event.persisted) {
+            const fromOtpPage = sessionStorage.getItem('fromOtpPage');
+            if (fromOtpPage) {
+                // Clear the mobile field
+                const mobileField = document.getElementById('mobile');
+                if (mobileField) {
+                    // Multiple methods to clear the field
+                    mobileField.value = '';
+                    mobileField.defaultValue = '';
+                    mobileField.setAttribute('value', '');
+                    mobileField.setAttribute('autocomplete', 'off');
+                    
+                    // Force a re-render
+                    mobileField.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                
+                // Show notification
+                const notification = document.getElementById('resetNotification');
+                if (notification) {
+                    notification.style.display = 'block';
+                }
+                
+                // Focus on mobile field
+                if (mobileField) {
+                    mobileField.focus();
+                }
+                
+                // Clear the session storage flag
+                sessionStorage.removeItem('fromOtpPage');
+            }
+        }
     });
 </script>
 </body>

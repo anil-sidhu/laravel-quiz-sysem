@@ -8,13 +8,14 @@
 <body>
     <x-navbar name={{$name}} ></x-navbar>
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5">
-    <div class="w-full max-w-6xl mx-auto mt-8">
-        <h1 class="text-2xl text-blue-700 font-bold mb-4">Users List</h1>
-        <form method="get" class="mb-4 flex items-center gap-2">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, email, mobile..." class="px-3 py-2 border border-gray-300 rounded-lg w-64">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Search</button>
+    <div class="w-full max-w-6xl mx-auto mt-8 px-4">
+        <h1 class="text-xl sm:text-2xl text-blue-700 font-bold mb-4">Users List</h1>
+        <form method="get" class="mb-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, email, mobile..." class="flex-1 sm:w-64 px-3 py-2 border border-gray-300 rounded-lg">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg whitespace-nowrap">Search</button>
         </form>
-        <div class="overflow-x-auto rounded-lg shadow">
+        <!-- Desktop Table View -->
+        <div class="hidden lg:block overflow-x-auto rounded-lg shadow">
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
                 <tr class="bg-gray-100 text-gray-700 text-sm">
@@ -81,6 +82,60 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="lg:hidden space-y-4">
+            @foreach($users as $key=>$user)
+            <div class="bg-white rounded-lg shadow p-4 border">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h3 class="font-semibold text-gray-900">{{ $user->name }}</h3>
+                        <p class="text-sm text-gray-600">{{ $user->email }}</p>
+                        <p class="text-sm text-gray-600">{{ $user->mobile }}</p>
+                    </div>
+                    <span class="text-xs text-gray-500">#{{ ($users->currentPage()-1)*$users->perPage() + $key + 1 }}</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                    <div>
+                        <span class="text-gray-500">Passing Year:</span>
+                        <span class="font-medium">{{ $user->passing_year ? substr($user->passing_year, 0, 4) : '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">Date:</span>
+                        <span class="font-medium">{{ $user->created_at ? $user->created_at->format('Y-m-d') : '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">Training:</span>
+                        <span class="font-medium">{{ $user->interested_in_training == 'yes' ? 'Yes' : 'No' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">Calls:</span>
+                        <span class="font-medium">{{ $user->leads ? 'Yes' : 'No' }}</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        @if($user->mobile_verified_at)
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Verified</span>
+                        @else
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Not Verified</span>
+                        @endif
+                    </div>
+                    <form method="post" action="{{ route('admin.updateUserStatus', $user->id) }}" class="flex items-center">
+                        @csrf
+                        <select name="user_status" class="border rounded px-2 py-1 text-xs" onchange="this.form.submit()">
+                            <option value="Not Interested" {{ $user->user_status == 'Not Interested' ? 'selected' : '' }}>Not Interested</option>
+                            <option value="Interested" {{ $user->user_status == 'Interested' ? 'selected' : '' }}>Interested</option>
+                            <option value="Joined" {{ $user->user_status == 'Joined' ? 'selected' : '' }}>Joined</option>
+                            <option value="Follow up Required" {{ $user->user_status == 'Follow up Required' ? 'selected' : '' }}>Follow up Required</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+            @endforeach
         </div>
         <div class="flex justify-between items-center mt-4">
             <div class="text-gray-700 text-sm">
