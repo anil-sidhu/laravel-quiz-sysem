@@ -92,6 +92,7 @@
     </form>
     </div>
 </div>
+<x-footer-user></x-footer-user>
 
 <script>
     // Check if user is coming back from OTP page (browser back button or direct link)
