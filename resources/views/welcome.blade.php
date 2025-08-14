@@ -4,9 +4,9 @@
     <x-common></x-common>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Programming Interview Questions, Code & Notes of Step by Step YouTube Channel, Anil Sidhu</title>
-    <meta name="description" content="Find coding & programming MCQs, Interview questions, notes and code for  code step by step YouTube Channel in various programming languages>
-  <meta name="keywords" content="Anil Sidhu, Interview Questions, programming language mcqs, technology quizzes for developers, coding video summaries, programming notes pdf, code snippets library, software development practice, web development mcqs, data science mcqs, the coding skills">
+    <title>The Coding skills | Code & Notes of Step by Step YouTube Channel | Anil Sidhu</title>
+    <meta name="description" content="Find coding & programming MCQs, Interview questions, notes and code for  code step by step YouTube Channel in various programming languages | Anil Sidhu" />
+  <meta name="keywords" content="Anil Sidhu, Interview Questions, programming language mcqs, technology quizzes for developers, coding video summaries, programming notes pdf, code snippets library, software development practice, web development mcqs, data science mcqs, the coding skills, Anil sidhu" />
     @vite('resources/css/app.css')
     <style>
         body {

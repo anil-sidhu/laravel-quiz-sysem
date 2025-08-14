@@ -24,7 +24,7 @@ Route::get('certificate',[UserController::class,'certificate']);
 Route::get('courses',[UserController::class,'courses']);
 Route::get('course-details/{c_id}/{c_title}/',[UserController::class,'courseDetails']);
 Route::get('topic/{c_id}/{t_id}/{t_title}/',[UserController::class,'topic']);
-Route::get('about-me', function() {
+Route::get('anil-sidhu', function() {
     return view('about-me');
 });
 

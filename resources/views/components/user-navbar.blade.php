@@ -23,7 +23,7 @@
         <div class="hidden lg:flex space-x-4 items-center">
           <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/">Home</a>
           <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/categories-list">Categories</a>
-          <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/about-me">About Me</a>
+          <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/anil-sidhu">About Me</a>
           @if(session('user'))
           <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/user-details">Welcome, {{session('user')->name}}</a>
           <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/user-logout">Logout</a>

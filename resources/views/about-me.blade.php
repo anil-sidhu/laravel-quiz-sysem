@@ -4,8 +4,8 @@
     <x-common></x-common>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Anil Sidhu | Senior Software Engineer at Oracle | Full Stack Developer & Tech Educator</title>
-    <meta name="description" content="Learn about Anil Sidhu, a Senior Software Engineer at Oracle with 9 years of full stack development experience. Expert in React, Angular, Node.js, Laravel, and more. Founder of TheCodingSkills.com, YouTube educator, and collaborator with Sharpener Tech." />
+    <title> Anil Sidhu | Owner of Code step by step | who is Anil sidhu | About Anil sidhu</title>
+    <meta name="description" content="Learn about Anil Sidhu, a Senior Software Engineer at Oracle with 9 years of full stack development experience. Expert in React, Angular, Node.js, Laravel, and more. Founder of TheCodingSkills.com, YouTube educator" />
     <meta name="keywords" content="Anil Sidhu, Oracle, Senior Software Engineer, Full Stack Developer, React, Angular, Node.js, Laravel, TheCodingSkills, Sharpener Tech, JavaScript, Oracle JET, software engineer profile, web development, front end architecture, YouTube coding tutorials, tech educator" />
     @vite('resources/css/app.css')
 </head>
