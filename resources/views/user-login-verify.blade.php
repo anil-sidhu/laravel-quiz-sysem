@@ -13,7 +13,7 @@
         }
         @media (max-width: 768px) {
             .mobile-full-form {
-                min-height: 100vh;
+                min-height: auto;
                 padding: 0;
                 background: white;
                 align-items: flex-start;
@@ -26,12 +26,7 @@
                 border-radius: 0;
                 padding: 2rem 1rem;
                 margin-top: 0;
-                min-height: calc(100vh - 80px);
-                display: flex;
-                flex-direction: column;
-            }
-            .mobile-full-form form {
-                flex: 1;
+                margin-bottom: 0;
             }
         }
     </style>
@@ -77,6 +72,7 @@
         </script>
     </div>
 </div>
+<x-footer-user></x-footer-user>
 <script>
     // Resend timer logic
     let timer = 30;
