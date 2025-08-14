@@ -3,6 +3,7 @@
 <head>
 <x-common></x-common>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{$currentTopic->title}} | programming  courses | The Coding Skills | Anil Sidhu</title>
     <meta name="description" content="{{$currentTopic->title}}, {{$currentTopic->keywords}}  notes from coding code step by step YouTube Channel">
   <meta name="keywords" content="{{$currentTopic->title}}, {{$currentTopic->keywords}}, Anil Sidhu">
@@ -64,50 +65,109 @@ span,code{
 h2.list-heading{
   font-size:24px; font-weight:200
 }
+
+/* Mobile responsive styles */
+body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Code block responsive */
+pre, code {
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+/* Mobile sidebar toggle */
+.mobile-sidebar-toggle {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-sidebar-toggle {
+        display: block;
+    }
+    
+    .sidebar {
+        display: none;
+    }
+    
+    .sidebar.active {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: white;
+        z-index: 50;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+}
     </style>
 </head>
 <body>
   <x-user-navbar></x-user-navbar> 
-  <div class="flex min-h-screen bg-gray-100">
-  <!-- Sidebar -->
-  <aside class="w-70 bg-white shadow-md p-6">
-    <h2 class=" text-green-950 list-heading">Playlist Topics</h2>
+  <div class="flex min-h-screen bg-gray-100 w-full max-w-full overflow-x-hidden">
+  
+  <!-- Mobile Sidebar Toggle Button -->
+  <button id="mobile-sidebar-toggle" class="mobile-sidebar-toggle fixed top-20 left-4 z-40 bg-green-600 text-white p-2 rounded-lg shadow-lg">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+  </button>
+
+  <!-- Left Sidebar - Playlist Topics -->
+  <aside id="playlist-sidebar" class="sidebar w-70 bg-white shadow-md p-6 lg:block">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-green-950 list-heading">Playlist Topics</h2>
+      <button id="close-sidebar" class="lg:hidden text-gray-500 hover:text-gray-700">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
     <nav class="space-y-4">
-
     @foreach($relatedTopics as $topic)
- 
-      <a title="{{$topic->title}}" class="truncate-2-lines" href="/topic/{{$topic->course_id}}/{{$topic->id}}/{{str_replace(' ', '-',$topic->title)}}" 
-      class="block text-gray-700 hover:text-blue-600 font-medium">{{$topic->title}}</a>
-
+      <a title="{{$topic->title}}" class="truncate-2-lines block text-gray-700 hover:text-blue-600 font-medium" href="/topic/{{$topic->course_id}}/{{$topic->id}}/{{str_replace(' ', '-',$topic->title)}}">
+        {{$topic->title}}
+      </a>
     @endforeach
-
     </nav>
   </aside>
 
   <!-- Main Content -->
-  <main class="flex-1 p-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">{{$currentTopic->title}}</h1>
+  <main class="flex-1 p-4 sm:p-8 w-full">
+    <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-6">{{$currentTopic->title}}</h1>
 
-    <div>
-    {!!$currentTopic->video_link!!}
+    <div class="mb-6">
+      {!!$currentTopic->video_link!!}
     </div>
 
-
-    <div class="grid">
-    {!!$currentTopic->description!!}
+    <div class="prose max-w-none">
+      {!!$currentTopic->description!!}
     </div>
   </main>
 
-  <aside class="w-60 bg-white shadow-md p-6">
-    <h2   class=" text-green-950 list-heading">Related Course </h2>
+  <!-- Right Sidebar - Related Courses -->
+  <aside id="courses-sidebar" class="sidebar w-60 bg-white shadow-md p-6 lg:block">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-green-950 list-heading">Related Courses</h2>
+      <button id="close-courses-sidebar" class="lg:hidden text-gray-500 hover:text-gray-700">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
     <nav class="space-y-4">
-
     @foreach($courses as $course)
-
-      <a class="truncate-2-lines" href="/course-details/{{$course->id}}/{{str_replace(' ', '-',$course->title)}}" class="text-green-900 font-bold hover:underline text-sm">{{$course->title}}</a>
-
+      <a class="truncate-2-lines block text-green-900 font-bold hover:underline text-sm" href="/course-details/{{$course->id}}/{{str_replace(' ', '-',$course->title)}}">
+        {{$course->title}}
+      </a>
     @endforeach
-
     </nav>
   </aside>
 
@@ -142,4 +202,36 @@ h2.list-heading{
         });
     </script>
 @endif
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileToggle = document.getElementById('mobile-sidebar-toggle');
+        const playlistSidebar = document.getElementById('playlist-sidebar');
+        const coursesSidebar = document.getElementById('courses-sidebar');
+        const closeSidebar = document.getElementById('close-sidebar');
+        const closeCoursesSidebar = document.getElementById('close-courses-sidebar');
+
+        // Toggle playlist sidebar
+        mobileToggle.addEventListener('click', function() {
+            playlistSidebar.classList.toggle('active');
+        });
+
+        // Close playlist sidebar
+        closeSidebar.addEventListener('click', function() {
+            playlistSidebar.classList.remove('active');
+        });
+
+        // Close courses sidebar
+        closeCoursesSidebar.addEventListener('click', function() {
+            coursesSidebar.classList.remove('active');
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!playlistSidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
+                playlistSidebar.classList.remove('active');
+            }
+        });
+    });
+</script>
 </body>
