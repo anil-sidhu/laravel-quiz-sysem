@@ -28,7 +28,7 @@
     @endif
     <h1 class="border-b border-solid text-2xl sm:text-3xl md:text-4xl text-green-900 p-4 sm:p-5 pb-2 mb-4 mt-6 sm:mt-10 font-extralight text-center px-4" >Test Skills with MCQs</h1>
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 sm:p-8 font-extralight text-lg sm:text-xl md:text-2xl w-full max-w-full">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 sm:p-8 font-extralight text-lg sm:text-xl md:text-2xl w-full max-w-full">
     @foreach($categories as $key=>$category)
     <a class="p-4 sm:p-6 text-center border w-full min-h-[80px] sm:min-h-[100px] flex items-center justify-center rounded-lg transition duration-300 hover:bg-green-900 hover:text-white cursor-pointer break-words" href="user-quiz-list/{{$category->id}}/{{str_replace(' ','-',$category->name)}}">
     {{$category->name}}
