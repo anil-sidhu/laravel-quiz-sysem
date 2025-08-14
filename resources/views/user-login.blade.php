@@ -2,17 +2,38 @@
 <html lang="en">
 <head>
 <x-common></x-common>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>The Coding Skills User Login | Code Step by Step YouTube Channel Official website | theCodingSkills.com/</title>
     <meta name="description" content="Login for coding and programming language MCQs, structured notes from coding code step by step YouTube Channel, Anil Sidhu">
   <meta name="keywords" content="Anil Sidhu, Code step by step youtube channel, Programming language MCQs, technology quizzes for developers, The Coding Skills">
   
     @vite('resources/css/app.css')
+    <style>
+        body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        @media (max-width: 768px) {
+            .mobile-full-form {
+                min-height: 100vh;
+                padding: 1rem;
+                background: white;
+            }
+            .mobile-full-form .form-container {
+                max-width: 100%;
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
 <x-user-navbar></x-user-navbar> 
-<div class="bg-gray-100 flex items-center justify-center min-h-screen px-4">
+<div class="bg-gray-100 flex items-center justify-center min-h-screen px-4 mobile-full-form">
     
-    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-sm">
+    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-sm form-container">
 
     @if(session('message-error'))
     <div>

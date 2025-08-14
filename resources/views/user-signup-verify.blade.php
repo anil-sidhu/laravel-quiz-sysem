@@ -2,14 +2,35 @@
 <html lang="en">
 <head>
     <x-common></x-common>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Verify Mobile Number | The Coding Skills</title>
     <meta name="description" content="Verify your mobile number to complete signup on The Coding Skills.">
     @vite('resources/css/app.css')
+    <style>
+        body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        @media (max-width: 768px) {
+            .mobile-full-form {
+                min-height: 100vh;
+                padding: 1rem;
+                background: white;
+            }
+            .mobile-full-form .form-container {
+                max-width: 100%;
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
 <x-user-navbar></x-user-navbar>
-<div class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow w-full">
+<div class="bg-gray-100 flex items-center justify-center min-h-screen mobile-full-form">
+    <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow w-full form-container">
         <h2 class="text-2xl font-bold mb-4 text-center">Verify Your Mobile Number</h2>
         @if(session('message-error'))
             <div class="bg-red-100 text-red-700 p-2 rounded mb-3">{{ session('message-error') }}</div>
