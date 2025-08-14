@@ -80,6 +80,22 @@ pre, code {
     max-width: 100%;
 }
 
+/* Video player responsive */
+iframe, video, embed, object {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16/9;
+}
+
+/* YouTube embed specific */
+.youtube-embed, .youtube-embed iframe {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16/9;
+}
+
 /* Mobile sidebar toggle */
 .mobile-sidebar-toggle {
     display: none;
@@ -143,7 +159,7 @@ pre, code {
   <main class="flex-1 p-4 sm:p-8 w-full">
     <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-6">{{$currentTopic->title}}</h1>
 
-    <div class="mb-6">
+    <div class="mb-6 w-full overflow-hidden">
       {!!$currentTopic->video_link!!}
     </div>
 
