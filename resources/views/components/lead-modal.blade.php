@@ -130,6 +130,7 @@
                     
                     document.getElementById('modalSignupSpinner').style.display = 'none';
                     if (response.ok) {
+                        document.getElementById('modalSignupBtn').disabled = false;
                         let data = await response.json();
                         if (data.redirect) {
                             // OTP verification required - redirect to OTP page
@@ -145,6 +146,7 @@
                             }, 2000);
                         }
                     } else {
+                        document.getElementById('modalSignupBtn').disabled = false;
                         let data = await response.json();
                         let msg = '';
                         if (data.errors) {
