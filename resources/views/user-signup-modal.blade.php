@@ -35,8 +35,8 @@
         <div id="error_passing_year" class="input-error"></div>
     </div>
     <div class="mb-1">
-        <label for="modal_interested_in_training" class="text-gray-600 mb-1 font-bold text-blue-700">Interested in Training <span class="text-green-600 text-[11px]">(Highly Recommended)</span></label>
-        <select id="modal_interested_in_training" name="interested_in_training" class="w-full px-4 py-[2px] px-[5px] border-1 border-[#d6d6d6] rounded-xl focus:outline-none">
+        <label for="modal_interested_in_training" class=" mb-1 font-bold text-green-900">Interested in Training <span class="text-green-600 text-[11px]">(Highly Recommended)</span></label>
+        <select id="modal_interested_in_training" name="interested_in_training" class="w-full py-[2px] px-[5px] border-1 border-[#d6d6d6] rounded-xl focus:outline-none">
             <option value="">Select an option</option>
             <option value="yes">Yes, I am interested in training</option>
             <option value="no">No, not interested</option>
@@ -48,7 +48,7 @@
         <label for="modal_leads" class="text-gray-700 font-bold text-[11px]">I would like to receive call from training <span class="text-green-600">(Get a free consultation!)</span></label>
         <div id="error_leads" class="input-error"></div>
     </div>
-    <button id="modalSignupBtn" type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white flex items-center justify-center">
+    <button id="modalSignupBtn" type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white flex items-center justify-center">
         Signup
         <span id="modalSignupSpinner" class="spinner" style="display:none;"></span>
     </button>

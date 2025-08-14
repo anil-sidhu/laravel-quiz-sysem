@@ -47,7 +47,7 @@
 
     @if(session('message-success'))
     <div>
-        <p class=" text-green-500 font-bold">{{session('message-success')}}</p>
+        <p class=" text-green-900 font-bold">{{session('message-success')}}</p>
     </div>
     @endif
 
@@ -83,11 +83,11 @@
        @enderror
         </div>
 
-        <button type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 sm:py-3 text-white font-medium">Login</button>
+        <button type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 sm:py-3 text-white font-medium">Login</button>
         
         <div class="flex flex-col sm:flex-row items-center justify-between gap-2 mt-4">
-            <a href="user-forgot-password" class="text-green-500 text-sm sm:text-base hover:underline">Forgot Password?</a>
-            <a href="user-signup" class="text-blue-600 text-sm sm:text-base hover:underline">Don't have an account? Sign up</a>
+            <a href="user-forgot-password" class="text-green-900 text-sm sm:text-base hover:underline">Forgot Password?</a>
+            <a href="user-signup" class="text-green-900 text-sm sm:text-base hover:underline">Don't have an account? Sign up</a>
         </div>
     </form>
     </div>

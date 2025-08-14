@@ -57,18 +57,18 @@
                 tabSignup.onclick = function() {
                     document.getElementById('leadSignupForm').classList.remove('hidden');
                     document.getElementById('leadLoginForm').classList.add('hidden');
-                    this.classList.add('bg-blue-500', 'text-white');
-                    this.classList.remove('bg-gray-200', 'text-blue-700');
-                    tabLogin.classList.remove('bg-blue-500', 'text-white');
-                    tabLogin.classList.add('bg-gray-200', 'text-blue-700');
+                    this.classList.add('bg-green-900', 'text-white');
+                    this.classList.remove('bg-gray-200', 'text-green-900');
+                    tabLogin.classList.remove('bg-green-900', 'text-white');
+                    tabLogin.classList.add('bg-gray-200', 'text-green-900');
                 };
                 tabLogin.onclick = function() {
                     document.getElementById('leadSignupForm').classList.add('hidden');
                     document.getElementById('leadLoginForm').classList.remove('hidden');
-                    this.classList.add('bg-blue-500', 'text-white');
-                    this.classList.remove('bg-gray-200', 'text-blue-700');
-                    tabSignup.classList.remove('bg-blue-500', 'text-white');
-                    tabSignup.classList.add('bg-gray-200', 'text-blue-700');
+                    this.classList.add('bg-green-900', 'text-white');
+                    this.classList.remove('bg-gray-200', 'text-green-900');
+                    tabSignup.classList.remove('bg-green-900', 'text-white');
+                    tabSignup.classList.add('bg-gray-200', 'text-green-900');
                 };
             }
         });

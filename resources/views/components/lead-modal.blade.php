@@ -18,13 +18,13 @@
     <div class="bg-white rounded-2xl shadow-lg w-full max-w-md mx-4 relative">
         <button id="leadModalClose" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none hidden">&times;</button>
         <div class="p-4 sm:p-6 pt-[6px]">
-            <h2 class="text-sm sm:text-base font-bold text-center text-blue-700 mb-2">Unlock Your Learning Journey!</h2>
+            <!-- <h2 class="no-margin text-sm sm:text-base font-bold text-center text-green-900 mb-2">Unlock Your Learning Journey!</h2> -->
             <!-- <p class="text-center text-gray-700 mb-4">Sign up or log in to access exclusive content, personalized training, and get a free call from our experts!<br>
                 <span class="text-green-700 font-semibold">Select <u>"Interested in training"</u> and <u>"I would like to receive call from training"</u> for a free consultation and special offers!</span> -->
             </p>
             <div class="flex justify-center mb-2">
-                <button id="leadTabSignup" class="px-3 sm:px-4 py-2 rounded-l-xl bg-blue-500 text-white font-semibold focus:outline-none text-sm sm:text-base">Signup</button>
-                <button id="leadTabLogin" class="px-3 sm:px-4 py-2 rounded-r-xl bg-gray-200 text-blue-700 font-semibold focus:outline-none text-sm sm:text-base">Login</button>
+                <button id="leadTabSignup" class="px-3 sm:px-4 py-2 rounded-l-xl bg-green-900 text-white font-semibold focus:outline-none text-sm sm:text-base">Signup</button>
+                <button id="leadTabLogin" class="px-3 sm:px-4 py-2 rounded-r-xl bg-gray-200 text-green-900 font-semibold focus:outline-none text-sm sm:text-base">Login</button>
             </div>
             <div id="leadSignupForm" class="">
                 <div id="modalSignupError" class="text-red-600 text-sm mb-2"></div>
@@ -66,18 +66,18 @@
             tabSignup.onclick = function() {
                 document.getElementById('leadSignupForm').classList.remove('hidden');
                 document.getElementById('leadLoginForm').classList.add('hidden');
-                this.classList.add('bg-blue-500', 'text-white');
-                this.classList.remove('bg-gray-200', 'text-blue-700');
-                tabLogin.classList.remove('bg-blue-500', 'text-white');
-                tabLogin.classList.add('bg-gray-200', 'text-blue-700');
+                this.classList.add('bg-green-900', 'text-white');
+                this.classList.remove('bg-gray-200', 'text-green-900');
+                tabLogin.classList.remove('bg-green-900', 'text-white');
+                tabLogin.classList.add('bg-gray-200', 'text-green-900');
             };
             tabLogin.onclick = function() {
                 document.getElementById('leadSignupForm').classList.add('hidden');
                 document.getElementById('leadLoginForm').classList.remove('hidden');
-                this.classList.add('bg-blue-500', 'text-white');
-                this.classList.remove('bg-gray-200', 'text-blue-700');
-                tabSignup.classList.remove('bg-blue-500', 'text-white');
-                tabSignup.classList.add('bg-gray-200', 'text-blue-700');
+                this.classList.add('bg-green-900', 'text-white');
+                this.classList.remove('bg-gray-200', 'text-green-900');
+                tabSignup.classList.remove('bg-green-900', 'text-white');
+                tabSignup.classList.add('bg-gray-200', 'text-green-900');
             };
         }
 

@@ -46,7 +46,7 @@
             @csrf
             <label for="otp" class="block font-semibold">Enter OTP sent to your mobile:</label>
             <input type="text" name="otp" id="otp" maxlength="6" class="w-full border rounded px-3 py-2" required autofocus pattern="[0-9]{6}">
-            <button type="submit" class="w-full bg-blue-500 text-white rounded px-4 py-2">Verify OTP</button>
+            <button type="submit" class="w-full bg-green-900 text-white rounded px-4 py-2">Verify OTP</button>
         </form>
         <form id="resendForm" action="/user-signup-verify/resend" method="post" class="mt-4">
             @csrf
@@ -57,7 +57,7 @@
         
         <!-- Back to Signup Link -->
         <div class="mt-6 text-center">
-            <a href="/user-signup?reset=true" class="text-blue-600 hover:text-blue-800 underline text-sm">
+            <a href="/user-signup?reset=true" class="text-green-900 hover:text-blue-800 underline text-sm">
                 ← Back to Signup (Change Phone Number)
             </a>
         </div>

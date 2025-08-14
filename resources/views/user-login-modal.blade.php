@@ -10,6 +10,6 @@
         <input type="password" id="modal_login_password" placeholder="Enter User password" name="password"
         class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
     </div>
-    <button type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white">Login</button>
-    <a href="user-forgot-password" class="text-green-500">Forgot Password?</a>
+    <button type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white">Login</button>
+    <a href="user-forgot-password" class="text-green-900">Forgot Password?</a>
 </form> 

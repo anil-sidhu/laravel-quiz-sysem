@@ -12,7 +12,7 @@
 <body>
     <x-user-navbar ></x-user-navbar>
     @if(session('message'))
-<p class="text-green-500">{{'message'}}</p>
+<p class="text-green-900">{{'message'}}</p>
 @endif
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5 px-4">
     <h1 class="text-lg sm:text-xl md:text-2xl text-center text-green-800 mb-4 sm:mb-6 font-bold">
@@ -47,7 +47,7 @@
         <input id="option_4" class="form-radio text-blue-500" type="radio" value="d" name="option">
         <span class="text-green-900 pl-2" >{{$mcqData->d}} </span>
     </label>
-    <button type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white" >
+    <button type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white" >
     Submit Answer and Next
     </button>
 

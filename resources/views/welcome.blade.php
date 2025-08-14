@@ -23,7 +23,7 @@
   <div class="flex flex-col min-h-screen items-center bg-gray-100 w-full max-w-full overflow-x-hidden">
     @if(session('message-success'))
     <div>
-        <p class=" text-green-500 font-bold">{{session('message-success')}}</p>
+        <p class=" text-green-900 font-bold">{{session('message-success')}}</p>
     </div>
     @endif
     <h1 class="border-b border-solid text-2xl sm:text-3xl md:text-4xl text-green-900 p-4 sm:p-5 pb-2 mb-4 mt-6 sm:mt-10 font-extralight text-center px-4" >Test Skills with MCQs</h1>

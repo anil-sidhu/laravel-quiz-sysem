@@ -28,11 +28,11 @@
         @endforeach
     </select>
     </div>
-    <button type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white" >Add</button>
+    <button type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white" >Add</button>
 </form>
 @else
-<span class="text-green-500 font-bold">Quiz : {{session('quizDetails')->name}}</span>
-<p class="text-green-500 font-bold">Total MCQs : {{$totalMCQs}}
+<span class="text-green-900 font-bold">Quiz : {{session('quizDetails')->name}}</span>
+<p class="text-green-900 font-bold">Total MCQs : {{$totalMCQs}}
     @if($totalMCQs>0)
     <a class="text-yellow-500 text-sm" href="show-quiz/{{session('quizDetails')->id}}">Show MCQs</a>
     @endif
@@ -89,7 +89,7 @@
    <div class="text-red-500">{{$message}}</div>
    @enderror
     </div>
-    <button type="submit" name="submit" value="add-more" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white" >Add More</button>
+    <button type="submit" name="submit" value="add-more" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white" >Add More</button>
     <button type="submit" name="submit" value="done" class="w-full bg-green-500 rounded-xl px-4 py-2 text-white" >Add and Submit</button>
 <a  class="w-full bg-red-500 block text-center rounded-xl px-4 py-2 text-white" href="/end-quiz">Finish Quiz</a>
 

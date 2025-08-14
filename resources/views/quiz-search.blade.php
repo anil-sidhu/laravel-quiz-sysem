@@ -30,7 +30,7 @@
                     <li class="w-110">{{$item->name}}</li>
                     <li class="w-30">{{$item->mcq_count}}</li>
                     <li class="w-30">
-                    <a href="/start-quiz/{{$item->id}}/{{str_replace(' ','-',$item->name)}}" class="text-green-500 font-bold">
+                    <a href="/start-quiz/{{$item->id}}/{{str_replace(' ','-',$item->name)}}" class="text-green-900 font-bold">
                         Attempt Quiz
                         </a>
                     </li>

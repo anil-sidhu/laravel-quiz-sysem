@@ -101,6 +101,10 @@ iframe, video, embed, object {
     display: none;
 }
 
+.no-margin{
+  margin:0
+}
+
 @media (max-width: 768px) {
     .mobile-sidebar-toggle {
         display: block;
@@ -123,6 +127,7 @@ iframe, video, embed, object {
         padding: 1rem;
     }
 }
+
     </style>
 </head>
 <body>
@@ -130,7 +135,7 @@ iframe, video, embed, object {
   <div class="flex min-h-screen bg-gray-100 w-full max-w-full overflow-x-hidden">
   
   <!-- Mobile Sidebar Toggle Button -->
-  <button id="mobile-sidebar-toggle" class="mobile-sidebar-toggle fixed top-20 left-4 z-40 bg-green-600 text-white p-2 rounded-lg shadow-lg">
+  <button id="mobile-sidebar-toggle" class="mobile-sidebar-toggle fixed top-20 left-4 z-40 bg-green-900 text-white p-2 rounded-lg shadow-lg">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
     </svg>
@@ -148,7 +153,7 @@ iframe, video, embed, object {
     </div>
     <nav class="space-y-4">
     @foreach($relatedTopics as $topic)
-      <a title="{{$topic->title}}" class="truncate-2-lines block text-gray-700 hover:text-blue-600 font-medium" href="/topic/{{$topic->course_id}}/{{$topic->id}}/{{str_replace(' ', '-',$topic->title)}}">
+      <a title="{{$topic->title}}" class="truncate-2-lines block text-gray-700 hover:text-green-900 font-medium" href="/topic/{{$topic->course_id}}/{{$topic->id}}/{{str_replace(' ', '-',$topic->title)}}">
         {{$topic->title}}
       </a>
     @endforeach
@@ -202,18 +207,18 @@ iframe, video, embed, object {
             document.getElementById('leadTabSignup').onclick = function() {
                 document.getElementById('leadSignupForm').classList.remove('hidden');
                 document.getElementById('leadLoginForm').classList.add('hidden');
-                this.classList.add('bg-blue-500', 'text-white');
-                this.classList.remove('bg-gray-200', 'text-blue-700');
-                document.getElementById('leadTabLogin').classList.remove('bg-blue-500', 'text-white');
-                document.getElementById('leadTabLogin').classList.add('bg-gray-200', 'text-blue-700');
+                this.classList.add('bg-green-900', 'text-white');
+                this.classList.remove('bg-gray-200', 'text-green-900');
+                document.getElementById('leadTabLogin').classList.remove('bg-green-900', 'text-white');
+                document.getElementById('leadTabLogin').classList.add('bg-gray-200', 'text-green-900');
             };
             document.getElementById('leadTabLogin').onclick = function() {
                 document.getElementById('leadSignupForm').classList.add('hidden');
                 document.getElementById('leadLoginForm').classList.remove('hidden');
-                this.classList.add('bg-blue-500', 'text-white');
-                this.classList.remove('bg-gray-200', 'text-blue-700');
-                document.getElementById('leadTabSignup').classList.remove('bg-blue-500', 'text-white');
-                document.getElementById('leadTabSignup').classList.add('bg-gray-200', 'text-blue-700');
+                this.classList.add('bg-green-900', 'text-white');
+                this.classList.remove('bg-gray-200', 'text-green-900');
+                document.getElementById('leadTabSignup').classList.remove('bg-green-900', 'text-white');
+                document.getElementById('leadTabSignup').classList.add('bg-gray-200', 'text-green-900');
             };
         });
     </script>

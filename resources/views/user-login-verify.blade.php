@@ -44,13 +44,13 @@
             <div class="bg-green-100 text-green-700 p-2 rounded mb-3">{{ session('message-success') }}</div>
         @endif
         @if(session('message-info'))
-            <div class="bg-blue-100 text-blue-700 p-2 rounded mb-3">{{ session('message-info') }}</div>
+            <div class="bg-blue-100 text-green-900 p-2 rounded mb-3">{{ session('message-info') }}</div>
         @endif
         <form action="/user-login-verify" method="post" class="space-y-4">
             @csrf
             <label for="otp" class="block font-semibold">Enter OTP sent to your mobile:</label>
             <input type="text" name="otp" id="otp" maxlength="6" class="w-full border rounded px-3 py-2" required autofocus pattern="[0-9]{6}">
-            <button type="submit" class="w-full bg-blue-500 text-white rounded px-4 py-2">Verify OTP</button>
+            <button type="submit" class="w-full bg-green-900 text-white rounded px-4 py-2">Verify OTP</button>
         </form>
         <form id="resendForm" action="/user-login-verify/resend" method="post" class="mt-4">
             @csrf
@@ -61,7 +61,7 @@
         
         <!-- Back to Login Link -->
         <div class="mt-6 text-center">
-            <a href="/user-login?reset=true" class="text-blue-600 hover:text-blue-800 underline text-sm">
+            <a href="/user-login?reset=true" class="text-green-900 hover:text-blue-800 underline text-sm">
                 ← Back to Login (Try Different Email)
             </a>
         </div>

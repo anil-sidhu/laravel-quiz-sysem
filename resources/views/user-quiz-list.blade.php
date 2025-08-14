@@ -41,7 +41,7 @@
                     <li class="flex-1 text-sm px-4 break-words">{{$item->name}}</li>
                     <li class="w-24 text-sm">{{$item->mcq_count}}</li>
                     <li class="w-28 text-sm">
-                    <a href="/start-quiz/{{$item->id}}/{{str_replace(' ','-', $item->name)}}" class="text-green-500 font-bold hover:text-green-700 text-sm">
+                    <a href="/start-quiz/{{$item->id}}/{{str_replace(' ','-', $item->name)}}" class="text-green-900 font-bold hover:text-green-700 text-sm">
                         Attempt Quiz
                         </a>
                     </li>

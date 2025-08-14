@@ -21,7 +21,7 @@
   <div class="flex flex-col min-h-screen items-center bg-gray-100 w-full max-w-full overflow-x-hidden">
     @if(session('message-success'))
     <div>
-        <p class=" text-green-500 font-bold">{{session('message-success')}}</p>
+        <p class=" text-green-900 font-bold">{{session('message-success')}}</p>
     </div>
     @endif
    

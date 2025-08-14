@@ -160,13 +160,13 @@
             <label for="leads" class="text-gray-600 mb-1">I would like to receive call from training</label>
         </div>
 
-        <button id="signupBtn" type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white flex items-center justify-center">
+        <button id="signupBtn" type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white flex items-center justify-center">
             Signup
             <span id="signupSpinner" class="spinner" style="display:none;"></span>
         </button>
         
         <div class="text-center mt-4">
-            <a href="user-login" class="text-blue-600 text-sm sm:text-base hover:underline">Already have an account? Login</a>
+            <a href="user-login" class="text-green-900 text-sm sm:text-base hover:underline">Already have an account? Login</a>
         </div>
     </form>
     </div>

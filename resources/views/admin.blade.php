@@ -9,10 +9,10 @@
     <x-navbar name={{$name}} ></x-navbar>
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5">
     <div class="w-full max-w-6xl mx-auto mt-8 px-4">
-        <h1 class="text-xl sm:text-2xl text-blue-700 font-bold mb-4">Users List</h1>
+        <h1 class="text-xl sm:text-2xl text-green-900 font-bold mb-4">Users List</h1>
         <form method="get" class="mb-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, email, mobile..." class="flex-1 sm:w-64 px-3 py-2 border border-gray-300 rounded-lg">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg whitespace-nowrap">Search</button>
+            <button type="submit" class="bg-green-900 text-white px-4 py-2 rounded-lg whitespace-nowrap">Search</button>
         </form>
         <!-- Desktop Table View -->
         <div class="hidden lg:block overflow-x-auto rounded-lg shadow">

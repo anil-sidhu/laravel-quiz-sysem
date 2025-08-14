@@ -75,7 +75,7 @@
        <div class="text-red-500">{{$message}}</div>
        @enderror
 
-    <button type="submit" class="w-full bg-blue-500 rounded-xl px-4 py-2 text-white" >Add Topic</button>
+    <button type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white" >Add Topic</button>
 
 </form>
 </div> 

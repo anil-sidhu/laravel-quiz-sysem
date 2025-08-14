@@ -8,8 +8,8 @@
 </head>
 <body class="pt-10 text-center">
 <div class="flex justify-between w-200 ml-10">
-<a class="text-green-500 font-bold" href="/">Back</a>
-<a class="text-green-500 font-bold" href="/download-certificate">Download</a>
+<a class="text-green-900 font-bold" href="/">Back</a>
+<a class="text-green-900 font-bold" href="/download-certificate">Download</a>
 
 </div>
     <div class="w-200 border-4 m-10 bg-gray-100 border-indigo-900 p-10 text-center">

@@ -32,7 +32,7 @@
                     <li class="w-100">{{$record->name}}</li>
                     <li class="w-50">
                         @if($record->status==2)
-                        <span class="text-green-500">Completed</span>
+                        <span class="text-green-900">Completed</span>
                         @else
                         <span class="text-orange-500">Not Completed</span>
 
