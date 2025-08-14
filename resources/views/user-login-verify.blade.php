@@ -14,8 +14,10 @@
         @media (max-width: 768px) {
             .mobile-full-form {
                 min-height: 100vh;
-                padding: 1rem;
+                padding: 0;
                 background: white;
+                align-items: flex-start;
+                justify-content: flex-start;
             }
             .mobile-full-form .form-container {
                 max-width: 100%;
@@ -23,6 +25,7 @@
                 box-shadow: none;
                 border-radius: 0;
                 padding: 2rem 1rem;
+                margin-top: 0;
             }
         }
     </style>
