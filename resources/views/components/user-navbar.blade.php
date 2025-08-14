@@ -1,4 +1,4 @@
-<nav class="bg-white shadow-md px-4 py-3 font-extralight border-b-green-900 border">
+<nav class="bg-white shadow-md px-4 py-3 font-extralight border-b-green-900 border w-full max-w-full overflow-x-hidden">
       <div class="flex justify-between items-center">
         <!-- Logo -->
         <div class="text-2xl text-green-900 hover:text-blue-500 cursor-pointer">
