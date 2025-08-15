@@ -1,8 +1,8 @@
 <form id="modalLoginForm" action="/user-login" method="post" class="space-y-4">
     @csrf
     <div>
-        <label for="modal_login_email" class="text-gray-600 mb-1">User Email</label>
-        <input type="text" id="modal_login_email" placeholder="Enter User email" name="email"
+        <label for="modal_login_mobile" class="text-gray-600 mb-1">User Mobile</label>
+        <input type="text" id="modal_login_mobile" placeholder="Enter User mobile" name="mobile"
         class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
     </div>
     <div>

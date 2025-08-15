@@ -37,7 +37,7 @@
 <x-user-navbar></x-user-navbar> 
 <div class="bg-gray-100 flex items-center justify-center min-h-screen px-4 mobile-full-form">
     
-    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-sm form-container">
+    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-md form-container">
 
     @if(session('message-error'))
     <div>
@@ -55,7 +55,7 @@
     
     <div id="resetNotification" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg" style="display: none;">
         <p class="text-blue-800 text-sm">
-            <strong>Note:</strong> You can try logging in with a different email address.
+            <strong>Note:</strong> You can try logging in with a different mobile number.
         </p>
     </div>
     @error('user')
@@ -66,10 +66,10 @@
     
 
         <div>
-            <label for="email" class="text-gray-600 mb-1 text-sm sm:text-base">User Email</label>
-            <input type="text" id="email" placeholder="Enter User email" name="email"
+            <label for="mobile" class="text-gray-600 mb-1 text-sm sm:text-base">User Mobile Number</label>
+            <input type="text" id="mobile" placeholder="Enter User mobile" name="mobile"
             class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl focus:outline-none text-sm sm:text-base">
-       @error('email')
+       @error('mobile')
        <div class="text-red-500">{{$message}}</div>
        @enderror
         </div>
@@ -101,14 +101,14 @@
         const isResetParam = window.location.search.includes('reset=true');
         
         if (fromOtpPage || isResetParam) {
-            // Clear the email field
-            document.getElementById('email').value = '';
+            // Clear the emamobileil field
+            document.getElementById('mobile').value = '';
             
             // Show notification
             document.getElementById('resetNotification').style.display = 'block';
             
-            // Focus on email field
-            document.getElementById('email').focus();
+            // Focus on mobile field
+            document.getElementById('mobile').focus();
             
             // Clear the session storage flag
             sessionStorage.removeItem('fromOtpPage');

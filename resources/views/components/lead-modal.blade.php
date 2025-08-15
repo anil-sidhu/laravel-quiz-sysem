@@ -14,8 +14,8 @@
 #leadModal.hidden { display: none !important; }
 </style>
 
-<div id="leadModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-2xl shadow-lg w-full max-w-md mx-4 relative">
+<div id="leadModal" class="fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-2xl shadow-lg w-full max-w-lg mx-4 relative">
         <button id="leadModalClose" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none hidden">&times;</button>
         <div class="p-4 sm:p-6 pt-[6px]">
             <!-- <h2 class="no-margin text-sm sm:text-base font-bold text-center text-green-900 mb-2">Unlock Your Learning Journey!</h2> -->
