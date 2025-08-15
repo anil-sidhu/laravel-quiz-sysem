@@ -3,51 +3,51 @@
     <div class="mb-1">
         <label for="modal_name" class="text-gray-600 mb-1">User Name</label>
         <input type="text" id="modal_name" placeholder="Enter User name" name="name"
-        class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">
+        class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
         <div id="error_name" class="input-error"></div>
     </div>
-    <div class="mb-1">
+    <!-- <div class="mb-1">
         <label for="modal_email" class="text-gray-600 mb-1">User Email</label>
         <input type="text" id="modal_email" placeholder="Enter User email" name="email"
         class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">
         <div id="error_email" class="input-error"></div>
-    </div>
+    </div> -->
     <div class="mb-1">
         <label for="modal_mobile" class="text-gray-600 mb-1">User Mobile</label>
         <input type="text" id="modal_mobile" placeholder="Enter User Mobile" name="mobile"
-        class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">
+        class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
         <div id="error_mobile" class="input-error"></div>
     </div>
     <div class="relative mb-1">
         <label for="modal_password" class="text-gray-600 mb-1">Password</label>
         <input type="password" id="modal_password" placeholder="Enter User password" name="password"
-        class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">
+        class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
         <div id="error_password" class="input-error"></div>
     </div>
     <div class="mb-1">
         <label for="modal_passing_year" class="text-gray-600 mb-1">Passing Year (optional)</label>
-        <select id="modal_passing_year" name="passing_year" class="w-full px-4 py-1 border border-gray-300 rounded-xl focus:outline-none">
+        <select id="modal_passing_year" name="passing_year" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
             <option value="">Select year</option>
-            @for($y = date('Y'); $y >= date('Y')-13; $y--)
+            @for($y = date('Y')+3; $y >= date('Y')-13; $y--)
                 <option value="{{$y}}">{{$y}}</option>
             @endfor
         </select>
         <div id="error_passing_year" class="input-error"></div>
     </div>
-    <div class="mb-1">
-        <label for="modal_interested_in_training" class=" mb-1 font-bold text-green-900">Interested in Training <span class="text-green-600 text-[11px]">(Highly Recommended)</span></label>
-        <select id="modal_interested_in_training" name="interested_in_training" class="w-full py-[2px] px-[5px] border-1 border-[#d6d6d6] rounded-xl focus:outline-none">
-            <option value="">Select an option</option>
-            <option value="yes">Yes, I am interested in training</option>
+    <div class="mb-3">
+        <label for="modal_interested_in_training" class=" mb-1 text-gray-600">Interested in Sharpener’s Job Gurantee Program? <span class="text-red-600 text-[11px]">(Recommended)</span></label>
+        <select id="modal_interested_in_training" name="interested_in_training" class="w-full py-2 px-[5px] border-1 border-[#d6d6d6] rounded-xl focus:outline-none">
+            <option value="">Select</option>
+            <option value="yes">Yes, I am interested</option>
             <option value="no">No, not interested</option>
         </select>
         <div id="error_interested_in_training" class="input-error"></div>
     </div>
-    <div class="flex items-center p-2">
+    <!-- <div class="flex items-center p-2">
         <input type="checkbox" id="modal_leads" name="leads" value="1" class="mr-2">
         <label for="modal_leads" class="text-gray-700 font-bold text-[11px]">I would like to receive call from training <span class="text-green-600">(Get a free consultation!)</span></label>
         <div id="error_leads" class="input-error"></div>
-    </div>
+    </div> -->
     <button id="modalSignupBtn" type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white flex items-center justify-center">
         Signup
         <span id="modalSignupSpinner" class="spinner" style="display:none;"></span>

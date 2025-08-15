@@ -74,9 +74,9 @@ class UserController extends Controller
     function userSignup(Request $request){
       $validate = $request->validate([
         'name'=>'required | min:3',
-        'email'=>'required | email | unique:users',
+        // 'email'=>'required | email | unique:users',
         'password'=>'required | min:3',
-        'mobile'=>'required | min:10',
+        'mobile'   => 'required|numeric|digits:10',
         'interested_in_training' => 'required|in:yes,no',
       ]);
 
@@ -85,11 +85,11 @@ class UserController extends Controller
 
       $userData = [
         'name'=>$request->name,
-        'email'=>$request->email,
+        'email'=>"-",
         'mobile'=>$request->mobile,
         'password'=>Hash::make($request->password),
         'interested_in_training'=>$request->interested_in_training,
-        'leads'=>$request->has('leads') ? true : false,
+        // 'leads'=>$request->has('leads') ? true : false,
         'passing_year' => $request->passing_year,
       ];
 
@@ -183,19 +183,19 @@ class UserController extends Controller
 
     function userLogin(Request $request){
       $validate = $request->validate([
-        'email'=>'required | email',
+        'mobile'   => 'required|numeric|digits:10',
         'password'=>'required',
       ]);
 
-     $user= User::where('email',$request->email)->first();
+     $user= User::where('mobile',$request->mobile)->first();
      if(!$user || !Hash::check($request->password,$user->password)){
       if($request->ajax()) {
         return response()->json([
           'success' => false,
-          'message' => 'User not valid, Please check email and password again'
+          'message' => 'User not valid, Please check mobile and password again'
         ], 422);
       }
-      return redirect('user-login')->with('message-error',"User not valid, Please check email and password again");
+      return redirect('user-login')->with('message-error',"User not valid, Please check mobile number and password again");
      }
 
      // Check if user needs mobile verification but hasn't completed it
@@ -360,7 +360,7 @@ if($mcqData){
     
  function verifyUser($email){
  echo $orgEmail = Crypt::decryptString($email);
- $user= User::where('email',$orgEmail)->first();
+ $user= User::where('mobile',$orgEmail)->first();
  if($user){
   $user->active=2;
 
@@ -376,9 +376,9 @@ if($mcqData){
 
  function userForgotPassword(Request $request){
 
-  $link = Crypt::encryptString($request->email);
+  $link = Crypt::encryptString($request->mobile);
   $link = url('/user-forgot-password/'.$link);
- Mail::to($request->email)->send(new UserForgotPassword($link));
+ Mail::to($request->mobile)->send(new UserForgotPassword($link));
  return redirect('/')->with('message-success',"Please check email to set new password");
  }
 

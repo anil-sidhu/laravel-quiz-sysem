@@ -69,8 +69,8 @@
 <x-user-navbar></x-user-navbar> 
 <div class=" bg-gray-100 flex items-center justify-center min-h-screen mobile-full-form">
     
-    <div class=" bg-white p-8 rounded-2xl  shadow-lg w-full max-w-sm form-container">
-    <h2 class="text-2xl text-center text-gray-800 mb-6 ">User Signup </h2>
+    <div class=" bg-white py-3 px-8 rounded-2xl  shadow-lg w-full max-w-md form-container">
+    <h2 class="text-2xl text-center text-green-800">User Signup </h2>
     
     <div id="resetNotification" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg" style="display: none;">
         <p class="text-blue-800 text-sm">
@@ -88,25 +88,25 @@
     @endif -->
     <form id="signupForm" action="/user-signup" method="post" class="space-y-4">
         @csrf
-        <div>
-            <label for="name" class="text-gray-600 mb-1">User Name</label>
+        <div class="mb-2">
+            <label for="name" class="text-gray-600 ">User Name</label>
             <input type="text" id="name" placeholder="Enter User name" name="name"
             class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none" value="{{ old('name') }}">
        @error('name')
        <div class="input-error">{{$message}}</div>
        @enderror
         </div>
-
-        <div>
+<!-- 
+        <div class="mb-2">
             <label for="email" class="text-gray-600 mb-1">User Email</label>
             <input type="text" id="email" placeholder="Enter User email" name="email"
             class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none" value="{{ old('email') }}">
        @error('email')
        <div class="input-error">{{$message}}</div>
        @enderror
-        </div>
+        </div> -->
 
-        <div>
+        <div class="mb-2">
             <label for="mobile" class="text-gray-600 mb-1">User Mobile</label>
             <input type="text" id="mobile" placeholder="Enter User Mobile" name="mobile"
             class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none" 
@@ -118,11 +118,11 @@
        @enderror
         </div>
 
-        <div>
+        <div class="mb-2">
             <label for="passing_year" class="text-gray-600 mb-1">Passing Year (optional)</label>
             <select id="passing_year" name="passing_year" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
                 <option value="">Select year</option>
-                @for($y = date('Y'); $y >= date('Y')-13; $y--)
+                @for($y = date('Y')+3; $y >= date('Y')-10; $y--)
                     <option value="{{$y}}" {{ old('passing_year') == $y ? 'selected' : '' }}>{{$y}}</option>
                 @endfor
             </select>
@@ -131,7 +131,7 @@
             @enderror
         </div>
 
-        <div class="relative">
+        <div class="relative mb-2">
             <label for="password" class="text-gray-600 mb-1">Password</label>
             <input type="password" id="password" placeholder="Enter User password" name="password"
             class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
@@ -144,10 +144,10 @@
         </div>
 
         <div>
-            <label for="interested_in_training" class="text-gray-600 mb-1">Interested in Training</label>
+            <label for="interested_in_training" class="text-gray-600 mb-1">Interested in Sharpener’s Job Gurantee Program?</label>
             <select id="interested_in_training" name="interested_in_training" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
-                <option value="">Select an option</option>
-                <option value="yes" {{ old('interested_in_training') == 'yes' ? 'selected' : '' }}>Yes, I am interested in training</option>
+                <option value="">Select</option>
+                <option value="yes" {{ old('interested_in_training') == 'yes' ? 'selected' : '' }}>Yes, I am interested</option>
                 <option value="no" {{ old('interested_in_training') == 'no' ? 'selected' : '' }}>No, not interested</option>
             </select>
             @error('interested_in_training')
@@ -155,10 +155,10 @@
             @enderror
         </div>
 
-        <div class="flex items-center">
+        <!-- <div class="flex items-center">
             <input type="checkbox" id="leads" name="leads" value="1" class="mr-2" {{ old('leads') ? 'checked' : '' }}>
             <label for="leads" class="text-gray-600 mb-1">I would like to receive call from training</label>
-        </div>
+        </div> -->
 
         <button id="signupBtn" type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white flex items-center justify-center">
             Signup
