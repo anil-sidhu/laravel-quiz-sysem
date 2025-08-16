@@ -35,9 +35,10 @@
         .password-toggle {
             position: absolute;
             right: 12px;
-            top: 70%;
+            top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
+            z-index: 10;
         }
         .relative { position: relative; }
         
