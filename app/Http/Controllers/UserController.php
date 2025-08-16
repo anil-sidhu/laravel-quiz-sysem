@@ -85,7 +85,7 @@ class UserController extends Controller
 
       $userData = [
         'name'=>$request->name,
-        'email'=>"-",
+        'email'=>"user_" . time() . "_" . rand(1000, 9999) . "@temp.com",
         'mobile'=>$request->mobile,
         'password'=>Hash::make($request->password),
         'interested_in_training'=>$request->interested_in_training,
