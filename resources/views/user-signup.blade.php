@@ -39,6 +39,13 @@
             transform: translateY(-50%);
             cursor: pointer;
             z-index: 10;
+            pointer-events: auto;
+            margin-top: 16px;
+        }
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+            color: #6b7280;
         }
         .relative { position: relative; }
         
