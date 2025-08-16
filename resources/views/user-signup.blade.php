@@ -40,7 +40,6 @@
             cursor: pointer;
             z-index: 10;
             pointer-events: auto;
-            margin-top: 16px;
         }
         .password-toggle svg {
             width: 20px;
@@ -139,13 +138,15 @@
             @enderror
         </div>
 
-        <div class="relative mb-2">
+        <div class="mb-2">
             <label for="password" class="text-gray-600 mb-1">Password</label>
-            <input type="password" id="password" placeholder="Enter User password" name="password"
-            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
-            <span class="password-toggle" onclick="togglePassword('password', this)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-.274.832-.64 1.624-1.09 2.354M15.54 15.54A8.963 8.963 0 0112 17c-4.478 0-8.268-2.943-9.542-7a9.014 9.014 0 012.042-3.362M9.88 9.88a3 3 0 014.24 4.24"/></svg>
-            </span>
+            <div class="relative">
+                <input type="password" id="password" placeholder="Enter User password" name="password"
+                class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
+                <span class="password-toggle" onclick="togglePassword('password', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-.274.832-.64 1.624-1.09 2.354M15.54 15.54A8.963 8.963 0 0112 17c-4.478 0-8.268-2.943-9.542-7a9.014 9.014 0 012.042-3.362M9.88 9.88a3 3 0 014.24 4.24"/></svg>
+                </span>
+            </div>
             @error('password')
             <div class="input-error">{{$message}}</div>
             @enderror
