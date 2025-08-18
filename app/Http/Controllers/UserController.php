@@ -76,7 +76,7 @@ class UserController extends Controller
         'name'=>'required | min:3',
         // 'email'=>'required | email | unique:users',
         'password'=>'required | min:3',
-        'mobile'   => 'required|numeric|digits:10',
+        'mobile'   => 'required|numeric|digits:10|unique:users',
         'interested_in_training' => 'required|in:yes,no',
       ]);
 
