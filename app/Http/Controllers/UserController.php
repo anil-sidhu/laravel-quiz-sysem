@@ -78,6 +78,8 @@ class UserController extends Controller
         'password'=>'required | min:3',
         'mobile'   => 'required|numeric|digits:10|unique:users',
         'interested_in_training' => 'required|in:yes,no',
+      ], [
+        'mobile.unique' => 'Mobile number already in use. Please log in if you\'re an existing user.'
       ]);
 
       // Check if user needs phone verification
