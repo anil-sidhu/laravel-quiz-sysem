@@ -19,26 +19,26 @@
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
                 <tr class="bg-gray-100 text-gray-700 text-sm">
-                    <th class="p-2 border-b cursor-pointer w-[8%]">S. No</th>
-                    <th class="p-2 border-b cursor-pointer w-[20%]">
+                    <th class="p-2 border-b cursor-pointer w-[8%] text-center">S. No</th>
+                    <th class="p-2 border-b cursor-pointer w-[20%] text-left">
                         <a href="?sort=name&direction={{ $sort == 'name' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Name @if($sort=='name')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer w-[12%]">
+                    <th class="p-2 border-b cursor-pointer w-[12%] text-center">
                         <a href="?sort=mobile&direction={{ $sort == 'mobile' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Mobile @if($sort=='mobile')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer w-[10%]">
+                    <th class="p-2 border-b cursor-pointer w-[10%] text-center">
                         <a href="?sort=passing_year&direction={{ $sort == 'passing_year' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Passing Year @if($sort=='passing_year')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer w-[10%]">
+                    <th class="p-2 border-b cursor-pointer w-[10%] text-center">
                         <a href="?sort=mobile_verified_at&direction={{ $sort == 'mobile_verified_at' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">OTP Verified @if($sort=='mobile_verified_at')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer w-[20%]">
+                    <th class="p-2 border-b cursor-pointer w-[20%] text-center">
                         <a href="?sort=interested_in_training&direction={{ $sort == 'interested_in_training' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Sharpener Job Guarantee Program @if($sort=='interested_in_training')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer w-[12%]">
+                    <th class="p-2 border-b cursor-pointer w-[12%] text-center">
                         User Status
                     </th>
-                    <th class="p-2 border-b cursor-pointer w-[8%]">
+                    <th class="p-2 border-b cursor-pointer w-[8%] text-center">
                         <a href="?sort=created_at&direction={{ $sort == 'created_at' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Signup Date @if($sort=='created_at')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
                 </tr>
@@ -46,10 +46,10 @@
             <tbody>
                 @foreach($users as $key=>$user)
                 <tr class="even:bg-gray-50 hover:bg-blue-50 text-sm">
-                    <td class="p-2 border-b">{{ ($users->currentPage()-1)*$users->perPage() + $key + 1 }}</td>
-                    <td class="p-2 border-b">{{ $user->name }}</td>
-                    <td class="p-2 border-b">{{ $user->mobile }}</td>
-                    <td class="p-2 border-b">{{ $user->passing_year ? substr($user->passing_year, 0, 4) : '-' }}</td>
+                    <td class="p-2 border-b text-center">{{ ($users->currentPage()-1)*$users->perPage() + $key + 1 }}</td>
+                    <td class="p-2 border-b text-left">{{ $user->name }}</td>
+                    <td class="p-2 border-b text-center">{{ $user->mobile }}</td>
+                    <td class="p-2 border-b text-center">{{ $user->passing_year ? substr($user->passing_year, 0, 4) : '-' }}</td>
                     <td class="p-2 border-b text-center">
                         @if($user->mobile_verified_at)
                             <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Verified</span>
@@ -57,7 +57,7 @@
                             <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Not Verified</span>
                         @endif
                     </td>
-                    <td class="p-2 border-b">{{ $user->interested_in_training == 'yes' ? 'Yes' : 'No' }}</td>
+                    <td class="p-2 border-b text-center">{{ $user->interested_in_training == 'yes' ? 'Yes' : 'No' }}</td>
                     <td class="p-2 border-b text-center">
                         <form method="post" action="{{ route('admin.updateUserStatus', $user->id) }}" class="flex items-center gap-2">
                             @csrf
@@ -69,7 +69,7 @@
                             </select>
                         </form>
                     </td>
-                    <td class="p-2 border-b">{{ $user->created_at ? $user->created_at->format('Y-m-d') : '-' }}</td>
+                    <td class="p-2 border-b text-center">{{ $user->created_at ? $user->created_at->format('Y-m-d') : '-' }}</td>
                 </tr>
                 @endforeach
             </tbody>
