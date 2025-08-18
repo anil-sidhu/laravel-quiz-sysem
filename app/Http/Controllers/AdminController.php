@@ -55,12 +55,20 @@ class AdminController extends Controller
                 $q->where('interested_in_training', 'yes')
                   ->orWhere('leads', 1);
             });
+            
+            // Group by mobile to show unique users only
+            $query->select('*')
+                  ->whereIn('id', function($subQuery) {
+                      $subQuery->selectRaw('MAX(id)')
+                               ->from('users')
+                               ->groupBy('mobile');
+                  });
+            
             // Search
             $search = $request->input('search');
             if ($search) {
                 $query->where(function($q) use ($search) {
                     $q->where('name', 'like', "%$search%")
-                      ->orWhere('email', 'like', "%$search%")
                       ->orWhere('mobile', 'like', "%$search%")
                       ->orWhere('passing_year', 'like', "%$search%")
                       ->orWhere('interested_in_training', 'like', "%$search%")
@@ -72,7 +80,7 @@ class AdminController extends Controller
             // Sorting
             $sort = $request->input('sort', 'id');
             $direction = $request->input('direction', 'desc');
-            $allowedSorts = ['id','name','email','mobile','passing_year','mobile_verified_at','interested_in_training','leads','user_status'];
+            $allowedSorts = ['id','name','mobile','passing_year','mobile_verified_at','interested_in_training','leads','user_status'];
             if (!in_array($sort, $allowedSorts)) $sort = 'id';
             if (!in_array($direction, ['asc','desc'])) $direction = 'desc';
             $query->orderBy($sort, $direction);

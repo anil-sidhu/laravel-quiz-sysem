@@ -11,7 +11,7 @@
     <div class="w-full max-w-6xl mx-auto mt-8 px-4">
         <h1 class="text-xl sm:text-2xl text-green-900 font-bold mb-4">Users List</h1>
         <form method="get" class="mb-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, email, mobile..." class="flex-1 sm:w-64 px-3 py-2 border border-gray-300 rounded-lg">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, mobile..." class="flex-1 sm:w-64 px-3 py-2 border border-gray-300 rounded-lg">
             <button type="submit" class="bg-green-900 text-white px-4 py-2 rounded-lg whitespace-nowrap">Search</button>
         </form>
         <!-- Desktop Table View -->
@@ -25,9 +25,6 @@
                     </th>
                     <th class="p-2 border-b cursor-pointer">
                         <a href="?sort=mobile&direction={{ $sort == 'mobile' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Mobile @if($sort=='mobile')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
-                    </th>
-                    <th class="p-2 border-b cursor-pointer">
-                        <a href="?sort=email&direction={{ $sort == 'email' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Email @if($sort=='email')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
                     <th class="p-2 border-b cursor-pointer">
                         <a href="?sort=passing_year&direction={{ $sort == 'passing_year' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Passing Year @if($sort=='passing_year')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
@@ -55,7 +52,6 @@
                     <td class="p-2 border-b">{{ ($users->currentPage()-1)*$users->perPage() + $key + 1 }}</td>
                     <td class="p-2 border-b">{{ $user->name }}</td>
                     <td class="p-2 border-b">{{ $user->mobile }}</td>
-                    <td class="p-2 border-b">{{ $user->email }}</td>
                     <td class="p-2 border-b">{{ $user->passing_year ? substr($user->passing_year, 0, 4) : '-' }}</td>
                     <td class="p-2 border-b text-center">
                         @if($user->mobile_verified_at)
@@ -91,7 +87,6 @@
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <h3 class="font-semibold text-gray-900">{{ $user->name }}</h3>
-                        <p class="text-sm text-gray-600">{{ $user->email }}</p>
                         <p class="text-sm text-gray-600">{{ $user->mobile }}</p>
                     </div>
                     <span class="text-xs text-gray-500">#{{ ($users->currentPage()-1)*$users->perPage() + $key + 1 }}</span>
