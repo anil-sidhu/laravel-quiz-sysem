@@ -35,9 +35,6 @@
                     <th class="p-2 border-b cursor-pointer w-[5%]">
                         <a href="?sort=interested_in_training&direction={{ $sort == 'interested_in_training' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Training @if($sort=='interested_in_training')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer w-[5%]">
-                        <a href="?sort=leads&direction={{ $sort == 'leads' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Call @if($sort=='leads')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
-                    </th>
                     <th class="p-2 border-b cursor-pointer">
                         User Status
                     </th>
@@ -61,7 +58,6 @@
                         @endif
                     </td>
                     <td class="p-2 border-b">{{ $user->interested_in_training == 'yes' ? 'Yes' : 'No' }}</td>
-                    <td class="p-2 border-b">{{ $user->leads ? 'Yes' : 'No' }}</td>
                     <td class="p-2 border-b text-center">
                         <form method="post" action="{{ route('admin.updateUserStatus', $user->id) }}" class="flex items-center gap-2">
                             @csrf
@@ -104,10 +100,6 @@
                     <div>
                         <span class="text-gray-500">Training:</span>
                         <span class="font-medium">{{ $user->interested_in_training == 'yes' ? 'Yes' : 'No' }}</span>
-                    </div>
-                    <div>
-                        <span class="text-gray-500">Calls:</span>
-                        <span class="font-medium">{{ $user->leads ? 'Yes' : 'No' }}</span>
                     </div>
                 </div>
 
