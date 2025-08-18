@@ -8,7 +8,7 @@
 <body>
     <x-navbar name={{$name}} ></x-navbar>
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5">
-    <div class="w-full max-w-6xl mx-auto mt-8 px-4">
+    <div class="w-full max-w-7xl mx-auto mt-8 px-4">
         <h1 class="text-xl sm:text-2xl text-green-900 font-bold mb-4">Users List</h1>
         <form method="get" class="mb-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, mobile..." class="flex-1 sm:w-64 px-3 py-2 border border-gray-300 rounded-lg">
@@ -19,26 +19,26 @@
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
                 <tr class="bg-gray-100 text-gray-700 text-sm">
-                    <th class="p-2 border-b cursor-pointer">S. No</th>
-                    <th class="p-2 border-b cursor-pointer">
+                    <th class="p-2 border-b cursor-pointer w-[8%]">S. No</th>
+                    <th class="p-2 border-b cursor-pointer w-[20%]">
                         <a href="?sort=name&direction={{ $sort == 'name' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Name @if($sort=='name')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer">
+                    <th class="p-2 border-b cursor-pointer w-[12%]">
                         <a href="?sort=mobile&direction={{ $sort == 'mobile' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Mobile @if($sort=='mobile')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer">
+                    <th class="p-2 border-b cursor-pointer w-[10%]">
                         <a href="?sort=passing_year&direction={{ $sort == 'passing_year' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Passing Year @if($sort=='passing_year')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer">
+                    <th class="p-2 border-b cursor-pointer w-[10%]">
                         <a href="?sort=mobile_verified_at&direction={{ $sort == 'mobile_verified_at' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">OTP Verified @if($sort=='mobile_verified_at')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer w-[5%]">
-                        <a href="?sort=interested_in_training&direction={{ $sort == 'interested_in_training' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Training @if($sort=='interested_in_training')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                    <th class="p-2 border-b cursor-pointer w-[20%]">
+                        <a href="?sort=interested_in_training&direction={{ $sort == 'interested_in_training' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Sharpener Job Guarantee Program @if($sort=='interested_in_training')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
-                    <th class="p-2 border-b cursor-pointer">
+                    <th class="p-2 border-b cursor-pointer w-[12%]">
                         User Status
                     </th>
-                    <th class="p-2 border-b cursor-pointer w-[10%]">
+                    <th class="p-2 border-b cursor-pointer w-[8%]">
                         <a href="?sort=created_at&direction={{ $sort == 'created_at' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Signup Date @if($sort=='created_at')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
                 </tr>
