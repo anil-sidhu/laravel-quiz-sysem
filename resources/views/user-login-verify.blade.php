@@ -36,7 +36,6 @@
 <div class="bg-gray-100 flex items-center justify-center min-h-screen mobile-full-form">
     <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow w-full form-container">
         <h2 class="text-2xl font-bold mb-4 text-center">Verify Your Mobile Number</h2>
-        <p class="text-gray-600 text-center mb-4">Please verify your mobile number to complete login.</p>
         @if(session('message-error'))
             <div class="bg-red-100 text-red-700 p-2 rounded mb-3">{{ session('message-error') }}</div>
         @endif
