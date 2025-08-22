@@ -61,7 +61,7 @@
         <!-- Back to Login Link -->
         <div class="mt-6 text-center">
             <a href="/user-login?reset=true" class="text-green-900 hover:text-blue-800 underline text-sm">
-                ← Back to Login (Try Different Email)
+                ← Back to Login (Try Different Phone Number)
             </a>
         </div>
         

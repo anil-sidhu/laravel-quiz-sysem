@@ -96,20 +96,36 @@ class UserController extends Controller
       ];
 
       if ($needsPhoneVerification) {
-        // Generate OTP for users who need phone verification
-        $otp = rand(100000, 999999);
-        $otpExpiresAt = now()->addMinutes(10);
-        $userData['otp_code'] = $otp;
-        $userData['otp_expires_at'] = $otpExpiresAt;
-
+        // Create user without OTP (Sharpener Tech will handle OTP generation)
         $user = User::create($userData);
 
-        // Send OTP via Fast2SMS
+        // Send OTP via Sharpener Tech
         try {
-          $sms = app(\App\Services\Fast2SMSService::class);
-          $sms->sendOtp($user->mobile, $otp);
+          $sms = app(\App\Services\SharpenerTechService::class);
+          $result = $sms->sendOtp($user->mobile, $user->name);
+          
+          // Check if OTP was sent successfully
+          if (isset($result['status']) && $result['status'] !== 'success') {
+            // If OTP sending failed, delete the user and show error
+            $user->delete();
+            if ($request->ajax()) {
+              return response()->json([
+                'success' => false,
+                'message' => 'Failed to send OTP. Please try again.'
+              ], 500);
+            }
+            return redirect('/user-signup')->with('message-error', 'Failed to send OTP. Please try again.');
+          }
         } catch (\Exception $e) {
-          // Optionally handle SMS failure
+          // If OTP sending failed, delete the user and show error
+          $user->delete();
+          if ($request->ajax()) {
+            return response()->json([
+              'success' => false,
+              'message' => 'Failed to send OTP. Please try again.'
+            ], 500);
+          }
+          return redirect('/user-signup')->with('message-error', 'Failed to send OTP. Please try again.');
         }
 
         // Store user id in session for verification
@@ -204,17 +220,29 @@ class UserController extends Controller
      $needsVerification = ($user->interested_in_training === 'yes' || $user->leads == true) && is_null($user->mobile_verified_at);
      
      if($needsVerification){
-       // Generate new OTP and send it
-       $otp = rand(100000, 999999);
-       $user->otp_code = $otp;
-       $user->otp_expires_at = now()->addMinutes(10);
-       $user->save();
-
+       // Send OTP via Sharpener Tech (they handle OTP generation)
        try {
-         $sms = app(\App\Services\Fast2SMSService::class);
-         $sms->sendOtp($user->mobile, $otp);
+         $sms = app(\App\Services\SharpenerTechService::class);
+         $result = $sms->sendOtp($user->mobile, $user->name);
+         
+         // Check if OTP was sent successfully
+         if (isset($result['status']) && $result['status'] !== 'success') {
+           if ($request->ajax()) {
+             return response()->json([
+               'success' => false,
+               'message' => 'Failed to send OTP. Please try again.'
+             ], 500);
+           }
+           return redirect('/user-login')->with('message-error', 'Failed to send OTP. Please try again.');
+         }
        } catch (\Exception $e) {
-         // Optionally handle SMS failure
+         if ($request->ajax()) {
+           return response()->json([
+             'success' => false,
+             'message' => 'Failed to send OTP. Please try again.'
+           ], 500);
+         }
+         return redirect('/user-login')->with('message-error', 'Failed to send OTP. Please try again.');
        }
 
        // Store user id in session for verification
@@ -475,18 +503,27 @@ if($mcqData){
             session()->forget(['signup_user_id', 'signup_otp_attempts']);
             return redirect('/user-signup')->with('message-error', 'Too many attempts. Please sign up again.');
         }
-        if ((string)$user->otp_code !== (string)$request->otp || now()->gt($user->otp_expires_at)) {
-            return back()->with('message-error', 'Invalid or expired OTP.')->withInput();
+        // Verify OTP using Sharpener Tech API
+        try {
+            $sms = app(\App\Services\SharpenerTechService::class);
+            $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name);
+            
+            if (isset($result['status']) && $result['status'] !== 'success') {
+                return back()->with('message-error', 'Invalid or expired OTP.')->withInput();
+            }
+            
+            // Mark as verified
+            $user->mobile_verified_at = now();
+            $user->otp_code = null;
+            $user->otp_expires_at = null;
+            $user->save();
+            session()->forget(['signup_user_id', 'signup_otp_attempts']);
+            // Log in user
+            Session::put('user', $user);
+            return redirect('/')->with('message-success', 'Mobile verified and signup complete!');
+        } catch (\Exception $e) {
+            return back()->with('message-error', 'Failed to verify OTP. Please try again.')->withInput();
         }
-        // Mark as verified
-        $user->mobile_verified_at = now();
-        $user->otp_code = null;
-        $user->otp_expires_at = null;
-        $user->save();
-        session()->forget(['signup_user_id', 'signup_otp_attempts']);
-        // Log in user
-        Session::put('user', $user);
-        return redirect('/')->with('message-success', 'Mobile verified and signup complete!');
     }
 
     // Resend OTP
@@ -500,18 +537,15 @@ if($mcqData){
             }
             return redirect('/user-signup');
         }
-        $otp = rand(100000, 999999);
-        $user->otp_code = $otp;
-        $user->otp_expires_at = now()->addMinutes(10);
-        $user->save();
         try {
-            $sms = app(\App\Services\Fast2SMSService::class);
-            $result = $sms->sendOtp($user->mobile, $otp);
-            if (isset($result['return']) && !$result['return'] && isset($result['message']) && str_contains(strtolower($result['message'][0] ?? ''), 'spamming')) {
+            $sms = app(\App\Services\SharpenerTechService::class);
+            $result = $sms->sendOtp($user->mobile, $user->name);
+            // Check for Sharpener Tech API specific error responses
+            if (isset($result['status']) && $result['status'] !== 'success') {
                 if ($request->ajax()) {
-                    return response('You have reached the maximum number of OTP requests allowed per hour. Please try again later.', 429);
+                    return response('Failed to resend OTP. Please try again later.', 500);
                 }
-                return back()->with('message-error', 'You have reached the maximum number of OTP requests allowed per hour. Please try again later.');
+                return back()->with('message-error', 'Failed to resend OTP. Please try again later.');
             }
         } catch (\Exception $e) {
             if ($request->ajax()) {
@@ -553,22 +587,31 @@ if($mcqData){
             session()->forget(['login_user_id', 'login_otp_attempts', 'login_redirect_url']);
             return redirect('/user-login')->with('message-error', 'Too many attempts. Please login again.');
         }
-        if ((string)$user->otp_code !== (string)$request->otp || now()->gt($user->otp_expires_at)) {
-            return back()->with('message-error', 'Invalid or expired OTP.')->withInput();
+        // Verify OTP using Sharpener Tech API
+        try {
+            $sms = app(\App\Services\SharpenerTechService::class);
+            $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name);
+            
+            if (isset($result['status']) && $result['status'] !== 'success') {
+                return back()->with('message-error', 'Invalid or expired OTP.')->withInput();
+            }
+            
+            // Mark as verified
+            $user->mobile_verified_at = now();
+            $user->otp_code = null;
+            $user->otp_expires_at = null;
+            $user->save();
+            
+            // Get redirect URL and clean up session
+            $redirectUrl = session('login_redirect_url', '/');
+            session()->forget(['login_user_id', 'login_otp_attempts', 'login_redirect_url']);
+            
+            // Log in user
+            Session::put('user', $user);
+            return redirect($redirectUrl)->with('message-success', 'Mobile verified and login complete!');
+        } catch (\Exception $e) {
+            return back()->with('message-error', 'Failed to verify OTP. Please try again.')->withInput();
         }
-        // Mark as verified
-        $user->mobile_verified_at = now();
-        $user->otp_code = null;
-        $user->otp_expires_at = null;
-        $user->save();
-        
-        // Get redirect URL and clean up session
-        $redirectUrl = session('login_redirect_url', '/');
-        session()->forget(['login_user_id', 'login_otp_attempts', 'login_redirect_url']);
-        
-        // Log in user
-        Session::put('user', $user);
-        return redirect($redirectUrl)->with('message-success', 'Mobile verified and login complete!');
     }
 
     // Resend OTP for login
@@ -582,18 +625,15 @@ if($mcqData){
             }
             return redirect('/user-login');
         }
-        $otp = rand(100000, 999999);
-        $user->otp_code = $otp;
-        $user->otp_expires_at = now()->addMinutes(10);
-        $user->save();
         try {
-            $sms = app(\App\Services\Fast2SMSService::class);
-            $result = $sms->sendOtp($user->mobile, $otp);
-            if (isset($result['return']) && !$result['return'] && isset($result['message']) && str_contains(strtolower($result['message'][0] ?? ''), 'spamming')) {
+            $sms = app(\App\Services\SharpenerTechService::class);
+            $result = $sms->sendOtp($user->mobile, $user->name);
+            // Check for Sharpener Tech API specific error responses
+            if (isset($result['status']) && $result['status'] !== 'success') {
                 if ($request->ajax()) {
-                    return response('You have reached the maximum number of OTP requests allowed per hour. Please try again later.', 429);
+                    return response('Failed to resend OTP. Please try again later.', 500);
                 }
-                return back()->with('message-error', 'You have reached the maximum number of OTP requests allowed per hour. Please try again later.');
+                return back()->with('message-error', 'Failed to resend OTP. Please try again later.');
             }
         } catch (\Exception $e) {
             if ($request->ajax()) {
