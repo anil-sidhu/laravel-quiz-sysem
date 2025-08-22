@@ -35,20 +35,34 @@ class SharpenerTechService
             'url' => $url,
             'mobile' => $mobile,
             'name' => $name,
+            'apiKey' => substr($this->apiKey, 0, 10) . '...', // Log partial API key for debugging
+            'payload' => $payload,
         ]);
 
-        $response = Http::withHeaders([
-            'API-KEY' => $this->apiKey,
-            'Content-Type' => 'application/json',
-        ])->post($url, $payload);
+        try {
+            $response = Http::withHeaders([
+                'API-KEY' => $this->apiKey,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'User-Agent' => 'Laravel-Quiz-System/1.0',
+            ])->timeout(30)->post($url, $payload);
 
-        Log::info('Sharpener Tech Send OTP Response', [
-            'response' => $response->json(),
-            'status' => $response->status(),
-            'body' => $response->body(),
-        ]);
+            Log::info('Sharpener Tech Send OTP Response', [
+                'response' => $response->json(),
+                'status' => $response->status(),
+                'body' => $response->body(),
+                'headers' => $response->headers(),
+            ]);
 
-        return $response->json();
+            return $response->json();
+        } catch (\Exception $e) {
+            Log::error('Sharpener Tech Send OTP Error', [
+                'error' => $e->getMessage(),
+                'mobile' => $mobile,
+                'name' => $name,
+            ]);
+            throw $e;
+        }
     }
 
     /**
@@ -105,5 +119,42 @@ class SharpenerTechService
     public function resendOtp($mobile, $name)
     {
         return $this->sendOtp($mobile, $name);
+    }
+
+    /**
+     * Test API connectivity and configuration
+     * @return array Test results
+     */
+    public function testApiConnection()
+    {
+        $testMobile = '8285537543';
+        $testName = 'Test User';
+        
+        Log::info('Sharpener Tech API Test', [
+            'apiKey' => substr($this->apiKey, 0, 10) . '...',
+            'baseUrl' => $this->baseUrl,
+            'testMobile' => $testMobile,
+            'testName' => $testName,
+        ]);
+
+        try {
+            $result = $this->sendOtp($testMobile, $testName);
+            
+            return [
+                'success' => true,
+                'apiKey' => substr($this->apiKey, 0, 10) . '...',
+                'baseUrl' => $this->baseUrl,
+                'response' => $result,
+                'message' => 'API test completed successfully'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'apiKey' => substr($this->apiKey, 0, 10) . '...',
+                'baseUrl' => $this->baseUrl,
+                'error' => $e->getMessage(),
+                'message' => 'API test failed'
+            ];
+        }
     }
 }

@@ -181,3 +181,19 @@ Route::get('/clear-view-cache', function () {
         return '<h1>View Cache Clear Failed!</h1><pre>' . $e->getMessage() . '</pre>';
     }
 });
+
+// Debug route for Sharpener Tech API testing
+Route::get('/test-sharpener-api', function () {
+    try {
+        $sharpenerService = app(\App\Services\SharpenerTechService::class);
+        $result = $sharpenerService->testApiConnection();
+        
+        return response()->json($result);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'message' => 'API test failed with exception'
+        ]);
+    }
+});
