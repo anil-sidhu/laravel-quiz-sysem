@@ -491,11 +491,17 @@ if($mcqData){
     public function verifySignupOtp(Request $request)
     {
         $request->validate([
-            'otp' => 'required|digits:6',
+            'otp' => 'required|numeric|min:4|max:6', // Allow 4-6 digit OTPs
         ]);
         $userId = session('signup_user_id');
         $user = User::find($userId);
         if (!$user) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Session expired. Please sign up again.'
+                ], 419);
+            }
             return redirect('/user-signup')->with('message-error', 'Session expired. Please sign up again.');
         }
         // Limit attempts
@@ -503,6 +509,12 @@ if($mcqData){
         session(['signup_otp_attempts' => $attempts]);
         if ($attempts > 5) {
             session()->forget(['signup_user_id', 'signup_otp_attempts']);
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Too many attempts. Please sign up again.'
+                ], 429);
+            }
             return redirect('/user-signup')->with('message-error', 'Too many attempts. Please sign up again.');
         }
         // Verify OTP using Sharpener Tech API
@@ -511,7 +523,14 @@ if($mcqData){
             $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name);
             
             if (isset($result['status']) && $result['status'] !== 'success') {
-                return back()->with('message-error', 'Invalid or expired OTP.')->withInput();
+                $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $errorMessage
+                    ], 422);
+                }
+                return back()->with('message-error', $errorMessage)->withInput();
             }
             
             // Mark as verified
@@ -522,8 +541,22 @@ if($mcqData){
             session()->forget(['signup_user_id', 'signup_otp_attempts']);
             // Log in user
             Session::put('user', $user);
+            
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Mobile verified and signup complete!',
+                    'redirect' => '/'
+                ]);
+            }
             return redirect('/')->with('message-success', 'Mobile verified and signup complete!');
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to verify OTP. Please try again.'
+                ], 500);
+            }
             return back()->with('message-error', 'Failed to verify OTP. Please try again.')->withInput();
         }
     }
@@ -576,11 +609,17 @@ if($mcqData){
     public function verifyLoginOtp(Request $request)
     {
         $request->validate([
-            'otp' => 'required|digits:6',
+            'otp' => 'required|numeric|min:4|max:6', // Allow 4-6 digit OTPs
         ]);
         $userId = session('login_user_id');
         $user = User::find($userId);
         if (!$user) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Session expired. Please login again.'
+                ], 419);
+            }
             return redirect('/user-login')->with('message-error', 'Session expired. Please login again.');
         }
         // Limit attempts
@@ -588,6 +627,12 @@ if($mcqData){
         session(['login_otp_attempts' => $attempts]);
         if ($attempts > 5) {
             session()->forget(['login_user_id', 'login_otp_attempts', 'login_redirect_url']);
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Too many attempts. Please login again.'
+                ], 429);
+            }
             return redirect('/user-login')->with('message-error', 'Too many attempts. Please login again.');
         }
         // Verify OTP using Sharpener Tech API
@@ -596,7 +641,14 @@ if($mcqData){
             $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name);
             
             if (isset($result['status']) && $result['status'] !== 'success') {
-                return back()->with('message-error', 'Invalid or expired OTP.')->withInput();
+                $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $errorMessage
+                    ], 422);
+                }
+                return back()->with('message-error', $errorMessage)->withInput();
             }
             
             // Mark as verified
@@ -611,8 +663,22 @@ if($mcqData){
             
             // Log in user
             Session::put('user', $user);
+            
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Mobile verified and login complete!',
+                    'redirect' => $redirectUrl
+                ]);
+            }
             return redirect($redirectUrl)->with('message-success', 'Mobile verified and login complete!');
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to verify OTP. Please try again.'
+                ], 500);
+            }
             return back()->with('message-error', 'Failed to verify OTP. Please try again.')->withInput();
         }
     }

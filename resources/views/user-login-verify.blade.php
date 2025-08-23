@@ -11,6 +11,21 @@
             overflow-x: hidden;
             max-width: 100vw;
         }
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         @media (max-width: 768px) {
             .mobile-full-form {
                 min-height: auto;
@@ -45,11 +60,14 @@
         @if(session('message-info'))
             <div class="bg-blue-100 text-green-900 p-2 rounded mb-3">{{ session('message-info') }}</div>
         @endif
-        <form action="/user-login-verify" method="post" class="space-y-4">
+        <form id="verifyForm" class="space-y-4">
             @csrf
             <label for="otp" class="block font-semibold">Enter OTP sent to your mobile:</label>
-            <input type="text" name="otp" id="otp" maxlength="6" class="w-full border rounded px-3 py-2" required autofocus pattern="[0-9]{6}">
-            <button type="submit" class="w-full bg-green-900 text-white rounded px-4 py-2">Verify OTP</button>
+            <input type="text" name="otp" id="otp" maxlength="6" class="w-full border rounded px-3 py-2" required autofocus>
+            <button id="verifyBtn" type="submit" class="w-full bg-green-900 text-white rounded px-4 py-2 flex items-center justify-center">
+                Verify OTP
+                <span id="verifySpinner" class="spinner" style="display:none;"></span>
+            </button>
         </form>
         <form id="resendForm" action="/user-login-verify/resend" method="post" class="mt-4">
             @csrf
@@ -73,6 +91,61 @@
 </div>
 <x-footer-user></x-footer-user>
 <script>
+    // AJAX form submission for OTP verification
+    document.getElementById('verifyForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent form from submitting normally
+        
+        var btn = document.getElementById('verifyBtn');
+        var spinner = document.getElementById('verifySpinner');
+        var form = this;
+        
+        // Show loading state
+        btn.disabled = true;
+        spinner.style.display = 'inline-block';
+        
+        // Get form data
+        var formData = new FormData(form);
+        
+        // Send AJAX request
+        fetch('/user-login-verify', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                alert(data.message || 'OTP verified successfully!');
+                
+                // Redirect if specified
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    window.location.href = '/';
+                }
+            } else {
+                // Show error message
+                alert(data.message || 'Invalid OTP. Please try again.');
+                
+                // Re-enable button
+                btn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+            
+            // Re-enable button
+            btn.disabled = false;
+            spinner.style.display = 'none';
+        });
+    });
+
     // Resend timer logic
     let timer = 30;
     const resendBtn = document.getElementById('resendBtn');
