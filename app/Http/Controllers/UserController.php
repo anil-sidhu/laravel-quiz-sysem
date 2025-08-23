@@ -108,13 +108,14 @@ class UserController extends Controller
           if (isset($result['status']) && $result['status'] !== 'success') {
             // If OTP sending failed, delete the user and show error
             $user->delete();
+            $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to send OTP. Please try again.';
             if ($request->ajax()) {
               return response()->json([
                 'success' => false,
-                'message' => 'Failed to send OTP. Please try again.'
+                'message' => $errorMessage
               ], 500);
             }
-            return redirect('/user-signup')->with('message-error', 'Failed to send OTP. Please try again.');
+            return redirect('/user-signup')->with('message-error', $errorMessage);
           }
         } catch (\Exception $e) {
           // If OTP sending failed, delete the user and show error
@@ -227,13 +228,14 @@ class UserController extends Controller
          
          // Check if OTP was sent successfully
          if (isset($result['status']) && $result['status'] !== 'success') {
+           $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to send OTP. Please try again.';
            if ($request->ajax()) {
              return response()->json([
                'success' => false,
-               'message' => 'Failed to send OTP. Please try again.'
+               'message' => $errorMessage
              ], 500);
            }
-           return redirect('/user-login')->with('message-error', 'Failed to send OTP. Please try again.');
+           return redirect('/user-login')->with('message-error', $errorMessage);
          }
        } catch (\Exception $e) {
          if ($request->ajax()) {
@@ -542,10 +544,11 @@ if($mcqData){
             $result = $sms->sendOtp($user->mobile, $user->name);
             // Check for Sharpener Tech API specific error responses
             if (isset($result['status']) && $result['status'] !== 'success') {
+                $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to resend OTP. Please try again later.';
                 if ($request->ajax()) {
-                    return response('Failed to resend OTP. Please try again later.', 500);
+                    return response($errorMessage, 500);
                 }
-                return back()->with('message-error', 'Failed to resend OTP. Please try again later.');
+                return back()->with('message-error', $errorMessage);
             }
         } catch (\Exception $e) {
             if ($request->ajax()) {
@@ -630,10 +633,11 @@ if($mcqData){
             $result = $sms->sendOtp($user->mobile, $user->name);
             // Check for Sharpener Tech API specific error responses
             if (isset($result['status']) && $result['status'] !== 'success') {
+                $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to resend OTP. Please try again later.';
                 if ($request->ajax()) {
-                    return response('Failed to resend OTP. Please try again later.', 500);
+                    return response($errorMessage, 500);
                 }
-                return back()->with('message-error', 'Failed to resend OTP. Please try again later.');
+                return back()->with('message-error', $errorMessage);
             }
         } catch (\Exception $e) {
             if ($request->ajax()) {
