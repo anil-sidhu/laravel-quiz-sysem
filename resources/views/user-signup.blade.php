@@ -93,7 +93,7 @@
             </ul>
         </div>
     @endif -->
-    <form id="signupForm" action="/user-signup" method="post" class="space-y-4">
+    <form id="signupForm" class="space-y-4">
         @csrf
         <div class="mb-2">
             <label for="name" class="text-gray-600 ">User Name</label>
@@ -194,12 +194,59 @@
         }
     }
 
-    // Loading indicator on submit
+    // AJAX form submission
     document.getElementById('signupForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent form from submitting normally
+        
         var btn = document.getElementById('signupBtn');
         var spinner = document.getElementById('signupSpinner');
+        var form = this;
+        
+        // Show loading state
         btn.disabled = true;
         spinner.style.display = 'inline-block';
+        
+        // Get form data
+        var formData = new FormData(form);
+        
+        // Send AJAX request
+        fetch('/user-signup', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                alert(data.message || 'Signup successful!');
+                
+                // Redirect if specified
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    window.location.href = '/';
+                }
+            } else {
+                // Show error message
+                alert(data.message || 'Signup failed. Please try again.');
+                
+                // Re-enable button
+                btn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+            
+            // Re-enable button
+            btn.disabled = false;
+            spinner.style.display = 'none';
+        });
     });
 
     // Check if user is coming back from OTP page (browser back button or direct link)
