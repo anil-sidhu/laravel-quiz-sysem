@@ -491,7 +491,7 @@ if($mcqData){
     public function verifySignupOtp(Request $request)
     {
         $request->validate([
-            'otp' => 'required|numeric|min:4|max:6', // Allow 4-6 digit OTPs
+            'otp' => 'required|numeric|digits_between:4,6', // Allow 4-6 digit OTPs
         ]);
         $userId = session('signup_user_id');
         $user = User::find($userId);
@@ -609,7 +609,7 @@ if($mcqData){
     public function verifyLoginOtp(Request $request)
     {
         $request->validate([
-            'otp' => 'required|numeric|min:4|max:6', // Allow 4-6 digit OTPs
+            'otp' => 'required|numeric|digits_between:4,6', // Allow 4-6 digit OTPs
         ]);
         $userId = session('login_user_id');
         $user = User::find($userId);
