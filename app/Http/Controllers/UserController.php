@@ -526,20 +526,6 @@ if($mcqData){
             // Check if Sharpener Tech API failed
             if (isset($result['status']) && $result['status'] !== 'success') {
                 $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
-                
-                // Log the error for debugging
-                Log::error('Sharpener Tech OTP verification failed', [
-                    'mobile' => $user->mobile,
-                    'otp' => $request->otp,
-                    'sharpener_response' => $result,
-                    'user_agent' => $request->userAgent()
-                ]);
-                
-                // Provide user-friendly error message
-                if (str_contains(strtolower($errorMessage), 'something went wrong')) {
-                    $errorMessage = 'OTP verification service is temporarily unavailable. Please try again in a few minutes.';
-                }
-                
                 if ($request->ajax()) {
                     return response()->json([
                         'success' => false,
@@ -567,13 +553,6 @@ if($mcqData){
             }
             return redirect('/')->with('message-success', 'Mobile verified and signup complete!');
         } catch (\Exception $e) {
-            Log::error('Exception during OTP verification', [
-                'mobile' => $user->mobile ?? 'unknown',
-                'otp' => $request->otp,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -666,20 +645,6 @@ if($mcqData){
             // Check if Sharpener Tech API failed
             if (isset($result['status']) && $result['status'] !== 'success') {
                 $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
-                
-                // Log the error for debugging
-                Log::error('Sharpener Tech OTP verification failed (login)', [
-                    'mobile' => $user->mobile,
-                    'otp' => $request->otp,
-                    'sharpener_response' => $result,
-                    'user_agent' => $request->userAgent()
-                ]);
-                
-                // Provide user-friendly error message
-                if (str_contains(strtolower($errorMessage), 'something went wrong')) {
-                    $errorMessage = 'OTP verification service is temporarily unavailable. Please try again in a few minutes.';
-                }
-                
                 if ($request->ajax()) {
                     return response()->json([
                         'success' => false,
@@ -711,13 +676,6 @@ if($mcqData){
             }
             return redirect($redirectUrl)->with('message-success', 'Mobile verified and login complete!');
         } catch (\Exception $e) {
-            Log::error('Exception during OTP verification (login)', [
-                'mobile' => $user->mobile ?? 'unknown',
-                'otp' => $request->otp,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,

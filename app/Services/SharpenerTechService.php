@@ -20,9 +20,10 @@ class SharpenerTechService
      * Send OTP using Sharpener Tech API
      * @param string $mobile Mobile number
      * @param string $name User's name
+     * @param array $utmData Optional UTM parameters
      * @return array API response
      */
-    public function sendOtp($mobile, $name)
+    public function sendOtp($mobile, $name, $utmData = [])
     {
         $url = $this->baseUrl . '/send-otp';
         
@@ -30,6 +31,11 @@ class SharpenerTechService
             'mobileNo' => $mobile,
             'name' => $name
         ];
+
+        // Add UTM data if provided
+        if (!empty($utmData)) {
+            $payload['utmData'] = $utmData;
+        }
 
         Log::info('Sharpener Tech Send OTP Request', [
             'url' => $url,
@@ -77,16 +83,23 @@ class SharpenerTechService
     {
         $url = $this->baseUrl . '/verify-otp';
         
+        // Default UTM data if not provided
+        if (empty($utmData)) {
+            $utmData = [
+                'utmSource' => 'codestepbystep',
+                'utmMedium' => 'youtube',
+                'utmCampaign' => 'summer_offer',
+                'utmTerm' => 'fullstack_course',
+                'utmContent' => 'websiteleads'
+            ];
+        }
+        
         $payload = [
             'mobileNo' => $mobile,
             'otp' => $otp,
-            'name' => $name
+            'name' => $name,
+            'utmData' => $utmData
         ];
-
-        // Add UTM data if provided
-        if (!empty($utmData)) {
-            $payload['utmData'] = $utmData;
-        }
 
         Log::info('Sharpener Tech Verify OTP Request', [
             'url' => $url,
@@ -96,18 +109,30 @@ class SharpenerTechService
             'utmData' => $utmData,
         ]);
 
-        $response = Http::withHeaders([
-            'API-KEY' => $this->apiKey,
-            'Content-Type' => 'application/json',
-        ])->post($url, $payload);
+        try {
+            $response = Http::withHeaders([
+                'API-KEY' => $this->apiKey,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'User-Agent' => 'Laravel-Quiz-System/1.0',
+            ])->timeout(30)->post($url, $payload);
 
-        Log::info('Sharpener Tech Verify OTP Response', [
-            'response' => $response->json(),
-            'status' => $response->status(),
-            'body' => $response->body(),
-        ]);
+            Log::info('Sharpener Tech Verify OTP Response', [
+                'response' => $response->json(),
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
 
-        return $response->json();
+            return $response->json();
+        } catch (\Exception $e) {
+            Log::error('Sharpener Tech Verify OTP Error', [
+                'error' => $e->getMessage(),
+                'mobile' => $mobile,
+                'otp' => $otp,
+                'name' => $name,
+            ]);
+            throw $e;
+        }
     }
 
     /**
