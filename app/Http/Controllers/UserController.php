@@ -138,13 +138,12 @@ class UserController extends Controller
         if ($request->ajax()) {
           return response()->json([
             'success' => true,
-            'redirect' => '/user-signup-verify',
-            'message' => 'OTP sent to your mobile. Please verify to complete signup.'
+            'redirect' => '/user-signup-verify'
           ])->withCookie('remember_token', $user->remember_token, 2628000);
         }
 
-        // Redirect to OTP verification page
-        return redirect('/user-signup-verify');
+        // Redirect to OTP verification page with success message
+        return redirect('/user-signup-verify')->with('message-success', 'OTP sent to your mobile. Please verify to complete signup.');
       } else {
         // No phone verification needed, directly create user and log them in
         $user = User::create($userData);
@@ -256,8 +255,7 @@ class UserController extends Controller
        if($request->ajax()) {
          return response()->json([
            'success' => true,
-           'redirect' => '/user-login-verify',
-           'message' => 'Please verify your mobile number to complete login.'
+           'redirect' => '/user-login-verify'
          ]);
        }
 
@@ -547,7 +545,6 @@ if($mcqData){
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Mobile verified and signup complete!',
                     'redirect' => '/'
                 ]);
             }
@@ -670,7 +667,6 @@ if($mcqData){
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Mobile verified and login complete!',
                     'redirect' => $redirectUrl
                 ]);
             }
