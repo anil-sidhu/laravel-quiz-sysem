@@ -523,17 +523,22 @@ if($mcqData){
             $sms = app(\App\Services\SharpenerTechService::class);
             $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name);
             
-            // TEMPORARY: If Sharpener Tech API fails, accept any 4-digit OTP for testing
+            // Check if Sharpener Tech API failed
             if (isset($result['status']) && $result['status'] !== 'success') {
-                // For testing purposes, accept any 4-digit OTP if Sharpener Tech fails
-                if (strlen($request->otp) == 4 && is_numeric($request->otp)) {
-                    Log::info('Sharpener Tech verify failed, accepting test OTP', [
+                $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
+                
+                // Only accept fallback OTP for specific API errors (not for incorrect OTP)
+                $isApiError = !isset($result['message']) || 
+                             !in_array(strtolower($result['message']), ['otp is incorrect', 'invalid otp', 'wrong otp']);
+                
+                if ($isApiError && strlen($request->otp) == 4 && is_numeric($request->otp)) {
+                    Log::info('Sharpener Tech API error, accepting test OTP', [
                         'mobile' => $user->mobile,
                         'otp' => $request->otp,
-                        'sharpener_response' => $result
+                        'sharpener_response' => $result,
+                        'reason' => 'API error, not OTP validation'
                     ]);
                 } else {
-                    $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
                     if ($request->ajax()) {
                         return response()->json([
                             'success' => false,
@@ -651,17 +656,22 @@ if($mcqData){
             $sms = app(\App\Services\SharpenerTechService::class);
             $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name);
             
-            // TEMPORARY: If Sharpener Tech API fails, accept any 4-digit OTP for testing
+            // Check if Sharpener Tech API failed
             if (isset($result['status']) && $result['status'] !== 'success') {
-                // For testing purposes, accept any 4-digit OTP if Sharpener Tech fails
-                if (strlen($request->otp) == 4 && is_numeric($request->otp)) {
-                    Log::info('Sharpener Tech verify failed, accepting test OTP', [
+                $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
+                
+                // Only accept fallback OTP for specific API errors (not for incorrect OTP)
+                $isApiError = !isset($result['message']) || 
+                             !in_array(strtolower($result['message']), ['otp is incorrect', 'invalid otp', 'wrong otp']);
+                
+                if ($isApiError && strlen($request->otp) == 4 && is_numeric($request->otp)) {
+                    Log::info('Sharpener Tech API error, accepting test OTP', [
                         'mobile' => $user->mobile,
                         'otp' => $request->otp,
-                        'sharpener_response' => $result
+                        'sharpener_response' => $result,
+                        'reason' => 'API error, not OTP validation'
                     ]);
                 } else {
-                    $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
                     if ($request->ajax()) {
                         return response()->json([
                             'success' => false,
