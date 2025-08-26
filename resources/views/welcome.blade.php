@@ -22,8 +22,10 @@
   <x-user-navbar></x-user-navbar> 
   <div class="flex flex-col min-h-screen items-center bg-gray-100 w-full max-w-full overflow-x-hidden">
     @if(session('message-success'))
-    <div>
-        <p class=" text-green-900 font-bold">{{session('message-success')}}</p>
+    <div class="w-full max-w-4xl mx-auto p-4" id="successMessage">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-md text-center">
+            <p class="font-semibold text-lg">{{session('message-success')}}</p>
+        </div>
     </div>
     @endif
     <h1 class="border-b border-solid text-2xl sm:text-3xl md:text-4xl text-green-900 p-4 sm:p-5 pb-2 mb-4 mt-6 sm:mt-10 font-extralight text-center px-4" >Test Skills with MCQs</h1>
@@ -62,4 +64,20 @@
 @if(!session('user'))
     @include('components.lead-modal', ['closable' => true])
 @endif
+
+<script>
+    // Auto-hide success messages after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            setTimeout(function() {
+                successMessage.style.transition = 'opacity 0.5s ease-out';
+                successMessage.style.opacity = '0';
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 500);
+            }, 5000);
+        }
+    });
+</script>
 </body>

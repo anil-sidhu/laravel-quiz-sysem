@@ -54,9 +54,13 @@
         @if(session('message-error'))
             <div class="bg-red-100 text-red-700 p-2 rounded mb-3">{{ session('message-error') }}</div>
         @endif
-        @if(session('message-success'))
-            <div class="bg-green-100 text-green-700 p-2 rounded mb-3">{{ session('message-success') }}</div>
-        @endif
+                         @if(session('message-success'))
+     <div class="w-full max-w-md mx-auto mb-4" id="successMessage">
+         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-md text-center">
+             <p class="font-semibold">{{ session('message-success') }}</p>
+         </div>
+     </div>
+     @endif
         <form id="verifyForm" class="space-y-4">
             @csrf
             <label for="otp" class="block font-semibold">Enter OTP sent to your mobile:</label>
@@ -199,6 +203,20 @@
             }
         }, 1000);
     };
+
+    // Auto-hide success messages after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            setTimeout(function() {
+                successMessage.style.transition = 'opacity 0.5s ease-out';
+                successMessage.style.opacity = '0';
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 500);
+            }, 5000);
+        }
+    });
 </script>
 </body>
 </html> 
