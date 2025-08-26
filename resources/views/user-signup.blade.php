@@ -221,9 +221,6 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Show success message
-                alert(data.message || 'Signup successful!');
-                
                 // Redirect if specified
                 if (data.redirect) {
                     window.location.href = data.redirect;
