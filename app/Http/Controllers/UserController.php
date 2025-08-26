@@ -547,6 +547,7 @@ if($mcqData){
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
+                    'message' => 'Mobile verified and signup complete!',
                     'redirect' => '/'
                 ]);
             }
@@ -669,6 +670,7 @@ if($mcqData){
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
+                    'message' => 'Mobile verified and login complete!',
                     'redirect' => $redirectUrl
                 ]);
             }

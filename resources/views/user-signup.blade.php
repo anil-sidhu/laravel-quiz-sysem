@@ -177,11 +177,6 @@
         <div class="text-center mt-4">
             <a href="user-login" class="text-green-900 text-sm sm:text-base hover:underline">Already have an account? Login</a>
         </div>
-        
-        <!-- Test button for debugging -->
-        <div class="text-center mt-2">
-            <button type="button" onclick="testMessage()" class="bg-blue-500 text-white px-4 py-2 rounded">Test Message</button>
-        </div>
     </form>
     </div>
 </div>
@@ -225,11 +220,9 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log('AJAX Response:', data); // Debug log
             if (data.success) {
                 // Show success message before redirect
                 const successMessage = data.message || 'Signup successful! Please verify your mobile number.';
-                console.log('Success Message:', successMessage); // Debug log
                 
                 // Create and show success message
                 const messageDiv = document.createElement('div');
@@ -247,7 +240,6 @@
                 messageDiv.style.borderRadius = '8px';
                 messageDiv.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
                 document.body.appendChild(messageDiv);
-                console.log('Message div created and added to body'); // Debug log
                 
                 // Auto-hide after 3 seconds and redirect
                 setTimeout(() => {
@@ -327,34 +319,7 @@
         }
     });
 
-    // Test function for debugging
-    function testMessage() {
-        console.log('Test message function called');
-        const messageDiv = document.createElement('div');
-        messageDiv.innerHTML = '<p class="font-semibold">Test message - this should be visible!</p>';
-        messageDiv.style.zIndex = '9999';
-        messageDiv.style.position = 'fixed';
-        messageDiv.style.top = '20px';
-        messageDiv.style.left = '50%';
-        messageDiv.style.transform = 'translateX(-50%)';
-        messageDiv.style.backgroundColor = '#dcfce7';
-        messageDiv.style.border = '2px solid #22c55e';
-        messageDiv.style.color = '#15803d';
-        messageDiv.style.padding = '16px 24px';
-        messageDiv.style.borderRadius = '8px';
-        messageDiv.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
-        document.body.appendChild(messageDiv);
-        console.log('Test message div created and added to body');
-        
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-            messageDiv.style.transition = 'opacity 0.5s ease-out';
-            messageDiv.style.opacity = '0';
-            setTimeout(() => {
-                document.body.removeChild(messageDiv);
-            }, 500);
-        }, 5000);
-    }
+
 
     // Additional check on page load to handle browser cache
     window.addEventListener('pageshow', function(event) {

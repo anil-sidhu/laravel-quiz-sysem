@@ -139,11 +139,9 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log('AJAX Response:', data); // Debug log
             if (data.success) {
                 // Show success message before redirect
                 const successMessage = data.message || 'Login successful!';
-                console.log('Success Message:', successMessage); // Debug log
                 
                 // Create and show success message
                 const messageDiv = document.createElement('div');
@@ -161,7 +159,6 @@
                 messageDiv.style.borderRadius = '8px';
                 messageDiv.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
                 document.body.appendChild(messageDiv);
-                console.log('Message div created and added to body'); // Debug log
                 
                 // Auto-hide after 3 seconds and redirect
                 setTimeout(() => {
