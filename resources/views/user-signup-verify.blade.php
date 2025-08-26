@@ -119,12 +119,29 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Redirect if specified
-                if (data.redirect) {
-                    window.location.href = data.redirect;
-                } else {
-                    window.location.href = '/';
-                }
+                // Show success message before redirect
+                const successMessage = data.message || 'OTP verified successfully!';
+                
+                // Create and show success message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg shadow-lg z-50';
+                messageDiv.innerHTML = `<p class="font-semibold">${successMessage}</p>`;
+                document.body.appendChild(messageDiv);
+                
+                // Auto-hide after 3 seconds and redirect
+                setTimeout(() => {
+                    messageDiv.style.transition = 'opacity 0.5s ease-out';
+                    messageDiv.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(messageDiv);
+                        // Redirect if specified
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                        } else {
+                            window.location.href = '/';
+                        }
+                    }, 500);
+                }, 3000);
             } else {
                 // Show error message
                 alert(data.message || 'Invalid OTP. Please try again.');

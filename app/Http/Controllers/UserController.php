@@ -138,6 +138,7 @@ class UserController extends Controller
         if ($request->ajax()) {
           return response()->json([
             'success' => true,
+            'message' => 'OTP sent to your mobile. Please verify to complete signup.',
             'redirect' => '/user-signup-verify'
           ])->withCookie('remember_token', $user->remember_token, 2628000);
         }
@@ -255,6 +256,7 @@ class UserController extends Controller
        if($request->ajax()) {
          return response()->json([
            'success' => true,
+           'message' => 'Please verify your mobile number to complete login.',
            'redirect' => '/user-login-verify'
          ]);
        }
