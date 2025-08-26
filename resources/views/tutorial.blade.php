@@ -198,12 +198,22 @@ iframe, video, embed, object {
 @if(!session('user'))
     @include('components.lead-modal')
     <script>
+        console.log('Tutorial page - modal included, user not logged in'); // Debug log
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Tutorial page loaded - checking for modal'); // Debug log
+            
+            // Check if modal element exists
+            var modal = document.getElementById('leadModal');
+            console.log('Modal element found:', modal); // Debug log
+            
             setTimeout(function() {
                 console.log('Showing modal after 5 seconds'); // Debug log
-                document.getElementById('leadModal').classList.remove('hidden');
-                document.getElementById('leadModalClose').classList.add('hidden'); // Hide close button
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    document.getElementById('leadModalClose').classList.add('hidden'); // Hide close button
+                } else {
+                    console.log('ERROR: Modal element not found!'); // Debug log
+                }
             }, 5000);
             // Tab switching logic
             document.getElementById('leadTabSignup').onclick = function() {
