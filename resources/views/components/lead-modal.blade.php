@@ -109,6 +109,7 @@
             });
             signupForm.onsubmit = function(e) {
                 e.preventDefault();
+                console.log('Modal signup form submitted'); // Debug log
                 document.getElementById('modalSignupBtn').disabled = true;
                 document.getElementById('modalSignupSpinner').style.display = 'inline-block';
                 document.getElementById('modalSignupError').innerHTML = '';
@@ -123,6 +124,13 @@
                 console.log('Modal signup - capturing redirect URL:', currentUrl); // Debug log
                 const formData = new FormData(signupForm);
                 formData.append('redirect_url', currentUrl);
+                console.log('Modal signup - redirect_url added to formData:', currentUrl); // Debug log
+                
+                // Debug: Log all form data being sent
+                for (let pair of formData.entries()) {
+                    console.log('Form data:', pair[0], pair[1]);
+                }
+                
                 fetch('/user-signup', {
                     method: 'POST',
                     headers: {
