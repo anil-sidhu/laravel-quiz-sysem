@@ -39,6 +39,7 @@
 </div>
 
 <script>
+    console.log('Lead modal script loaded'); // Debug log
     document.addEventListener('DOMContentLoaded', function() {
         var closable = @json($closable ?? true);
         var showDelay = window.location.pathname.startsWith('/topic/') ? 5000 : 15000;
@@ -92,6 +93,7 @@
         // Signup
         var signupForm = document.getElementById('modalSignupForm');
         console.log('Modal signup form found:', signupForm); // Debug log
+        console.log('About to attach onsubmit event to modal form'); // Debug log
         if (signupForm) {
             // Real-time error clearing
             ['name','email','mobile','password','interested_in_training','leads','passing_year'].forEach(function(field) {
