@@ -91,6 +91,7 @@
         }
         // Signup
         var signupForm = document.getElementById('modalSignupForm');
+        console.log('Modal signup form found:', signupForm); // Debug log
         if (signupForm) {
             // Real-time error clearing
             ['name','email','mobile','password','interested_in_training','leads','passing_year'].forEach(function(field) {
@@ -108,6 +109,7 @@
                 }
             });
             signupForm.onsubmit = function(e) {
+                console.log('Modal signup form onsubmit event attached'); // Debug log
                 e.preventDefault();
                 console.log('Modal signup form submitted'); // Debug log
                 document.getElementById('modalSignupBtn').disabled = true;
@@ -131,6 +133,7 @@
                     console.log('Form data:', pair[0], pair[1]);
                 }
                 
+                console.log('About to send fetch request to /user-signup'); // Debug log
                 fetch('/user-signup', {
                     method: 'POST',
                     headers: {
