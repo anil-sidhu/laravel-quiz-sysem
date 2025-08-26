@@ -117,7 +117,11 @@
                     var err = document.getElementById('error_' + field);
                     if (err) err.innerHTML = '';
                 });
+                
+                // Capture current page URL for redirect after signup
+                const currentUrl = window.location.href;
                 const formData = new FormData(signupForm);
+                formData.append('redirect_url', currentUrl);
                 fetch('/user-signup', {
                     method: 'POST',
                     headers: {
@@ -139,10 +143,14 @@
                                 window.location.href = data.redirect;
                             }, 2000);
                         } else {
-                            // Normal signup success - reload page
+                            // Normal signup success - redirect to specified URL or reload
                             document.getElementById('modalSignupError').innerHTML = '<span style="color: #16a34a;">Signup successful! Redirecting...</span>';
                             setTimeout(function() {
-                                location.reload();
+                                if (data.redirect) {
+                                    window.location.href = data.redirect;
+                                } else {
+                                    location.reload();
+                                }
                             }, 2000);
                         }
                     } else {
@@ -181,7 +189,11 @@
                 const btn = loginForm.querySelector('button[type="submit"]');
                 btn.disabled = true;
                 document.getElementById('modalLoginError').innerHTML = '';
+                
+                // Capture current page URL for redirect after login
+                const currentUrl = window.location.href;
                 const formData = new FormData(loginForm);
+                formData.append('redirect_url', currentUrl);
                 fetch('/user-login', {
                     method: 'POST',
                     headers: {
@@ -193,7 +205,12 @@
                 .then(async response => {
                     btn.disabled = false;
                     if (response.ok) {
-                        location.reload();
+                        let data = await response.json();
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                        } else {
+                            location.reload();
+                        }
                     } else {
                         let data = await response.json();
                         let msg = '';

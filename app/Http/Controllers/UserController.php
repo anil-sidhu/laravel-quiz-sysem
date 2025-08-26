@@ -133,6 +133,11 @@ class UserController extends Controller
         // Store user id in session for verification
         session(['signup_user_id' => $user->id]);
         session(['signup_otp_attempts' => 0]);
+        
+        // Store redirect URL if provided (for modal signups)
+        if ($request->has('redirect_url')) {
+            session(['signup_redirect_url' => $request->redirect_url]);
+        }
 
         // Handle AJAX vs regular requests
         if ($request->ajax()) {
@@ -160,21 +165,25 @@ class UserController extends Controller
         // Log in user directly
         Session::put('user', $user);
         
+        // Get redirect URL if provided (for modal signups)
+        $redirectUrl = '/';
+        if ($request->has('redirect_url')) {
+            $redirectUrl = $request->redirect_url;
+        } elseif (Session::has('quiz-url')) {
+            $redirectUrl = Session::get('quiz-url');
+            Session::forget('quiz-url');
+        }
+        
         // Handle AJAX vs regular requests
         if ($request->ajax()) {
           return response()->json([
             'success' => true,
-            'message' => 'User registered successfully!'
+            'message' => 'User registered successfully!',
+            'redirect' => $redirectUrl
           ])->withCookie('remember_token', $user->remember_token, 2628000);
         }
 
-        if (Session::has('quiz-url')) {
-          $url = Session::get('quiz-url');
-          Session::forget('quiz-url');
-          return redirect($url)->with('message-success', "User registered successfully");
-        } else {
-          return redirect('/')->with('message-success', "User registered successfully");
-        }
+        return redirect($redirectUrl)->with('message-success', "User registered successfully");
       }
     }
 
@@ -251,7 +260,15 @@ class UserController extends Controller
        // Store user id in session for verification
        session(['login_user_id' => $user->id]);
        session(['login_otp_attempts' => 0]);
-       session(['login_redirect_url' => Session::has('quiz-url') ? Session::get('quiz-url') : '/']);
+       
+       // Store redirect URL (prioritize modal redirect_url over quiz-url)
+       $redirectUrl = '/';
+       if ($request->has('redirect_url')) {
+           $redirectUrl = $request->redirect_url;
+       } elseif (Session::has('quiz-url')) {
+           $redirectUrl = Session::get('quiz-url');
+       }
+       session(['login_redirect_url' => $redirectUrl]);
 
        if($request->ajax()) {
          return response()->json([
@@ -275,21 +292,24 @@ class UserController extends Controller
         // Set cookie that expires in 5 years
         Cookie::queue('remember_token', $rememberToken, 2628000); // 5 years in minutes
         
+        // Get redirect URL (prioritize modal redirect_url over quiz-url)
+        $redirectUrl = '/';
+        if ($request->has('redirect_url')) {
+            $redirectUrl = $request->redirect_url;
+        } elseif (Session::has('quiz-url')) {
+            $redirectUrl = Session::get('quiz-url');
+            Session::forget('quiz-url');
+        }
+        
         if($request->ajax()) {
           return response()->json([
             'success' => true,
-            'message' => 'Login successful!'
+            'message' => 'Login successful!',
+            'redirect' => $redirectUrl
           ])->withCookie('remember_token', $rememberToken, 2628000);
         }
         
-        if(Session::has('quiz-url')){
-         
-          $url=Session::get('quiz-url');
-          Session::forget('quiz-url');
-          return redirect($url);
-        }else{
-          return redirect('/');
-        }
+        return redirect($redirectUrl);
         
         
       }
@@ -540,7 +560,11 @@ if($mcqData){
             $user->otp_code = null;
             $user->otp_expires_at = null;
             $user->save();
-            session()->forget(['signup_user_id', 'signup_otp_attempts']);
+            
+            // Get redirect URL and clean up session
+            $redirectUrl = session('signup_redirect_url', '/');
+            session()->forget(['signup_user_id', 'signup_otp_attempts', 'signup_redirect_url']);
+            
             // Log in user
             Session::put('user', $user);
             
@@ -548,10 +572,10 @@ if($mcqData){
                 return response()->json([
                     'success' => true,
                     'message' => 'Mobile verified and signup complete!',
-                    'redirect' => '/'
+                    'redirect' => $redirectUrl
                 ]);
             }
-            return redirect('/')->with('message-success', 'Mobile verified and signup complete!');
+            return redirect($redirectUrl)->with('message-success', 'Mobile verified and signup complete!');
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json([
