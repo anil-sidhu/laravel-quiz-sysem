@@ -12,8 +12,18 @@ class SharpenerTechService
 
     public function __construct()
     {
-        $this->apiKey = env('SHARPENER_API_KEY', 'abcd1234apik3324324324ey');
-        $this->baseUrl = env('SHARPENER_BASE_URL', 'https://test.sharpener.tech/api/sharpener-auth');
+        $this->apiKey = env('SHARPENER_API_KEY', 'Sha.7d8f2f9a0b3c4d5e6f7g8h9i.jKlMnOpQrStUvWxYz1234567890abcdefABCDEFghiJKLmnopQRSTuv');
+        $this->baseUrl = env('SHARPENER_BASE_URL', 'https://api.sharpener.tech/api/sharpener-auth');
+    }
+
+    /**
+     * Check if this is a test request
+     * @param string $name User's name
+     * @return bool
+     */
+    private function isTestRequest($name)
+    {
+        return stripos($name, 'test') !== false;
     }
 
     /**
@@ -26,6 +36,9 @@ class SharpenerTechService
     public function sendOtp($mobile, $name, $utmData = [])
     {
         $url = $this->baseUrl . '/send-otp';
+        
+        // Check if this is a test request
+        $isTest = $this->isTestRequest($name);
         
         $payload = [
             'mobileNo' => $mobile,
@@ -41,6 +54,7 @@ class SharpenerTechService
             'url' => $url,
             'mobile' => $mobile,
             'name' => $name,
+            'isTest' => $isTest,
             'apiKey' => substr($this->apiKey, 0, 10) . '...', // Log partial API key for debugging
             'payload' => $payload,
         ]);
@@ -83,6 +97,9 @@ class SharpenerTechService
     {
         $url = $this->baseUrl . '/verify-otp';
         
+        // Check if this is a test request
+        $isTest = $this->isTestRequest($name);
+        
         // Default UTM data if not provided
         if (empty($utmData)) {
             $utmData = [
@@ -106,6 +123,7 @@ class SharpenerTechService
             'mobile' => $mobile,
             'otp' => $otp,
             'name' => $name,
+            'isTest' => $isTest,
             'utmData' => $utmData,
         ]);
 
@@ -153,13 +171,14 @@ class SharpenerTechService
     public function testApiConnection()
     {
         $testMobile = '8285537543';
-        $testName = 'Test User';
+        $testName = 'Test User'; // This will be flagged as test request
         
         Log::info('Sharpener Tech API Test', [
             'apiKey' => substr($this->apiKey, 0, 10) . '...',
             'baseUrl' => $this->baseUrl,
             'testMobile' => $testMobile,
             'testName' => $testName,
+            'isTest' => $this->isTestRequest($testName),
         ]);
 
         try {

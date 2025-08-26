@@ -7,9 +7,9 @@ This project has been updated to use Sharpener Tech's SMS API for OTP functional
 Add the following variables to your `.env` file:
 
 ```env
-# Sharpener Tech API Configuration
-SHARPENER_API_KEY=abcd1234apik3324324324ey
-SHARPENER_BASE_URL=https://test.sharpener.tech/api/sharpener-auth
+# Sharpener Tech API Configuration (Production)
+SHARPENER_API_KEY=Sha.7d8f2f9a0b3c4d5e6f7g8h9i.jKlMnOpQrStUvWxYz1234567890abcdefABCDEFghiJKLmnopQRSTuv
+SHARPENER_BASE_URL=https://api.sharpener.tech/api/sharpener-auth
 ```
 
 ## API Endpoints Used
@@ -51,11 +51,19 @@ SHARPENER_BASE_URL=https://test.sharpener.tech/api/sharpener-auth
 3. Test login flow with OTP verification
 4. Test resend OTP functionality
 
-## Notes
+## Important Notes
 
-- The API key provided is for testing environment
-- Production environment may require different API key and base URL
-- All API calls are logged for debugging purposes
+- **Production API**: This is now configured for production use
+- **Test Requests**: For testing purposes, include "test" anywhere in the user's name
+- **Real SMS**: Production API will send real SMS messages
+- **Lead Tracking**: Sharpener Tech will track leads for their courses
+- **All API calls are logged** for debugging purposes
+
+## Testing Guidelines
+
+- **For Testing**: Use names like "Test User", "John Test", "Test Developer"
+- **For Production**: Use real user names (without "test" in the name)
+- **Mobile Numbers**: Use real mobile numbers for production testing
 
 ## Troubleshooting
 
@@ -68,10 +76,11 @@ If the API returns success but OTP is not received on mobile:
 2. **Test API Connection**: Visit `/test-sharpener-api` to test the API connectivity
 
 3. **Common Issues**:
-   - **Test Environment**: The test API might not actually send SMS
+   - **Production Environment**: This API will send real SMS messages
    - **Mobile Number Format**: Ensure mobile number is in correct format (10 digits for India)
    - **API Key**: Verify the API key is correct
    - **Network Issues**: Check if Sharpener Tech's SMS gateway is working
+   - **Test vs Production**: Use "test" in name for testing, real names for production
 
 4. **Contact Sharpener Tech**: If API returns success but no SMS received, contact Sharpener Tech support
 
@@ -80,8 +89,8 @@ If the API returns success but OTP is not received on mobile:
 1. Check Laravel logs: `storage/logs/laravel.log`
 2. Test API manually using curl:
    ```bash
-   curl --location 'https://test.sharpener.tech/api/sharpener-auth/send-otp' \
-   --header 'API-KEY: abcd1234apik3324324324ey' \
+   curl --location 'https://api.sharpener.tech/api/sharpener-auth/send-otp' \
+   --header 'API-KEY: Sha.7d8f2f9a0b3c4d5e6f7g8h9i.jKlMnOpQrStUvWxYz1234567890abcdefABCDEFghiJKLmnopQRSTuv' \
    --header 'Content-Type: application/json' \
    --data '{
      "mobileNo": "8285537543",
