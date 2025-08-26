@@ -118,6 +118,7 @@
         })
         .then(response => response.json())
         .then(data => {
+            console.log('OTP Verification Response:', data); // Debug log
             if (data.success) {
                 // Show success message before redirect
                 const successMessage = data.message || 'OTP verified successfully!';
@@ -126,6 +127,17 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg shadow-lg z-50';
                 messageDiv.innerHTML = `<p class="font-semibold">${successMessage}</p>`;
+                messageDiv.style.zIndex = '9999'; // Ensure it's on top
+                messageDiv.style.position = 'fixed';
+                messageDiv.style.top = '20px';
+                messageDiv.style.left = '50%';
+                messageDiv.style.transform = 'translateX(-50%)';
+                messageDiv.style.backgroundColor = '#dcfce7';
+                messageDiv.style.border = '2px solid #22c55e';
+                messageDiv.style.color = '#15803d';
+                messageDiv.style.padding = '16px 24px';
+                messageDiv.style.borderRadius = '8px';
+                messageDiv.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
                 document.body.appendChild(messageDiv);
                 
                 // Auto-hide after 3 seconds and redirect
