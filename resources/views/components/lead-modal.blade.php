@@ -51,6 +51,10 @@
                 modal.classList.remove('hidden');
                 if (closable && closeBtn) closeBtn.classList.remove('hidden');
                 if (!closable && closeBtn) closeBtn.classList.add('hidden');
+                
+                // Initialize form JavaScript AFTER modal is visible
+                console.log('Modal is now visible, initializing form JavaScript'); // Debug log
+                initializeModalForms();
             }
         }, showDelay);
         var closeBtn = document.getElementById('leadModalClose');
@@ -90,11 +94,14 @@
             if (input) return input.value;
             return '';
         }
-        // Signup
-        var signupForm = document.getElementById('modalSignupForm');
-        console.log('Modal signup form found:', signupForm); // Debug log
-        console.log('About to attach onsubmit event to modal form'); // Debug log
-        if (signupForm) {
+        
+        function initializeModalForms() {
+            console.log('initializeModalForms function called'); // Debug log
+            // Signup
+            var signupForm = document.getElementById('modalSignupForm');
+            console.log('Modal signup form found:', signupForm); // Debug log
+            console.log('About to attach onsubmit event to modal form'); // Debug log
+            if (signupForm) {
             // Real-time error clearing
             ['name','email','mobile','password','interested_in_training','leads','passing_year'].forEach(function(field) {
                 var el = document.getElementById('modal_' + field);
@@ -195,6 +202,7 @@
                 });
             };
         }
+        
         // Login
         var loginForm = document.getElementById('modalLoginForm');
         if (loginForm) {
@@ -246,5 +254,6 @@
                 });
             };
         }
+        } // Close initializeModalForms function
     });
 </script> 
