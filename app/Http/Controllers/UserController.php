@@ -73,11 +73,27 @@ class UserController extends Controller
     }
 
     function userSignup(Request $request){
+      // Get the referrer URL (the page user came from)
+      $referrerUrl = $request->header('referer');
+      $redirectUrl = '/';
+      
+      // If user came from a tutorial page, use that as redirect URL
+      if ($referrerUrl && str_contains($referrerUrl, '/topic/')) {
+          $redirectUrl = $referrerUrl;
+          Log::info('User signup from tutorial page', ['referrer' => $referrerUrl]);
+      } elseif ($request->has('redirect_url')) {
+          $redirectUrl = $request->redirect_url;
+      } elseif (Session::has('quiz-url')) {
+          $redirectUrl = Session::get('quiz-url');
+      }
+      
       // Debug: Log all request data
       Log::info('User signup request', [
         'all_data' => $request->all(),
         'has_redirect_url' => $request->has('redirect_url'),
-        'redirect_url' => $request->get('redirect_url')
+        'redirect_url' => $request->get('redirect_url'),
+        'referrer_url' => $referrerUrl,
+        'final_redirect_url' => $redirectUrl
       ]);
       
       $validate = $request->validate([
@@ -141,14 +157,13 @@ class UserController extends Controller
         session(['signup_user_id' => $user->id]);
         session(['signup_otp_attempts' => 0]);
         
-        // Store redirect URL if provided (for modal signups)
-        if ($request->has('redirect_url')) {
-            session(['signup_redirect_url' => $request->redirect_url]);
-            Log::info('Signup redirect URL stored', [
-                'redirect_url' => $request->redirect_url,
-                'user_id' => $user->id
-            ]);
-        }
+        // Store redirect URL (from referrer or form data)
+        session(['signup_redirect_url' => $redirectUrl]);
+        Log::info('Signup redirect URL stored', [
+            'redirect_url' => $redirectUrl,
+            'user_id' => $user->id,
+            'source' => $referrerUrl && str_contains($referrerUrl, '/topic/') ? 'referrer' : 'form_data'
+        ]);
 
         // Handle AJAX vs regular requests
         if ($request->ajax()) {
@@ -176,14 +191,8 @@ class UserController extends Controller
         // Log in user directly
         Session::put('user', $user);
         
-        // Get redirect URL if provided (for modal signups)
-        $redirectUrl = '/';
-        if ($request->has('redirect_url')) {
-            $redirectUrl = $request->redirect_url;
-        } elseif (Session::has('quiz-url')) {
-            $redirectUrl = Session::get('quiz-url');
-            Session::forget('quiz-url');
-        }
+        // Use the redirect URL we captured earlier (from referrer or form data)
+        // $redirectUrl is already set from the beginning of the method
         
         // Handle AJAX vs regular requests
         if ($request->ajax()) {
@@ -222,6 +231,20 @@ class UserController extends Controller
 
 
     function userLogin(Request $request){
+      // Get the referrer URL (the page user came from)
+      $referrerUrl = $request->header('referer');
+      $redirectUrl = '/';
+      
+      // If user came from a tutorial page, use that as redirect URL
+      if ($referrerUrl && str_contains($referrerUrl, '/topic/')) {
+          $redirectUrl = $referrerUrl;
+          Log::info('User login from tutorial page', ['referrer' => $referrerUrl]);
+      } elseif ($request->has('redirect_url')) {
+          $redirectUrl = $request->redirect_url;
+      } elseif (Session::has('quiz-url')) {
+          $redirectUrl = Session::get('quiz-url');
+      }
+      
       $validate = $request->validate([
         'mobile'   => 'required|numeric|digits:10',
         'password'=>'required',
@@ -272,13 +295,7 @@ class UserController extends Controller
        session(['login_user_id' => $user->id]);
        session(['login_otp_attempts' => 0]);
        
-       // Store redirect URL (prioritize modal redirect_url over quiz-url)
-       $redirectUrl = '/';
-       if ($request->has('redirect_url')) {
-           $redirectUrl = $request->redirect_url;
-       } elseif (Session::has('quiz-url')) {
-           $redirectUrl = Session::get('quiz-url');
-       }
+       // Store redirect URL (from referrer or form data)
        session(['login_redirect_url' => $redirectUrl]);
 
        if($request->ajax()) {
@@ -303,14 +320,8 @@ class UserController extends Controller
         // Set cookie that expires in 5 years
         Cookie::queue('remember_token', $rememberToken, 2628000); // 5 years in minutes
         
-        // Get redirect URL (prioritize modal redirect_url over quiz-url)
-        $redirectUrl = '/';
-        if ($request->has('redirect_url')) {
-            $redirectUrl = $request->redirect_url;
-        } elseif (Session::has('quiz-url')) {
-            $redirectUrl = Session::get('quiz-url');
-            Session::forget('quiz-url');
-        }
+        // Use the redirect URL we captured earlier (from referrer or form data)
+        // $redirectUrl is already set from the beginning of the method
         
         if($request->ajax()) {
           return response()->json([
