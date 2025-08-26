@@ -73,6 +73,13 @@ class UserController extends Controller
     }
 
     function userSignup(Request $request){
+      // Debug: Log all request data
+      Log::info('User signup request', [
+        'all_data' => $request->all(),
+        'has_redirect_url' => $request->has('redirect_url'),
+        'redirect_url' => $request->get('redirect_url')
+      ]);
+      
       $validate = $request->validate([
         'name'=>'required | min:3',
         // 'email'=>'required | email | unique:users',
@@ -137,6 +144,10 @@ class UserController extends Controller
         // Store redirect URL if provided (for modal signups)
         if ($request->has('redirect_url')) {
             session(['signup_redirect_url' => $request->redirect_url]);
+            Log::info('Signup redirect URL stored', [
+                'redirect_url' => $request->redirect_url,
+                'user_id' => $user->id
+            ]);
         }
 
         // Handle AJAX vs regular requests
@@ -561,14 +572,25 @@ if($mcqData){
             $user->otp_expires_at = null;
             $user->save();
             
-            // Get redirect URL and clean up session
+            // Get redirect URL before cleaning up session
             $redirectUrl = session('signup_redirect_url', '/');
+            Log::info('Signup OTP verification - redirect URL retrieved', [
+                'redirect_url' => $redirectUrl,
+                'user_id' => $user->id,
+                'session_data' => session()->all()
+            ]);
+            
+            // Clean up session after getting redirect URL
             session()->forget(['signup_user_id', 'signup_otp_attempts', 'signup_redirect_url']);
             
             // Log in user
             Session::put('user', $user);
             
             if ($request->ajax()) {
+                Log::info('Signup OTP verification - AJAX response', [
+                    'redirect_url' => $redirectUrl,
+                    'user_id' => $user->id
+                ]);
                 return response()->json([
                     'success' => true,
                     'message' => 'Mobile verified and signup complete!',

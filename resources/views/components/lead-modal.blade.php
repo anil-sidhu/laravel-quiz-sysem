@@ -120,6 +120,7 @@
                 
                 // Capture current page URL for redirect after signup
                 const currentUrl = window.location.href;
+                console.log('Modal signup - capturing redirect URL:', currentUrl); // Debug log
                 const formData = new FormData(signupForm);
                 formData.append('redirect_url', currentUrl);
                 fetch('/user-signup', {
