@@ -199,7 +199,9 @@ iframe, video, embed, object {
     @include('components.lead-modal')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Tutorial page loaded - checking for modal'); // Debug log
             setTimeout(function() {
+                console.log('Showing modal after 5 seconds'); // Debug log
                 document.getElementById('leadModal').classList.remove('hidden');
                 document.getElementById('leadModalClose').classList.add('hidden'); // Hide close button
             }, 5000);
