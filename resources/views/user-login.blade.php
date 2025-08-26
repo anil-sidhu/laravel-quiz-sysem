@@ -68,11 +68,7 @@
 
     <h2 class="text-xl sm:text-2xl text-center text-gray-800 mb-4 sm:mb-6">User Login</h2>
     
-    <div id="resetNotification" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg" style="display: none;">
-        <p class="text-blue-800 text-sm">
-            <strong>Note:</strong> You can try logging in with a different mobile number.
-        </p>
-    </div>
+
     @error('user')
        <div class="text-red-500">{{$message}}</div>
        @enderror
@@ -202,8 +198,7 @@
             // Clear the mobile field
             document.getElementById('mobile').value = '';
             
-            // Show notification
-            document.getElementById('resetNotification').style.display = 'block';
+
             
             // Focus on mobile field
             document.getElementById('mobile').focus();

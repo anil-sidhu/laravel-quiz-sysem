@@ -79,11 +79,7 @@
     <div class=" bg-white py-3 px-8 rounded-2xl  shadow-lg w-full max-w-md form-container">
     <h2 class="text-2xl text-center text-green-800">User Signup </h2>
     
-    <div id="resetNotification" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg" style="display: none;">
-        <p class="text-blue-800 text-sm">
-            <strong>Note:</strong> Phone number field has been cleared. You can enter a new number.
-        </p>
-    </div>
+
     <!-- @if ($errors->any())
         <div class="mb-4 input-error">
             <ul>
@@ -296,11 +292,7 @@
                 mobileField.dispatchEvent(new Event('input', { bubbles: true }));
             }
             
-            // Show notification
-            const notification = document.getElementById('resetNotification');
-            if (notification) {
-                notification.style.display = 'block';
-            }
+
             
             // Focus on mobile field
             if (mobileField) {
@@ -340,11 +332,7 @@
                     mobileField.dispatchEvent(new Event('input', { bubbles: true }));
                 }
                 
-                // Show notification
-                const notification = document.getElementById('resetNotification');
-                if (notification) {
-                    notification.style.display = 'block';
-                }
+
                 
                 // Focus on mobile field
                 if (mobileField) {
