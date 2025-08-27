@@ -201,4 +201,77 @@ class SharpenerTechService
             ];
         }
     }
+
+    /**
+     * Open Dashboard - Authenticate user and get token for Sharpener dashboard
+     */
+    public function openDashboard($mobile, $signupDevice = 'Web', $utmData = [])
+    {
+        $url = $this->baseUrl . '/open-dashboard';
+        
+        $payload = [
+            'mobileNo' => $mobile,
+            'signupDevice' => $signupDevice,
+            'utmData' => $utmData ?: [
+                'utmSource' => 'thecodingskills',
+                'utmMedium' => 'web',
+                'utmCampaign' => 'quiz_system',
+                'utmTerm' => 'programming_courses',
+                'utmContent' => 'dashboard_access'
+            ]
+        ];
+
+        Log::info('Sharpener Tech Open Dashboard Request', [
+            'url' => $url,
+            'mobile' => $mobile,
+            'signupDevice' => $signupDevice,
+            'utmData' => $utmData
+        ]);
+
+        try {
+            $response = Http::withHeaders([
+                'API-KEY' => $this->apiKey,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'User-Agent' => 'TheCodingSkills/1.0'
+            ])
+            ->timeout(30)
+            ->post($url, $payload);
+
+            Log::info('Sharpener Tech Open Dashboard Response', [
+                'response' => $response->json(),
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if ($data['status'] === 'success' && isset($data['data']['token'])) {
+                    return [
+                        'success' => true,
+                        'token' => $data['data']['token'],
+                        'message' => $data['message'] ?? 'Dashboard access granted'
+                    ];
+                }
+            }
+
+            return [
+                'success' => false,
+                'message' => $response->json()['message'] ?? 'Failed to open dashboard',
+                'status_code' => $response->status()
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Sharpener Tech Open Dashboard Error', [
+                'error' => $e->getMessage(),
+                'mobile' => $mobile
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'Network error while accessing dashboard',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }

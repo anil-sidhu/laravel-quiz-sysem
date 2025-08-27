@@ -778,4 +778,56 @@ if($mcqData){
         return back()->with('message-success', 'OTP resent successfully.');
     }
 
+    /**
+     * Open Sharpener Dashboard for authenticated user
+     */
+    public function openSharpenerDashboard(Request $request)
+    {
+        // Check if user is logged in
+        if (!session()->has('user_id')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please login first to access the dashboard'
+            ], 401);
+        }
+
+        $user = User::find(session('user_id'));
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        // Call Sharpener Tech API
+        $result = SharpenerTechService::openDashboard(
+            $user->mobile,
+            'Web',
+            [
+                'utmSource' => 'thecodingskills',
+                'utmMedium' => 'web',
+                'utmCampaign' => 'quiz_system',
+                'utmTerm' => 'programming_courses',
+                'utmContent' => 'dashboard_access'
+            ]
+        );
+
+        if ($result['success']) {
+            // Set cookie for Sharpener domain
+            $cookie = cookie('SHARPENER_JWTTOKEN', $result['token'], 60 * 24 * 7, '/', '.sharpener.tech', true, true);
+            
+            // Redirect to Sharpener dashboard
+            return response()->json([
+                'success' => true,
+                'message' => 'Redirecting to dashboard...',
+                'redirect_url' => 'https://student.sharpener.tech/dashboard'
+            ])->withCookie($cookie);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => $result['message'] ?? 'Failed to access dashboard'
+        ], 400);
+    }
+
 }

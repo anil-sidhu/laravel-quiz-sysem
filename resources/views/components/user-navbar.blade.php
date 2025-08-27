@@ -26,6 +26,7 @@
           <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/anil-sidhu">About Me</a>
           @if(session('user'))
           <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/user-details">Welcome, {{session('user')->name}}</a>
+          <button id="sharpener-dashboard-btn" class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded-md transition-colors">Sharpener Dashboard</button>
           <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/user-logout">Logout</a>
           @else
           <a class="text-green-900 hover:text-blue-500 text-sm whitespace-nowrap" href="/user-login">Login</a>
@@ -63,6 +64,7 @@
           <a class="block text-green-900 hover:text-blue-500 py-2 border-b border-gray-200" href="/about-me">About Me</a>
           @if(session('user'))
           <a class="block text-green-900 hover:text-blue-500 py-2 border-b border-gray-200" href="/user-details">Welcome, {{session('user')->name}}</a>
+          <button id="sharpener-dashboard-btn-mobile" class="block text-green-900 hover:text-blue-500 py-2 border-b border-gray-200 bg-blue-100 hover:bg-blue-200 px-3 rounded-md transition-colors w-full text-left">Sharpener Dashboard</button>
           <a class="block text-green-900 hover:text-blue-500 py-2 border-b border-gray-200" href="/user-logout">Logout</a>
           @else
           <a class="block text-green-900 hover:text-blue-500 py-2 border-b border-gray-200" href="/user-login">Login</a>
@@ -77,5 +79,74 @@
       document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
         const mobileMenu = document.getElementById('mobile-menu');
         mobileMenu.classList.toggle('hidden');
+      });
+
+      // Sharpener Dashboard functionality
+      function openSharpenerDashboard() {
+        const button = event.target;
+        const originalText = button.textContent;
+        
+        // Show loading state
+        button.textContent = 'Loading...';
+        button.disabled = true;
+        
+        fetch('/open-sharpener-dashboard', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Show success message
+            showMessage(data.message, 'success');
+            
+            // Redirect to Sharpener dashboard
+            setTimeout(() => {
+              window.location.href = data.redirect_url;
+            }, 1000);
+          } else {
+            showMessage(data.message, 'error');
+            button.textContent = originalText;
+            button.disabled = false;
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showMessage('Failed to access dashboard. Please try again.', 'error');
+          button.textContent = originalText;
+          button.disabled = false;
+        });
+      }
+
+      // Show message function
+      function showMessage(message, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-md shadow-lg ${
+          type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+        }`;
+        messageDiv.textContent = message;
+        
+        document.body.appendChild(messageDiv);
+        
+        setTimeout(() => {
+          messageDiv.remove();
+        }, 3000);
+      }
+
+      // Add event listeners
+      document.addEventListener('DOMContentLoaded', function() {
+        const desktopBtn = document.getElementById('sharpener-dashboard-btn');
+        const mobileBtn = document.getElementById('sharpener-dashboard-btn-mobile');
+        
+        if (desktopBtn) {
+          desktopBtn.addEventListener('click', openSharpenerDashboard);
+        }
+        
+        if (mobileBtn) {
+          mobileBtn.addEventListener('click', openSharpenerDashboard);
+        }
       });
     </script>
