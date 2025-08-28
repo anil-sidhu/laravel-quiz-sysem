@@ -201,7 +201,7 @@ Route::get('/test-sharpener-api', function () {
 // Sharpener Dashboard Route
 Route::post('/open-sharpener-dashboard', [UserController::class, 'openSharpenerDashboard'])->name('open.sharpener.dashboard');
 
-// Test Sharpener Dashboard Route (for debugging)
-Route::get('/test-sharpener-dashboard', function() {
-    return view('test-sharpener-dashboard');
-})->name('test.sharpener.dashboard');
+
+
+
+

@@ -204,10 +204,13 @@ class SharpenerTechService
 
     /**
      * Open Dashboard - Authenticate user and get token for Sharpener dashboard
+     * Returns JWT token to be passed via URL fragment
      */
     public function openDashboard($mobile, $signupDevice = 'Web', $utmData = [])
     {
+        // Use production API for dashboard endpoint
         $url = $this->baseUrl . '/open-dashboard';
+        $apiKey = $this->apiKey;
         
         $payload = [
             'mobileNo' => $mobile,
@@ -230,7 +233,7 @@ class SharpenerTechService
 
         try {
             $response = Http::withHeaders([
-                'API-KEY' => $this->apiKey,
+                'API-KEY' => $apiKey,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'User-Agent' => 'TheCodingSkills/1.0'

@@ -24,6 +24,7 @@ use App\Mail\VerifyUser;
 use App\Mail\UserForgotPassword;
 use App\Models\Tutorial;
 use App\Models\Course;
+use App\Services\SharpenerTechService;
 
 
 class UserController extends Controller
@@ -784,14 +785,14 @@ if($mcqData){
     public function openSharpenerDashboard(Request $request)
     {
         // Check if user is logged in
-        if (!session()->has('user_id')) {
+        if (!session()->has('user')) {
             return response()->json([
                 'success' => false,
                 'message' => 'Please login first to access the dashboard'
             ], 401);
         }
 
-        $user = User::find(session('user_id'));
+        $user = session('user');
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -800,7 +801,8 @@ if($mcqData){
         }
 
         // Call Sharpener Tech API
-        $result = SharpenerTechService::openDashboard(
+        $sharpenerService = new SharpenerTechService();
+        $result = $sharpenerService->openDashboard(
             $user->mobile,
             'Web',
             [
@@ -813,15 +815,17 @@ if($mcqData){
         );
 
         if ($result['success']) {
-            // Set cookie for Sharpener domain
-            $cookie = cookie('SHARPENER_JWTTOKEN', $result['token'], 60 * 24 * 7, '/', '.sharpener.tech', true, true);
+            // For AJAX requests, return success with redirect URL
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Redirecting to dashboard...',
+                    'redirect_url' => 'https://student.sharpener.tech/dashboard#authToken=' . $result['token']
+                ]);
+            }
             
-            // Redirect to Sharpener dashboard
-            return response()->json([
-                'success' => true,
-                'message' => 'Redirecting to dashboard...',
-                'redirect_url' => 'https://student.sharpener.tech/dashboard'
-            ])->withCookie($cookie);
+            // For non-AJAX requests, redirect directly
+            return redirect('https://student.sharpener.tech/dashboard#authToken=' . $result['token']);
         }
 
         return response()->json([
