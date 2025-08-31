@@ -29,3 +29,8 @@
 .pagination_admin p{
   display: none;
 }
+
+/* Global CSS - Add your custom styles below */
+ql-code-block{
+  text-wrap: auto;
+}
