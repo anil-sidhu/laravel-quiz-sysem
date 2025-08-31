@@ -107,8 +107,8 @@ class UserController extends Controller
         'mobile.unique' => 'Mobile number already in use. Please log in if you\'re an existing user.'
       ]);
 
-      // Check if user needs phone verification
-      $needsPhoneVerification = $request->interested_in_training === 'yes' || $request->has('leads');
+      // All users need phone verification for Sharpener Tech integration
+      $needsPhoneVerification = true;
 
       $userData = [
         'name'=>$request->name,
@@ -263,7 +263,7 @@ class UserController extends Controller
      }
 
      // Check if user needs mobile verification but hasn't completed it
-     $needsVerification = ($user->interested_in_training === 'yes' || $user->leads == true) && is_null($user->mobile_verified_at);
+     $needsVerification = is_null($user->mobile_verified_at);
      
      if($needsVerification){
        // Send OTP via Sharpener Tech (they handle OTP generation)
