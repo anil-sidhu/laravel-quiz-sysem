@@ -101,10 +101,11 @@ class UserController extends Controller
         'name'=>'required | min:3',
         // 'email'=>'required | email | unique:users',
         'password'=>'required | min:3',
-        'mobile'   => 'required|numeric|digits:10|unique:users',
+        'mobile'   => 'required|numeric|digits:10|unique:users|regex:/^[6-9]\d{9}$/',
         'interested_in_training' => 'required|in:yes,no',
       ], [
-        'mobile.unique' => 'Mobile number already in use. Please log in if you\'re an existing user.'
+        'mobile.unique' => 'Mobile number already in use. Please log in if you\'re an existing user.',
+        'mobile.regex' => 'Please enter a valid Indian mobile number.'
       ]);
 
       // All users need phone verification for Sharpener Tech integration
@@ -247,8 +248,10 @@ class UserController extends Controller
       }
       
       $validate = $request->validate([
-        'mobile'   => 'required|numeric|digits:10',
+        'mobile'   => 'required|numeric|digits:10|regex:/^[6-9]\d{9}$/',
         'password'=>'required',
+      ], [
+        'mobile.regex' => 'Please enter a valid Indian mobile number.'
       ]);
 
      $user= User::where('mobile',$request->mobile)->first();

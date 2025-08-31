@@ -111,11 +111,15 @@
 
         <div class="mb-2">
             <label for="mobile" class="text-gray-600 mb-1">User Mobile</label>
-            <input type="text" id="mobile" placeholder="Enter User Mobile" name="mobile"
+            <input type="text" id="mobile" placeholder="Enter 10-digit mobile number" name="mobile"
             class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none" 
             value="{{ old('mobile') }}" 
             autocomplete="off" 
-            data-lpignore="true">
+            data-lpignore="true"
+            maxlength="10"
+            pattern="[6-9][0-9]{9}"
+            title="Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9">
+            <div id="mobileError" class="input-error" style="display: none;"></div>
        @error('mobile')
        <div class="input-error">{{$message}}</div>
        @enderror
@@ -190,6 +194,32 @@
         }
     }
 
+    // Indian mobile number validation
+    function validateIndianMobile(mobile) {
+        const mobileRegex = /^[6-9]\d{9}$/;
+        return mobileRegex.test(mobile);
+    }
+
+    // Mobile field validation
+    document.getElementById('mobile').addEventListener('input', function() {
+        const mobile = this.value;
+        const errorDiv = document.getElementById('mobileError');
+        
+        if (mobile.length > 0) {
+            if (!validateIndianMobile(mobile)) {
+                errorDiv.textContent = 'Please enter a valid Indian mobile number (should start with 6, 7, 8, or 9)';
+                errorDiv.style.display = 'block';
+                this.style.borderColor = '#e3342f';
+            } else {
+                errorDiv.style.display = 'none';
+                this.style.borderColor = '#d1d5db';
+            }
+        } else {
+            errorDiv.style.display = 'none';
+            this.style.borderColor = '#d1d5db';
+        }
+    });
+
     // AJAX form submission
     document.getElementById('signupForm').addEventListener('submit', function(e) {
         e.preventDefault(); // Prevent form from submitting normally
@@ -197,6 +227,13 @@
         var btn = document.getElementById('signupBtn');
         var spinner = document.getElementById('signupSpinner');
         var form = this;
+        
+        // Validate mobile number before submission
+        const mobile = document.getElementById('mobile').value;
+        if (!validateIndianMobile(mobile)) {
+            alert('Please enter a valid Indian mobile number (should start with 6, 7, 8, or 9)');
+            return;
+        }
         
         // Show loading state
         btn.disabled = true;
