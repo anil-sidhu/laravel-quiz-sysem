@@ -73,9 +73,7 @@
     </div>
 
         <label for="" class="text-gray-600 mb-1">Description Title</label>
-    <div id="editor" style="height: 200px;">
-    {{$topic->description}}
-    </div>
+    <div id="editor" style="height: 200px;"></div>
 
     <button type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white" >Edit Topic</button>
 
@@ -110,6 +108,12 @@
   },
     theme: 'snow'
   });
+
+  // Set the initial content from the database
+  const initialContent = `{!! addslashes($topic->description) !!}`;
+  if (initialContent && initialContent.trim() !== '') {
+    quill.root.innerHTML = initialContent;
+  }
 
   quill.on('text-change', (delta, oldDelta, source) => {
   if (source == 'api') {
