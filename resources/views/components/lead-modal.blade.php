@@ -102,29 +102,29 @@
                 <!-- Banner content will be added here -->
                 <div id="bannerSlider" class="h-full relative">
                     <!-- Slide 1: Alumni Testimonials -->
-                    <div class="banner-slide active h-full flex flex-col justify-center items-center text-white p-8">
+                    <div class="banner-slide active h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2">Sharpener Strong Alumni Base</h2>
-                            <p class="text-lg opacity-90">450+ Top companies where our students work</p>
+                            <h2 class="text-3xl font-bold mb-2 text-white">Sharpener Strong Alumni Base</h2>
+                            <p class="text-lg opacity-90 text-gray-200">450+ Top companies where our students work</p>
                         </div>
                         
                         <!-- Stats Cards -->
                         <div class="grid grid-cols-2 gap-4 mb-8 w-full max-w-md">
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold">4.9G</div>
-                                <div class="text-sm opacity-80">Google Rating from 700+ reviews</div>
+                                <div class="text-2xl font-bold text-white">4.9G</div>
+                                <div class="text-sm opacity-80 text-gray-200">Google Rating from 700+ reviews</div>
                             </div>
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold">95%</div>
-                                <div class="text-sm opacity-80">Average salary hike</div>
+                                <div class="text-2xl font-bold text-white">95%</div>
+                                <div class="text-sm opacity-80 text-gray-200">Average salary hike</div>
                             </div>
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold">2500+</div>
-                                <div class="text-sm opacity-80">Sharpenerians Placed</div>
+                                <div class="text-2xl font-bold text-white">2500+</div>
+                                <div class="text-sm opacity-80 text-gray-200">Sharpenerians Placed</div>
                             </div>
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold">100%</div>
-                                <div class="text-sm opacity-80">Job assurance</div>
+                                <div class="text-2xl font-bold text-white">100%</div>
+                                <div class="text-sm opacity-80 text-gray-200">Job assurance</div>
                             </div>
                         </div>
 
@@ -213,10 +213,10 @@
                     </div>
 
                     <!-- Slide 2: Simple Content -->
-                    <div class="banner-slide h-full flex flex-col justify-center items-center text-white p-8">
+                    <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center">
-                            <h2 class="text-4xl font-bold mb-4">Game Based Learning</h2>
-                            <p class="text-lg opacity-90 mb-8">A free strategy game, exclusively for Sharpenerians which uses the points you earn in studies.</p>
+                            <h2 class="text-4xl font-bold mb-4 text-white">Game Based Learning</h2>
+                            <p class="text-lg opacity-90 mb-8 text-gray-200">A free strategy game, exclusively for Sharpenerians which uses the points you earn in studies.</p>
                             
                             <!-- Game Elements -->
                             <div class="relative w-80 h-60 mx-auto">
@@ -240,10 +240,10 @@
                     </div>
 
                     <!-- Slide 3: Company Logos -->
-                    <div class="banner-slide h-full flex flex-col justify-center items-center text-white p-8">
+                    <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2">Sharpener has 1500+ companies tie-ups!</h2>
-                            <p class="text-lg opacity-90 mb-4">Your dream, our destination</p>
+                            <h2 class="text-3xl font-bold mb-2 text-white">Sharpener has 1500+ companies tie-ups!</h2>
+                            <p class="text-lg opacity-90 mb-4 text-gray-200">Your dream, our destination</p>
                             
                             <!-- Features -->
                             <div class="flex flex-col items-center space-y-2 mb-8">
@@ -350,7 +350,7 @@
                 @include('user-login-modal')
             </div>
         </div>
-</div>
+            </div>
         </div>
     </div>
 </div>
@@ -414,11 +414,11 @@
         
         function initializeModalForms() {
             console.log('initializeModalForms function called'); // Debug log
-            // Signup
-            var signupForm = document.getElementById('modalSignupForm');
+        // Signup
+        var signupForm = document.getElementById('modalSignupForm');
             console.log('Modal signup form found:', signupForm); // Debug log
             console.log('About to attach onsubmit event to modal form'); // Debug log
-            if (signupForm) {
+        if (signupForm) {
             // Real-time error clearing
             ['name','email','mobile','password','interested_in_training','leads','passing_year'].forEach(function(field) {
                 var el = document.getElementById('modal_' + field);
@@ -487,7 +487,7 @@
                                 if (data.redirect) {
                                     window.location.href = data.redirect;
                                 } else {
-                                    location.reload();
+                                location.reload();
                                 }
                             }, 2000);
                         }
@@ -548,7 +548,7 @@
                         if (data.redirect) {
                             window.location.href = data.redirect;
                         } else {
-                            location.reload();
+                        location.reload();
                         }
                     } else {
                         let data = await response.json();
