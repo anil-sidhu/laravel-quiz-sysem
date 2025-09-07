@@ -614,7 +614,7 @@
             if (!container) return;
 
             const meteor = document.createElement('span');
-            meteor.className = 'pointer-events-none absolute size-1 animate-meteor rounded-full bg-slate-400 shadow-[0_0_0_1px_#ffffff20]';
+            meteor.className = 'pointer-events-none absolute size-1 animate-meteor rounded-full bg-slate-300 shadow-[0_0_0_1px_#ffffff30]';
             
             // Random position and timing - start from top-left area
             const startX = Math.random() * 200 - 150; // Start from left edge or off-screen
@@ -629,7 +629,7 @@
             
             // Add the tail
             const tail = document.createElement('div');
-            tail.className = 'pointer-events-none absolute top-1/2 -z-10 h-px w-[60px] -translate-y-1/2 bg-gradient-to-r from-slate-400 to-transparent';
+            tail.className = 'pointer-events-none absolute top-1/2 -z-10 h-px w-[60px] -translate-y-1/2 bg-gradient-to-l from-slate-300 to-transparent';
             meteor.appendChild(tail);
             
             container.appendChild(meteor);
