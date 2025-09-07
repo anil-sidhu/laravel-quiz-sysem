@@ -72,14 +72,14 @@
 /* Meteor Animation */
 @keyframes meteor {
   0% {
-    transform: translateX(0) translateY(0);
+    transform: rotate(45deg) translateX(0);
     opacity: 1;
   }
   70% {
     opacity: 1;
   }
   100% {
-    transform: translateX(800px) translateY(600px);
+    transform: rotate(45deg) translateX(1000px);
     opacity: 0;
   }
 }
@@ -616,11 +616,11 @@
             const meteor = document.createElement('span');
             meteor.className = 'pointer-events-none absolute size-0.5 animate-meteor rounded-full bg-slate-500 shadow-[0_0_0_1px_#ffffff10]';
             
-            // Random position and timing
-            const startX = Math.random() * 200 - 100; // Start from left edge or slightly off-screen
-            const startY = Math.random() * 100 - 50; // Start from top edge or slightly off-screen
+            // Random position and timing - start from top-left area
+            const startX = Math.random() * 100 - 50; // Start from left edge
+            const startY = Math.random() * 100 - 50; // Start from top edge
             const delay = Math.random() * 2;
-            const duration = 3 + Math.random() * 5; // 3-8 seconds
+            const duration = 4 + Math.random() * 4; // 4-8 seconds
             
             meteor.style.left = startX + 'px';
             meteor.style.top = startY + 'px';
