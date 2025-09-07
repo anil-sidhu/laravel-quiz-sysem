@@ -104,27 +104,27 @@
                     <!-- Slide 1: Alumni Testimonials -->
                     <div class="banner-slide active h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2 text-white">Sharpener Strong Alumni Base</h2>
-                            <p class="text-lg opacity-90 text-gray-200">450+ Top companies where our students work</p>
+                            <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Sharpener Strong Alumni Base</h2>
+                            <p class="text-lg text-white drop-shadow-md">450+ Top companies where our students work</p>
                         </div>
                         
                         <!-- Stats Cards -->
                         <div class="grid grid-cols-2 gap-4 mb-8 w-full max-w-md">
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold text-white">4.9G</div>
-                                <div class="text-sm opacity-80 text-gray-200">Google Rating from 700+ reviews</div>
+                                <div class="text-2xl font-bold text-white drop-shadow-lg">4.9G</div>
+                                <div class="text-sm text-white drop-shadow-md">Google Rating from 700+ reviews</div>
                             </div>
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold text-white">95%</div>
-                                <div class="text-sm opacity-80 text-gray-200">Average salary hike</div>
+                                <div class="text-2xl font-bold text-white drop-shadow-lg">95%</div>
+                                <div class="text-sm text-white drop-shadow-md">Average salary hike</div>
                             </div>
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold text-white">2500+</div>
-                                <div class="text-sm opacity-80 text-gray-200">Sharpenerians Placed</div>
+                                <div class="text-2xl font-bold text-white drop-shadow-lg">2500+</div>
+                                <div class="text-sm text-white drop-shadow-md">Sharpenerians Placed</div>
                             </div>
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold text-white">100%</div>
-                                <div class="text-sm opacity-80 text-gray-200">Job assurance</div>
+                                <div class="text-2xl font-bold text-white drop-shadow-lg">100%</div>
+                                <div class="text-sm text-white drop-shadow-md">Job assurance</div>
                             </div>
                         </div>
 
@@ -136,36 +136,36 @@
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-blue-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Akansha</div>
-                                            <div class="text-sm opacity-80">Got Placed at Math Company</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Akansha</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at Math Company</div>
                                         </div>
                                     </div>
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-green-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Shafeeq Ali</div>
-                                            <div class="text-sm opacity-80">Got Placed at Freecharge</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Shafeeq Ali</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at Freecharge</div>
                                         </div>
                                     </div>
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-purple-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Tushar Singh</div>
-                                            <div class="text-sm opacity-80">Got Placed at Miles Education</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Tushar Singh</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at Miles Education</div>
                                         </div>
                                     </div>
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-red-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Shanmuganathan</div>
-                                            <div class="text-sm opacity-80">Got Placed at Bijak</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Shanmuganathan</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at Bijak</div>
                                         </div>
                                     </div>
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-yellow-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Ritik</div>
-                                            <div class="text-sm opacity-80">Got Placed at Oracle</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Ritik</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at Oracle</div>
                                         </div>
                                     </div>
                                 </div>
@@ -175,36 +175,36 @@
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-indigo-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Arun</div>
-                                            <div class="text-sm opacity-80">Got Placed at TechPearl</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Arun</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at TechPearl</div>
                                         </div>
                                     </div>
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-pink-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Pushkar</div>
-                                            <div class="text-sm opacity-80">Got Placed at Dvnj Health Tech</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Pushkar</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at Dvnj Health Tech</div>
                                         </div>
                                     </div>
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-teal-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Aditya</div>
-                                            <div class="text-sm opacity-80">Got Placed at Appscript</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Aditya</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at Appscript</div>
                                         </div>
                                     </div>
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-orange-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Priya</div>
-                                            <div class="text-sm opacity-80">Got Placed at Microsoft</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Priya</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at Microsoft</div>
                                         </div>
                                     </div>
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
                                         <div class="w-8 h-8 bg-cyan-500 rounded-full mr-3"></div>
                                         <div>
-                                            <div class="font-semibold">Rahul</div>
-                                            <div class="text-sm opacity-80">Got Placed at Amazon</div>
+                                            <div class="font-semibold text-white drop-shadow-md">Rahul</div>
+                                            <div class="text-sm text-white drop-shadow-sm">Got Placed at Amazon</div>
                                         </div>
                                     </div>
                                 </div>
@@ -215,8 +215,8 @@
                     <!-- Slide 2: Simple Content -->
                     <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center">
-                            <h2 class="text-4xl font-bold mb-4 text-white">Game Based Learning</h2>
-                            <p class="text-lg opacity-90 mb-8 text-gray-200">A free strategy game, exclusively for Sharpenerians which uses the points you earn in studies.</p>
+                            <h2 class="text-4xl font-bold mb-4 text-white drop-shadow-lg">Game Based Learning</h2>
+                            <p class="text-lg mb-8 text-white drop-shadow-md">A free strategy game, exclusively for Sharpenerians which uses the points you earn in studies.</p>
                             
                             <!-- Game Elements -->
                             <div class="relative w-80 h-60 mx-auto">
@@ -242,22 +242,22 @@
                     <!-- Slide 3: Company Logos -->
                     <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2 text-white">Sharpener has 1500+ companies tie-ups!</h2>
-                            <p class="text-lg opacity-90 mb-4 text-gray-200">Your dream, our destination</p>
+                            <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Sharpener has 1500+ companies tie-ups!</h2>
+                            <p class="text-lg mb-4 text-white drop-shadow-md">Your dream, our destination</p>
                             
                             <!-- Features -->
                             <div class="flex flex-col items-center space-y-2 mb-8">
                                 <div class="flex items-center">
                                     <div class="w-6 h-6 bg-blue-500 rounded-full mr-3"></div>
-                                    <span>PAN India tie-ups for all locations</span>
+                                    <span class="text-white drop-shadow-md">PAN India tie-ups for all locations</span>
                                 </div>
                                 <div class="flex items-center">
                                     <div class="w-6 h-6 bg-green-500 rounded-full mr-3"></div>
-                                    <span>Students are free to choose a company of their choice</span>
+                                    <span class="text-white drop-shadow-md">Students are free to choose a company of their choice</span>
                                 </div>
                                 <div class="flex items-center">
                                     <div class="w-6 h-6 bg-purple-500 rounded-full mr-3"></div>
-                                    <span>Alumni program for experienced folks for job switches</span>
+                                    <span class="text-white drop-shadow-md">Alumni program for experienced folks for job switches</span>
                                 </div>
                             </div>
                         </div>
