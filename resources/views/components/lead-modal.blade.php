@@ -72,14 +72,14 @@
 /* Meteor Animation */
 @keyframes meteor {
   0% {
-    transform: rotate(215deg) translateX(0);
+    transform: translateX(0) translateY(0);
     opacity: 1;
   }
   70% {
     opacity: 1;
   }
   100% {
-    transform: rotate(215deg) translateX(-500px);
+    transform: translateX(800px) translateY(600px);
     opacity: 0;
   }
 }
@@ -614,15 +614,16 @@
             if (!container) return;
 
             const meteor = document.createElement('span');
-            meteor.className = 'pointer-events-none absolute left-1/2 top-1/2 size-0.5 rotate-[215deg] animate-meteor rounded-full bg-slate-500 shadow-[0_0_0_1px_#ffffff10]';
+            meteor.className = 'pointer-events-none absolute size-0.5 animate-meteor rounded-full bg-slate-500 shadow-[0_0_0_1px_#ffffff10]';
             
             // Random position and timing
-            const left = Math.random() * 1000;
+            const startX = Math.random() * 200 - 100; // Start from left edge or slightly off-screen
+            const startY = Math.random() * 100 - 50; // Start from top edge or slightly off-screen
             const delay = Math.random() * 2;
-            const duration = 2 + Math.random() * 8; // 2-10 seconds
+            const duration = 3 + Math.random() * 5; // 3-8 seconds
             
-            meteor.style.top = '-5px';
-            meteor.style.left = left + 'px';
+            meteor.style.left = startX + 'px';
+            meteor.style.top = startY + 'px';
             meteor.style.animationDelay = delay + 's';
             meteor.style.animationDuration = duration + 's';
             
@@ -644,12 +645,12 @@
         // Create meteors periodically
         function startMeteorAnimation() {
             // Create initial meteors
-            for (let i = 0; i < 20; i++) {
-                setTimeout(createMeteor, i * 200);
+            for (let i = 0; i < 15; i++) {
+                setTimeout(createMeteor, i * 150);
             }
             
             // Continue creating meteors
-            setInterval(createMeteor, 300);
+            setInterval(createMeteor, 500);
         }
 
         // Start meteor animation when modal is shown
