@@ -72,14 +72,14 @@
 /* Meteor Animation */
 @keyframes meteor {
   0% {
-    transform: rotate(45deg) translateX(0);
+    transform: translate(0, 0);
     opacity: 1;
   }
   70% {
     opacity: 1;
   }
   100% {
-    transform: rotate(45deg) translateX(1000px);
+    transform: translate(800px, 600px);
     opacity: 0;
   }
 }
@@ -614,13 +614,13 @@
             if (!container) return;
 
             const meteor = document.createElement('span');
-            meteor.className = 'pointer-events-none absolute size-0.5 animate-meteor rounded-full bg-slate-500 shadow-[0_0_0_1px_#ffffff10]';
+            meteor.className = 'pointer-events-none absolute size-1 animate-meteor rounded-full bg-slate-400 shadow-[0_0_0_1px_#ffffff20]';
             
             // Random position and timing - start from top-left area
-            const startX = Math.random() * 100 - 50; // Start from left edge
-            const startY = Math.random() * 100 - 50; // Start from top edge
-            const delay = Math.random() * 2;
-            const duration = 4 + Math.random() * 4; // 4-8 seconds
+            const startX = Math.random() * 150 - 100; // Start from left edge or slightly off-screen
+            const startY = Math.random() * 150 - 100; // Start from top edge or slightly off-screen
+            const delay = Math.random() * 3;
+            const duration = 3 + Math.random() * 4; // 3-7 seconds
             
             meteor.style.left = startX + 'px';
             meteor.style.top = startY + 'px';
@@ -629,7 +629,7 @@
             
             // Add the tail
             const tail = document.createElement('div');
-            tail.className = 'pointer-events-none absolute top-1/2 -z-10 h-px w-[50px] -translate-y-1/2 bg-gradient-to-r from-slate-500 to-transparent';
+            tail.className = 'pointer-events-none absolute top-1/2 -z-10 h-px w-[60px] -translate-y-1/2 bg-gradient-to-r from-slate-400 to-transparent';
             meteor.appendChild(tail);
             
             container.appendChild(meteor);
@@ -645,12 +645,12 @@
         // Create meteors periodically
         function startMeteorAnimation() {
             // Create initial meteors
-            for (let i = 0; i < 15; i++) {
-                setTimeout(createMeteor, i * 150);
+            for (let i = 0; i < 20; i++) {
+                setTimeout(createMeteor, i * 100);
             }
             
             // Continue creating meteors
-            setInterval(createMeteor, 500);
+            setInterval(createMeteor, 400);
         }
 
         // Start meteor animation when modal is shown
