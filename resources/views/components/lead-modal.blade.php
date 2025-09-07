@@ -104,8 +104,8 @@
                     <!-- Slide 1: Alumni Testimonials -->
                     <div class="banner-slide active h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2 text-gray-900">Sharpener Strong Alumni Base</h2>
-                            <p class="text-lg text-gray-700">450+ Top companies where our students work</p>
+                            <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Sharpener Strong Alumni Base</h2>
+                            <p class="text-lg text-white drop-shadow-md">450+ Top companies where our students work</p>
                         </div>
                         
                         <!-- Stats Cards -->
@@ -130,7 +130,7 @@
 
                         <!-- Alumni Carousel -->
                         <div class="w-full max-w-2xl">
-                            <div class="alumni-carousel-container overflow-hidden h-32">
+                            <div class="alumni-carousel-container overflow-hidden h-40">
                                 <!-- Row 1: Moving Left to Right -->
                                 <div class="alumni-row-1 flex">
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">
@@ -215,8 +215,8 @@
                     <!-- Slide 2: Simple Content -->
                     <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center">
-                            <h2 class="text-4xl font-bold mb-4 text-gray-900">Game Based Learning</h2>
-                            <p class="text-lg mb-8 text-gray-700">A free strategy game, exclusively for Sharpenerians which uses the points you earn in studies.</p>
+                            <h2 class="text-4xl font-bold mb-4 text-white drop-shadow-lg">Game Based Learning</h2>
+                            <p class="text-lg mb-8 text-white drop-shadow-md">A free strategy game, exclusively for Sharpenerians which uses the points you earn in studies.</p>
                             
                             <!-- Game Elements -->
                             <div class="relative w-80 h-60 mx-auto">
@@ -242,22 +242,22 @@
                     <!-- Slide 3: Company Logos -->
                     <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2 text-gray-900">Sharpener has 1500+ companies tie-ups!</h2>
-                            <p class="text-lg mb-4 text-gray-700">Your dream, our destination</p>
+                            <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Sharpener has 1500+ companies tie-ups!</h2>
+                            <p class="text-lg mb-4 text-white drop-shadow-md">Your dream, our destination</p>
                             
                             <!-- Features -->
                             <div class="flex flex-col items-center space-y-2 mb-8">
                                 <div class="flex items-center">
                                     <div class="w-6 h-6 bg-blue-500 rounded-full mr-3"></div>
-                                    <span class="text-gray-900">PAN India tie-ups for all locations</span>
+                                    <span class="text-white drop-shadow-md">PAN India tie-ups for all locations</span>
                                 </div>
                                 <div class="flex items-center">
                                     <div class="w-6 h-6 bg-green-500 rounded-full mr-3"></div>
-                                    <span class="text-gray-900">Students are free to choose a company of their choice</span>
+                                    <span class="text-white drop-shadow-md">Students are free to choose a company of their choice</span>
                                 </div>
                                 <div class="flex items-center">
                                     <div class="w-6 h-6 bg-purple-500 rounded-full mr-3"></div>
-                                    <span class="text-gray-900">Alumni program for experienced folks for job switches</span>
+                                    <span class="text-white drop-shadow-md">Alumni program for experienced folks for job switches</span>
                                 </div>
                             </div>
                         </div>
