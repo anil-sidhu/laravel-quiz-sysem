@@ -79,7 +79,7 @@
     opacity: 1;
   }
   100% {
-    transform: rotate(45deg) translateX(1200px);
+    transform: rotate(45deg) translateX(1500px);
     opacity: 0;
   }
 }
@@ -617,8 +617,8 @@
             meteor.className = 'pointer-events-none absolute size-1 animate-meteor rounded-full bg-slate-300 shadow-[0_0_0_1px_#ffffff30]';
             
             // Random position and timing - start from top-left area
-            const startX = Math.random() * 200 - 150; // Start from left edge or off-screen
-            const startY = Math.random() * 200 - 150; // Start from top edge or off-screen
+            const startX = Math.random() * 100 - 200; // Start further off-screen to the left
+            const startY = Math.random() * 100 - 200; // Start further off-screen to the top
             const delay = Math.random() * 2;
             const duration = 4 + Math.random() * 3; // 4-7 seconds
             
@@ -645,12 +645,12 @@
         // Create meteors periodically
         function startMeteorAnimation() {
             // Create initial meteors
-            for (let i = 0; i < 25; i++) {
-                setTimeout(createMeteor, i * 80);
+            for (let i = 0; i < 20; i++) {
+                setTimeout(createMeteor, i * 100);
             }
             
             // Continue creating meteors
-            setInterval(createMeteor, 300);
+            setInterval(createMeteor, 400);
         }
 
         // Start meteor animation when modal is shown
