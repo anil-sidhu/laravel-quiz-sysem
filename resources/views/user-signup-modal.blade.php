@@ -1,7 +1,7 @@
 <form id="modalSignupForm" action="/user-signup" method="post" class="space-y-4">
     @csrf
     <div class="mb-1">
-        <label for="modal_name" class="text-gray-600 mb-1">User Name</label>
+        <label for="modal_name" class="text-gray-800 mb-1">User Name</label>
         <input type="text" id="modal_name" placeholder="Enter User name" name="name"
         class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
         <div id="error_name" class="input-error"></div>
@@ -13,19 +13,19 @@
         <div id="error_email" class="input-error"></div>
     </div> -->
     <div class="mb-1">
-        <label for="modal_mobile" class="text-gray-600 mb-1">User Mobile</label>
+        <label for="modal_mobile" class="text-gray-800 mb-1">User Mobile</label>
         <input type="text" id="modal_mobile" placeholder="Enter User Mobile" name="mobile"
         class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
         <div id="error_mobile" class="input-error"></div>
     </div>
     <div class="relative mb-1">
-        <label for="modal_password" class="text-gray-600 mb-1">Password</label>
+        <label for="modal_password" class="text-gray-800 mb-1">Password</label>
         <input type="password" id="modal_password" placeholder="Enter User password" name="password"
         class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
         <div id="error_password" class="input-error"></div>
     </div>
     <div class="mb-1">
-        <label for="modal_passing_year" class="text-gray-600 mb-1">Passing Year (optional)</label>
+        <label for="modal_passing_year" class="text-gray-800 mb-1">Passing Year (optional)</label>
         <select id="modal_passing_year" name="passing_year" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
             <option value="">Select year</option>
             @for($y = date('Y')+3; $y >= date('Y')-13; $y--)
@@ -35,7 +35,7 @@
         <div id="error_passing_year" class="input-error"></div>
     </div>
     <div class="mb-3">
-        <label for="modal_interested_in_training" class=" mb-1 text-gray-600">Interested in Sharpener’s Job Gurantee Program? <span class="text-red-600 text-[11px]">(Recommended)</span></label>
+        <label for="modal_interested_in_training" class=" mb-1 text-gray-800">Interested in Sharpener's Job Gurantee Program? <span class="text-red-600 text-[11px]">(Recommended)</span></label>
         <select id="modal_interested_in_training" name="interested_in_training" class="w-full py-2 px-[5px] border-1 border-[#d6d6d6] rounded-xl focus:outline-none">
             <option value="">Select</option>
             <option value="yes">Yes, I am interested</option>
