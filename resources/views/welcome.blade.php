@@ -44,8 +44,8 @@
         <div class="bg-white rounded-lg shadow-lg p-6 sm:p-8 relative">
             <!-- Sharpener Logo and Text - Top Right -->
             <div class="absolute top-4 right-4 flex items-center">
-                <svg class="w-6 h-6 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="url(#sharpenerGradient)"/>
+                <svg class="w-8 h-8 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="url(#sharpenerGradient)" stroke="url(#sharpenerGradient)" stroke-width="0.5"/>
                     <defs>
                         <linearGradient id="sharpenerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" style="stop-color:#b00;stop-opacity:1" />
