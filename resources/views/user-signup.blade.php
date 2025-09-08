@@ -440,6 +440,7 @@
         </div>
     </form>
     </div>
+    </div>
 </div>
 <x-footer-user></x-footer-user>
 <script>
