@@ -130,7 +130,7 @@
 
                         <!-- Alumni Carousel -->
                         <div class="w-full max-w-2xl">
-                            <div class="alumni-carousel-container overflow-hidden h-40">
+                            <div class="alumni-carousel-container overflow-hidden h-50">
                                 <!-- Row 1: Moving Left to Right -->
                                 <div class="alumni-row-1 flex">
                                     <div class="alumni-item flex-shrink-0 w-48 mx-2 bg-white bg-opacity-10 rounded-lg p-3 flex items-center">

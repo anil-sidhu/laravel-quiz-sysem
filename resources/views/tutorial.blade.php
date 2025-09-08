@@ -195,7 +195,7 @@ iframe, video, embed, object {
 </div>
 
 <x-footer-user></x-footer-user>
-@if(!session('user'))
+@if(!session('user') && !session('admin'))
     @include('components.lead-modal')
     <script>
         console.log('Tutorial page - modal included, user not logged in'); // Debug log

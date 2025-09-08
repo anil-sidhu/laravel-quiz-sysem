@@ -40,7 +40,7 @@
     </div>
 
     <!-- Sharpener Promotional Box -->
-    <div class="w-full max-w-4xl mx-auto p-4 sm:p-8 mt-6 sm:mt-10">
+    <div class="w-full max-w-4xl mx-auto p-4 sm:p-8 mt-0">
         <div class="bg-white rounded-lg shadow-lg p-6 sm:p-8 relative">
             <!-- Sharpener Logo and Text - Top Right -->
             <div class="absolute top-4 right-4 flex items-center">
@@ -134,7 +134,7 @@
   </div>
 </div>
 <x-footer-user></x-footer-user>
-@if(!session('user'))
+@if(!session('user') && !session('admin'))
     @include('components.lead-modal', ['closable' => true])
 @endif
 

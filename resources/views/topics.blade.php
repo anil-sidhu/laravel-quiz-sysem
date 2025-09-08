@@ -38,7 +38,7 @@
     
     </div>
 </div>
-@if(!session('user'))
+@if(!session('user') && !session('admin'))
     @include('components.lead-modal')
     <script>
         document.addEventListener('DOMContentLoaded', function() {

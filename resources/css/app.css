@@ -10,8 +10,6 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-
-
 .ql-code-block-container {
     display: block;
     background-color: #2d2d2d !important;
@@ -31,6 +29,6 @@
 }
 
 /* Global CSS - Add your custom styles below */
-ql-code-block{
+.ql-code-block{
   text-wrap: auto;
 }
