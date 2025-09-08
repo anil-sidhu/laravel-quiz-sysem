@@ -165,20 +165,20 @@
                 <!-- Stats Cards -->
                 <div class="grid grid-cols-2 gap-4 mb-8 w-full max-w-md">
                     <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                        <div class="text-2xl font-bold text-white">4.9G</div>
-                        <div class="text-sm text-white">Google Rating from 700+ reviews</div>
+                        <div class="text-2xl font-bold text-gray-900">4.9G</div>
+                        <div class="text-sm text-gray-700">Google Rating from 700+ reviews</div>
                     </div>
                     <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                        <div class="text-2xl font-bold text-white">95%</div>
-                        <div class="text-sm text-white">Average salary hike</div>
+                        <div class="text-2xl font-bold text-gray-900">95%</div>
+                        <div class="text-sm text-gray-700">Average salary hike</div>
                     </div>
                     <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                        <div class="text-2xl font-bold text-white">2500+</div>
-                        <div class="text-sm text-white">Sharpenerians Placed</div>
+                        <div class="text-2xl font-bold text-gray-900">2500+</div>
+                        <div class="text-sm text-gray-700">Sharpenerians Placed</div>
                     </div>
                     <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
-                        <div class="text-2xl font-bold text-white">100%</div>
-                        <div class="text-sm text-white">Job assurance</div>
+                        <div class="text-2xl font-bold text-gray-900">100%</div>
+                        <div class="text-sm text-gray-700">Job assurance</div>
                     </div>
                 </div>
 
