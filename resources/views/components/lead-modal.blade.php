@@ -268,56 +268,56 @@
                                 <!-- Column 1: Moving Bottom to Top -->
                                 <div class="company-column-1 absolute left-0 w-1/2 h-full">
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Fynd</div>
+                                        <div class="font-bold text-gray-900">Fynd</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Propelld</div>
+                                        <div class="font-bold text-gray-900">Propelld</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Athenahealth</div>
+                                        <div class="font-bold text-gray-900">Athenahealth</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Publicis Sapient</div>
+                                        <div class="font-bold text-gray-900">Publicis Sapient</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Radiansys</div>
+                                        <div class="font-bold text-gray-900">Radiansys</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Rakuten</div>
+                                        <div class="font-bold text-gray-900">Rakuten</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">OYO</div>
+                                        <div class="font-bold text-gray-900">OYO</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">IDFC First</div>
+                                        <div class="font-bold text-gray-900">IDFC First</div>
                                     </div>
                                 </div>
                                 
                                 <!-- Column 2: Moving Top to Bottom -->
                                 <div class="company-column-2 absolute right-0 w-1/2 h-full">
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Upstox</div>
+                                        <div class="font-bold text-gray-900">Upstox</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Netcore</div>
+                                        <div class="font-bold text-gray-900">Netcore</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Zolo</div>
+                                        <div class="font-bold text-gray-900">Zolo</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Scalex</div>
+                                        <div class="font-bold text-gray-900">Scalex</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Shiprocket</div>
+                                        <div class="font-bold text-gray-900">Shiprocket</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">SkillGigs</div>
+                                        <div class="font-bold text-gray-900">SkillGigs</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Societe Generale</div>
+                                        <div class="font-bold text-gray-900">Societe Generale</div>
                                     </div>
                                     <div class="company-item bg-white bg-opacity-10 rounded-lg p-3 m-2 text-center">
-                                        <div class="font-bold">Telstra</div>
+                                        <div class="font-bold text-gray-900">Telstra</div>
                                     </div>
                                 </div>
                             </div>
