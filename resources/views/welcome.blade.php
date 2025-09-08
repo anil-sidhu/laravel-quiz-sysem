@@ -57,7 +57,7 @@
             </div>
 
             <!-- Pay After Placement Badge -->
-            <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4" style="background-color: #FEE2E2; color: #EF4444;">
+            <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4" style="background-color: #FEE2E2; color: #B91C1C;">
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
