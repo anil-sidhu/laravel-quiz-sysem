@@ -74,6 +74,9 @@
 
         <label for="" class="text-gray-600 mb-1">Description Title</label>
     <div id="editor" style="height: 200px;"></div>
+    <div class="text-sm text-gray-500 mt-1 mb-3">
+        Character count: <span id="charCount">0</span> / 500,000
+    </div>
 
     <button type="submit" class="w-full bg-green-900 rounded-xl px-4 py-2 text-white" >Edit Topic</button>
 
@@ -115,12 +118,30 @@
     quill.root.innerHTML = initialContent;
   }
 
+  // Update initial character count
+  const initialLength = quill.getLength() - 1;
+  document.getElementById('charCount').textContent = initialLength;
+
   quill.on('text-change', (delta, oldDelta, source) => {
   if (source == 'api') {
     console.log('An API call triggered this change.');
   } else if (source == 'user') {
     const html = quill.root.innerHTML;
     document.getElementById('quillContent').value = html;
+    
+    // Update character count
+    const textLength = quill.getLength() - 1; // Subtract 1 to exclude the trailing newline
+    document.getElementById('charCount').textContent = textLength;
+    
+    // Change color based on length
+    const charCountElement = document.getElementById('charCount');
+    if (textLength > 500000) {
+      charCountElement.style.color = 'red';
+    } else if (textLength > 450000) {
+      charCountElement.style.color = 'orange';
+    } else {
+      charCountElement.style.color = 'green';
+    }
   }
 });
 

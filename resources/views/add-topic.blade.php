@@ -70,6 +70,9 @@
 
         <label for="" class="text-gray-600 mb-1">Description Title</label>
     <div id="editor" style="height: 200px;"></div>
+    <div class="text-sm text-gray-500 mt-1">
+        Character count: <span id="charCount">0</span> / 500,000
+    </div>
 
     @error('description')
        <div class="text-red-500">{{$message}}</div>
@@ -115,6 +118,20 @@
   } else if (source == 'user') {
     const html = quill.root.innerHTML;
     document.getElementById('quillContent').value = html;
+    
+    // Update character count
+    const textLength = quill.getLength() - 1; // Subtract 1 to exclude the trailing newline
+    document.getElementById('charCount').textContent = textLength;
+    
+    // Change color based on length
+    const charCountElement = document.getElementById('charCount');
+    if (textLength > 500000) {
+      charCountElement.style.color = 'red';
+    } else if (textLength > 450000) {
+      charCountElement.style.color = 'orange';
+    } else {
+      charCountElement.style.color = 'green';
+    }
   }
 });
 

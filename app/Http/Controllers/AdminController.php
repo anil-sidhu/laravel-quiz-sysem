@@ -265,6 +265,9 @@ class AdminController extends Controller
             "description"=>"required | max:500000 | min:100",
             "video_link"=>"required",
             "keywords"=>"required | max:500 | min:20",
+        ], [
+            'description.max' => 'The description field must not exceed 500,000 characters.',
+            'description.min' => 'The description field must be at least 100 characters.',
         ]); 
         // return $request;
         $course = new Tutorial();
@@ -283,9 +286,12 @@ class AdminController extends Controller
         //  return $request;
         $validation = $request->validate([
             "title"=>"required | max:100 | min:10",
-            "description"=>"required | max:5000 | min:100",
+            "description"=>"required | max:500000 | min:100",
             "video_link"=>"required",
             "keywords"=>"required | max:500 | min:20",
+        ], [
+            'description.max' => 'The description field must not exceed 500,000 characters.',
+            'description.min' => 'The description field must be at least 100 characters.',
         ]); 
         // return $request;
         $topic =  Tutorial::find($id);
