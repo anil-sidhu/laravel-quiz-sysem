@@ -91,9 +91,10 @@ class SharpenerTechService
      * @param string $otp OTP to verify
      * @param string $name User's name
      * @param array $utmData Optional UTM parameters
+     * @param bool $interestShown Whether user showed interest in training
      * @return array API response
      */
-    public function verifyOtp($mobile, $otp, $name, $utmData = [])
+    public function verifyOtp($mobile, $otp, $name, $utmData = [], $interestShown = false)
     {
         $url = $this->baseUrl . '/verify-otp';
         
@@ -115,7 +116,8 @@ class SharpenerTechService
             'mobileNo' => $mobile,
             'otp' => $otp,
             'name' => $name,
-            'utmData' => $utmData
+            'utmData' => $utmData,
+            'interestShown' => $interestShown
         ];
 
         Log::info('Sharpener Tech Verify OTP Request', [
@@ -125,6 +127,7 @@ class SharpenerTechService
             'name' => $name,
             'isTest' => $isTest,
             'utmData' => $utmData,
+            'interestShown' => $interestShown,
         ]);
 
         try {

@@ -567,7 +567,19 @@ if($mcqData){
         // Verify OTP using Sharpener Tech API
         try {
             $sms = app(\App\Services\SharpenerTechService::class);
-            $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name);
+            // Check if user is interested in training
+            $interestShown = ($user->interested_in_training === 'yes');
+            
+            Log::info('Sharpener Tech OTP Verification - Interest Tracking', [
+                'user_id' => $user->id,
+                'mobile' => $user->mobile,
+                'name' => $user->name,
+                'interested_in_training' => $user->interested_in_training,
+                'interestShown' => $interestShown,
+                'verification_type' => request()->is('user-signup-verify') ? 'signup' : 'login'
+            ]);
+            
+            $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name, [], $interestShown);
             
             // Check if Sharpener Tech API failed
             if (isset($result['status']) && $result['status'] !== 'success') {
@@ -701,7 +713,19 @@ if($mcqData){
         // Verify OTP using Sharpener Tech API
         try {
             $sms = app(\App\Services\SharpenerTechService::class);
-            $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name);
+            // Check if user is interested in training
+            $interestShown = ($user->interested_in_training === 'yes');
+            
+            Log::info('Sharpener Tech OTP Verification - Interest Tracking', [
+                'user_id' => $user->id,
+                'mobile' => $user->mobile,
+                'name' => $user->name,
+                'interested_in_training' => $user->interested_in_training,
+                'interestShown' => $interestShown,
+                'verification_type' => request()->is('user-signup-verify') ? 'signup' : 'login'
+            ]);
+            
+            $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name, [], $interestShown);
             
             // Check if Sharpener Tech API failed
             if (isset($result['status']) && $result['status'] !== 'success') {
