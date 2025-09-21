@@ -633,6 +633,32 @@ if($mcqData){
             $user->otp_code = null;
             $user->otp_expires_at = null;
             $user->save();
+
+            // Create lead payment record if user came from a course
+            if ($user->signup_source_course_id) {
+                $course = \App\Models\Course::find($user->signup_source_course_id);
+                if ($course && $course->created_by_admin_id) {
+                    // Determine lead value based on interest level
+                    $leadValue = $user->interested_in_training === 'yes' ? 75.00 : 25.00;
+                    $leadQuality = $user->interested_in_training === 'yes' ? 'interested' : 'signup';
+                    
+                    \App\Models\AdminLeadPayment::createLeadPayment(
+                        $course->created_by_admin_id,
+                        $user->id,
+                        $course->id,
+                        $leadValue,
+                        $leadQuality
+                    );
+
+                    Log::info('Lead payment created for admin', [
+                        'admin_id' => $course->created_by_admin_id,
+                        'user_id' => $user->id,
+                        'course_id' => $course->id,
+                        'lead_value' => $leadValue,
+                        'lead_quality' => $leadQuality
+                    ]);
+                }
+            }
             
             // Get redirect URL before cleaning up session
             $redirectUrl = session('signup_redirect_url', '/');
@@ -779,6 +805,32 @@ if($mcqData){
             $user->otp_code = null;
             $user->otp_expires_at = null;
             $user->save();
+
+            // Create lead payment record if user came from a course
+            if ($user->signup_source_course_id) {
+                $course = \App\Models\Course::find($user->signup_source_course_id);
+                if ($course && $course->created_by_admin_id) {
+                    // Determine lead value based on interest level
+                    $leadValue = $user->interested_in_training === 'yes' ? 75.00 : 25.00;
+                    $leadQuality = $user->interested_in_training === 'yes' ? 'interested' : 'signup';
+                    
+                    \App\Models\AdminLeadPayment::createLeadPayment(
+                        $course->created_by_admin_id,
+                        $user->id,
+                        $course->id,
+                        $leadValue,
+                        $leadQuality
+                    );
+
+                    Log::info('Lead payment created for admin', [
+                        'admin_id' => $course->created_by_admin_id,
+                        'user_id' => $user->id,
+                        'course_id' => $course->id,
+                        'lead_value' => $leadValue,
+                        'lead_quality' => $leadQuality
+                    ]);
+                }
+            }
             
             // Get redirect URL and clean up session
             $redirectUrl = session('login_redirect_url', '/');

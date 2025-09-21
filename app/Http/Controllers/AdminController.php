@@ -450,13 +450,116 @@ class AdminController extends Controller
                ? round(($totalInterestedLeads / $totalLeads) * 100, 2) 
                : 0;
 
+           // Get payment analytics if admin_lead_payments table exists
+           $paymentAnalytics = [];
+           $totalCommissions = 0;
+           $pendingCommissions = 0;
+           
+           try {
+               if (Schema::hasTable('admin_lead_payments')) {
+                   $paymentAnalytics = \App\Models\AdminLeadPayment::select('admin_id')
+                       ->selectRaw('SUM(commission_amount) as total_earnings')
+                       ->selectRaw('SUM(CASE WHEN payment_status = "pending" THEN commission_amount ELSE 0 END) as pending_earnings')
+                       ->selectRaw('COUNT(*) as total_payments')
+                       ->groupBy('admin_id')
+                       ->with('admin:id,name')
+                       ->get()
+                       ->keyBy('admin_id');
+                   
+                   $totalCommissions = \App\Models\AdminLeadPayment::sum('commission_amount');
+                   $pendingCommissions = \App\Models\AdminLeadPayment::where('payment_status', 'pending')->sum('commission_amount');
+               }
+           } catch (\Exception $e) {
+               \Log::info('Payment analytics query skipped: ' . $e->getMessage());
+           }
+
            return view('course-analytics', [
                'name' => $admin->name,
                'courses' => $coursesWithAnalytics,
                'adminPerformance' => $adminPerformance,
                'totalLeads' => $totalLeads,
                'totalInterestedLeads' => $totalInterestedLeads,
-               'overallConversionRate' => $overallConversionRate
+               'overallConversionRate' => $overallConversionRate,
+               'paymentAnalytics' => $paymentAnalytics,
+               'totalCommissions' => $totalCommissions,
+               'pendingCommissions' => $pendingCommissions
+           ]);
+       }
+
+       /**
+        * Individual Admin Performance Dashboard
+        */
+       function myPerformance(Request $request) {
+           $admin = Session::get('admin');
+           
+           if (!$admin) {
+               return redirect('admin-login');
+           }
+
+           // Get admin's courses with analytics
+           $myCourses = Course::where('created_by_admin_id', $admin->id)
+               ->withCount([
+                   'signupLeads as total_signups',
+                   'interestedLeads as interested_signups'
+               ])
+               ->orderBy('total_signups', 'desc')
+               ->get()
+               ->map(function ($course) {
+                   $course->conversion_rate = $course->total_signups > 0 
+                       ? round(($course->interested_signups / $course->total_signups) * 100, 2) 
+                       : 0;
+                   return $course;
+               });
+
+           // Get payment analytics for this admin
+           $myEarnings = [];
+           $totalEarnings = 0;
+           $pendingEarnings = 0;
+           $recentPayments = collect([]);
+
+           try {
+               if (Schema::hasTable('admin_lead_payments')) {
+                   $myEarnings = \App\Models\AdminLeadPayment::where('admin_id', $admin->id)
+                       ->selectRaw('SUM(commission_amount) as total_earnings')
+                       ->selectRaw('SUM(CASE WHEN payment_status = "pending" THEN commission_amount ELSE 0 END) as pending_earnings')
+                       ->selectRaw('COUNT(*) as total_payments')
+                       ->first();
+
+                   $totalEarnings = $myEarnings->total_earnings ?? 0;
+                   $pendingEarnings = $myEarnings->pending_earnings ?? 0;
+
+                   // Get recent payments (last 30 days)
+                   $recentPayments = \App\Models\AdminLeadPayment::where('admin_id', $admin->id)
+                       ->with(['course:id,title', 'user:id,name'])
+                       ->orderBy('lead_generated_at', 'desc')
+                       ->limit(10)
+                       ->get();
+               }
+           } catch (\Exception $e) {
+               \Log::info('My performance query error: ' . $e->getMessage());
+           }
+
+           // Calculate total leads from my courses
+           $totalLeads = User::whereHas('signupSourceCourse', function($query) use ($admin) {
+               $query->where('created_by_admin_id', $admin->id);
+           })->count();
+
+           $interestedLeads = User::whereHas('signupSourceCourse', function($query) use ($admin) {
+               $query->where('created_by_admin_id', $admin->id);
+           })->where('interested_in_training', 'yes')->count();
+
+           $myConversionRate = $totalLeads > 0 ? round(($interestedLeads / $totalLeads) * 100, 2) : 0;
+
+           return view('admin-performance', [
+               'name' => $admin->name,
+               'admin' => $admin,
+               'myCourses' => $myCourses,
+               'totalLeads' => $totalLeads,
+               'interestedLeads' => $interestedLeads,
+               'myConversionRate' => $myConversionRate,
+               'totalEarnings' => $totalEarnings,
+               'pendingEarnings' => $pendingEarnings,
+               'recentPayments' => $recentPayments
            ]);
        }
 
