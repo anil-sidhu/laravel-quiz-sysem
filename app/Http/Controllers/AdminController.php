@@ -238,11 +238,21 @@ class AdminController extends Controller
             "title"=>"required | max:150 | min:10",
             "description"=>"required | max:500 | min:10",
         ]); 
+        
+        $admin = Session::get('admin');
         $course = new Course();
         $course->title= $request->title;
         $course->description= $request->description;
+        $course->created_by_admin_id= $admin->id;
+        $course->admin_assigned_at= now();
 
         if($course->save()){
+            Log::info('Course created with admin tracking', [
+                'course_id' => $course->id,
+                'course_title' => $course->title,
+                'admin_id' => $admin->id,
+                'admin_name' => $admin->name
+            ]);
             return redirect('/dashboard');
         }
     }
@@ -360,6 +370,76 @@ class AdminController extends Controller
         }
 
        
+       }
+
+       /**
+        * Course Analytics Dashboard - Track leads from each course
+        */
+       function courseAnalytics(Request $request) {
+           $admin = Session::get('admin');
+           
+           if (!$admin) {
+               return redirect('admin-login');
+           }
+
+           // Get courses with lead analytics
+           $coursesWithAnalytics = Course::select('courses.*')
+               ->withCount([
+                   'signupLeads as total_signups',
+                   'interestedLeads as interested_signups'
+               ])
+               ->with('createdByAdmin:id,name')
+               ->orderBy('total_signups', 'desc')
+               ->get()
+               ->map(function ($course) {
+                   $course->conversion_rate = $course->total_signups > 0 
+                       ? round(($course->interested_signups / $course->total_signups) * 100, 2) 
+                       : 0;
+                   return $course;
+               });
+
+           // Get recent signups (last 30 days) per course
+           $recentSignupsData = User::select('signup_source_course_id')
+               ->selectRaw('COUNT(*) as recent_signups')
+               ->where('created_at', '>=', now()->subDays(30))
+               ->whereNotNull('signup_source_course_id')
+               ->groupBy('signup_source_course_id')
+               ->pluck('recent_signups', 'signup_source_course_id');
+
+           // Add recent signup data to courses
+           $coursesWithAnalytics = $coursesWithAnalytics->map(function ($course) use ($recentSignupsData) {
+               $course->recent_signups = $recentSignupsData->get($course->id, 0);
+               return $course;
+           });
+
+           // Get top performing courses by admin
+           $adminPerformance = Course::select('created_by_admin_id')
+               ->selectRaw('COUNT(DISTINCT courses.id) as total_courses')
+               ->selectRaw('SUM(CASE WHEN users.id IS NOT NULL THEN 1 ELSE 0 END) as total_leads')
+               ->selectRaw('SUM(CASE WHEN users.interested_in_training = "yes" THEN 1 ELSE 0 END) as interested_leads')
+               ->leftJoin('users', 'courses.id', '=', 'users.signup_source_course_id')
+               ->leftJoin('admins', 'courses.created_by_admin_id', '=', 'admins.id')
+               ->whereNotNull('courses.created_by_admin_id')
+               ->groupBy('courses.created_by_admin_id')
+               ->with('createdByAdmin:id,name')
+               ->get();
+
+           // Overall statistics
+           $totalLeads = User::whereNotNull('signup_source_course_id')->count();
+           $totalInterestedLeads = User::whereNotNull('signup_source_course_id')
+               ->where('interested_in_training', 'yes')->count();
+           $overallConversionRate = $totalLeads > 0 
+               ? round(($totalInterestedLeads / $totalLeads) * 100, 2) 
+               : 0;
+
+           return view('course-analytics', [
+               'name' => $admin->name,
+               'courses' => $coursesWithAnalytics,
+               'adminPerformance' => $adminPerformance,
+               'totalLeads' => $totalLeads,
+               'totalInterestedLeads' => $totalInterestedLeads,
+               'overallConversionRate' => $overallConversionRate
+           ]);
        }
 
     public function updateUserStatus(Request $request, $userId)

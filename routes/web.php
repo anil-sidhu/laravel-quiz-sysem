@@ -85,6 +85,7 @@ Route::view('admin-login','admin-login');
 Route::post('admin-login',[AdminController::class,'login']);
 
 Route::middleware('CheckAdminAuth')->group(function(){
+    Route::get('course-analytics', [AdminController::class, 'courseAnalytics']);
     Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
     Route::get('admin-logout',[AdminController::class,'logout'])->name('admin-logout');
     Route::get('admin-categories',[AdminController::class,'categories']);

@@ -29,6 +29,10 @@ class User extends Authenticatable
         'otp_code',
         'otp_expires_at',
         'mobile_verified_at',
+        'signup_source_course_id',
+        'signup_source_page_url',
+        'signup_source_type',
+        'signup_tracked_at',
         'remember_token',
     ];
 
@@ -52,6 +56,15 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'signup_tracked_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get the course that generated this signup
+     */
+    public function signupSourceCourse()
+    {
+        return $this->belongsTo(Course::class, 'signup_source_course_id');
     }
 }

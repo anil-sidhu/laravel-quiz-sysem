@@ -78,23 +78,53 @@ class UserController extends Controller
       $referrerUrl = $request->header('referer');
       $redirectUrl = '/';
       
-      // If user came from a tutorial page, use that as redirect URL
-      if ($referrerUrl && str_contains($referrerUrl, '/topic/')) {
-          $redirectUrl = $referrerUrl;
-          Log::info('User signup from tutorial page', ['referrer' => $referrerUrl]);
-      } elseif ($request->has('redirect_url')) {
+      // Extract course tracking information from referrer URL
+      $courseId = null;
+      $sourceType = 'other';
+      
+      if ($referrerUrl) {
+          // Pattern: /topic/6/21/title -> Course ID = 6 (topic page)
+          if (preg_match('/\/topic\/(\d+)\/\d+\//', $referrerUrl, $matches)) {
+              $courseId = (int)$matches[1];
+              $sourceType = 'topic_page';
+              $redirectUrl = $referrerUrl; // Redirect back to topic page
+              Log::info('User signup from topic page', [
+                  'referrer' => $referrerUrl,
+                  'course_id' => $courseId
+              ]);
+          }
+          // Pattern: /course-details/6/title -> Course ID = 6 (course page)
+          elseif (preg_match('/\/course-details\/(\d+)\//', $referrerUrl, $matches)) {
+              $courseId = (int)$matches[1];
+              $sourceType = 'course_page';
+              Log::info('User signup from course details page', [
+                  'referrer' => $referrerUrl,
+                  'course_id' => $courseId
+              ]);
+          }
+          // Homepage or other pages on the same domain
+          elseif (str_contains($referrerUrl, 'thecodingskills.com')) {
+              $sourceType = 'homepage';
+              Log::info('User signup from homepage/other page', ['referrer' => $referrerUrl]);
+          }
+      }
+      
+      // Override with explicit redirect URL if provided
+      if ($request->has('redirect_url')) {
           $redirectUrl = $request->redirect_url;
       } elseif (Session::has('quiz-url')) {
           $redirectUrl = Session::get('quiz-url');
       }
       
-      // Debug: Log all request data
-      Log::info('User signup request', [
+      // Enhanced logging with course tracking
+      Log::info('User signup request with course tracking', [
         'all_data' => $request->all(),
         'has_redirect_url' => $request->has('redirect_url'),
         'redirect_url' => $request->get('redirect_url'),
         'referrer_url' => $referrerUrl,
-        'final_redirect_url' => $redirectUrl
+        'final_redirect_url' => $redirectUrl,
+        'extracted_course_id' => $courseId,
+        'source_type' => $sourceType
       ]);
       
       $validate = $request->validate([
@@ -119,6 +149,11 @@ class UserController extends Controller
         'interested_in_training'=>$request->interested_in_training,
         // 'leads'=>$request->has('leads') ? true : false,
         'passing_year' => $request->passing_year,
+        // Course tracking fields
+        'signup_source_course_id' => $courseId,
+        'signup_source_page_url' => $referrerUrl,
+        'signup_source_type' => $sourceType,
+        'signup_tracked_at' => now(),
       ];
 
       if ($needsPhoneVerification) {
