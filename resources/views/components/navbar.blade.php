@@ -13,7 +13,6 @@
             <a class="text-gray-700 hover:text-blue-500" href="/admin-categories">Categories</a>
             <a class="text-gray-700 hover:text-blue-500" href="/add-quiz">Quiz</a>
             <a class="text-gray-700 hover:text-blue-500" href="/course-analytics">📊 Analytics</a>
-            <a class="text-gray-700 hover:text-blue-500" href="/my-performance">💰 My Performance</a>
             <a class="text-gray-700 hover:text-blue-500" href="">Welcome {{$name}}</a>
             <a class="text-gray-700 hover:text-blue-500" href="/admin-logout">Logout</a>
             <a class="text-gray-700 hover:text-blue-500" href="/add-course">Add Course</a>

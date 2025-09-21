@@ -34,7 +34,7 @@
         </div>
 
         <!-- Overall Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="analytics-card p-6 rounded-xl shadow-lg">
                 <div class="flex items-center justify-between">
                     <div>
@@ -62,17 +62,6 @@
                         <p class="text-3xl font-bold">{{$overallConversionRate}}%</p>
                     </div>
                     <div class="text-4xl opacity-80">📈</div>
-                </div>
-            </div>
-
-            <div class="bg-yellow-500 p-6 rounded-xl shadow-lg text-white">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold">Total Commissions</h3>
-                        <p class="text-3xl font-bold">${{number_format($totalCommissions, 2)}}</p>
-                        <p class="text-sm opacity-80">Pending: ${{number_format($pendingCommissions, 2)}}</p>
-                    </div>
-                    <div class="text-4xl opacity-80">💰</div>
                 </div>
             </div>
         </div>
@@ -166,7 +155,6 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Leads</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interested Leads</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Success Rate</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Earnings</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -180,18 +168,6 @@
                             <td class="px-6 py-4 text-sm font-bold text-green-600">{{$admin->interested_leads}}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">
                                 {{$admin->total_leads > 0 ? round(($admin->interested_leads / $admin->total_leads) * 100, 2) : 0}}%
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-900">
-                                @if(isset($paymentAnalytics[$admin->created_by_admin_id]))
-                                    <div>
-                                        <span class="text-green-600 font-bold">${{number_format($paymentAnalytics[$admin->created_by_admin_id]->total_earnings, 2)}}</span>
-                                        <div class="text-xs text-gray-500">
-                                            Pending: ${{number_format($paymentAnalytics[$admin->created_by_admin_id]->pending_earnings, 2)}}
-                                        </div>
-                                    </div>
-                                @else
-                                    <span class="text-gray-400">$0.00</span>
-                                @endif
                             </td>
                         </tr>
                         @endforeach
