@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Admin;
 use App\Models\Category;
@@ -387,8 +389,14 @@ class AdminController extends Controller
                ->withCount([
                    'signupLeads as total_signups',
                    'interestedLeads as interested_signups'
-               ])
-               ->with('createdByAdmin:id,name')
+               ]);
+               
+           // Only load admin relationship if admins table exists
+           if (Schema::hasTable('admins')) {
+               $coursesWithAnalytics = $coursesWithAnalytics->with('createdByAdmin:id,name');
+           }
+           
+           $coursesWithAnalytics = $coursesWithAnalytics
                ->orderBy('total_signups', 'desc')
                ->get()
                ->map(function ($course) {
@@ -412,17 +420,27 @@ class AdminController extends Controller
                return $course;
            });
 
-           // Get top performing courses by admin
-           $adminPerformance = Course::select('created_by_admin_id')
-               ->selectRaw('COUNT(DISTINCT courses.id) as total_courses')
-               ->selectRaw('SUM(CASE WHEN users.id IS NOT NULL THEN 1 ELSE 0 END) as total_leads')
-               ->selectRaw('SUM(CASE WHEN users.interested_in_training = "yes" THEN 1 ELSE 0 END) as interested_leads')
-               ->leftJoin('users', 'courses.id', '=', 'users.signup_source_course_id')
-               ->leftJoin('admins', 'courses.created_by_admin_id', '=', 'admins.id')
-               ->whereNotNull('courses.created_by_admin_id')
-               ->groupBy('courses.created_by_admin_id')
-               ->with('createdByAdmin:id,name')
-               ->get();
+           // Get top performing courses by admin (skip if admins table doesn't exist)
+           $adminPerformance = collect([]);
+           
+           try {
+               // Check if admins table exists
+               if (Schema::hasTable('admins')) {
+                   $adminPerformance = Course::select('created_by_admin_id')
+                       ->selectRaw('COUNT(DISTINCT courses.id) as total_courses')
+                       ->selectRaw('SUM(CASE WHEN users.id IS NOT NULL THEN 1 ELSE 0 END) as total_leads')
+                       ->selectRaw('SUM(CASE WHEN users.interested_in_training = "yes" THEN 1 ELSE 0 END) as interested_leads')
+                       ->leftJoin('users', 'courses.id', '=', 'users.signup_source_course_id')
+                       ->leftJoin('admins', 'courses.created_by_admin_id', '=', 'admins.id')
+                       ->whereNotNull('courses.created_by_admin_id')
+                       ->groupBy('courses.created_by_admin_id')
+                       ->with('createdByAdmin:id,name')
+                       ->get();
+               }
+           } catch (\Exception $e) {
+               // If there's any error with admin queries, just skip it
+               \Log::info('Admin performance query skipped: ' . $e->getMessage());
+           }
 
            // Overall statistics
            $totalLeads = User::whereNotNull('signup_source_course_id')->count();

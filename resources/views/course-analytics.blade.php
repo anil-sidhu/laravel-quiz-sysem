@@ -95,7 +95,13 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-900">
-                                {{$course->createdByAdmin ? $course->createdByAdmin->name : 'Not Assigned'}}
+                                @if(isset($course->createdByAdmin) && $course->createdByAdmin)
+                                    {{$course->createdByAdmin->name}}
+                                @elseif(isset($course->created_by_admin_id) && $course->created_by_admin_id)
+                                    Admin ID: {{$course->created_by_admin_id}}
+                                @else
+                                    Not Assigned
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center">
