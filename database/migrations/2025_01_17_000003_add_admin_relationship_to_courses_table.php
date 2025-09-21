@@ -12,13 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            // Add admin relationship to track who created each course
-            $table->unsignedBigInteger('created_by_admin_id')->nullable()->after('description');
-            $table->timestamp('admin_assigned_at')->nullable()->after('created_by_admin_id');
+            // Check and add admin relationship fields only if they don't exist
+            if (!Schema::hasColumn('courses', 'created_by_admin_id')) {
+                $table->unsignedBigInteger('created_by_admin_id')->nullable()->after('description');
+            }
             
-            // Add foreign key constraint (assuming admins table exists)
-            $table->foreign('created_by_admin_id')->references('id')->on('admins')->onDelete('set null');
+            if (!Schema::hasColumn('courses', 'admin_assigned_at')) {
+                $table->timestamp('admin_assigned_at')->nullable()->after('created_by_admin_id');
+            }
         });
+        
+        // Add foreign key constraint separately (only if column exists and constraint doesn't exist)
+        if (Schema::hasColumn('courses', 'created_by_admin_id')) {
+            try {
+                Schema::table('courses', function (Blueprint $table) {
+                    $table->foreign('created_by_admin_id')->references('id')->on('admins')->onDelete('set null');
+                });
+            } catch (\Exception $e) {
+                // Foreign key might already exist, ignore the error
+                \Log::info('Admin foreign key constraint might already exist: ' . $e->getMessage());
+            }
+        }
     }
 
     /**
