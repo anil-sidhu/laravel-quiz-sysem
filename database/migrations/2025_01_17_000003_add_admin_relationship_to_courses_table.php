@@ -26,7 +26,7 @@ return new class extends Migration
         if (Schema::hasColumn('courses', 'created_by_admin_id')) {
             try {
                 Schema::table('courses', function (Blueprint $table) {
-                    $table->foreign('created_by_admin_id')->references('id')->on('admins')->onDelete('set null');
+                    $table->foreign('created_by_admin_id')->references('id')->on('admin')->onDelete('set null');
                 });
             } catch (\Exception $e) {
                 // Foreign key might already exist, ignore the error

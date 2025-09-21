@@ -391,8 +391,8 @@ class AdminController extends Controller
                    'interestedLeads as interested_signups'
                ]);
                
-           // Only load admin relationship if admins table exists
-           if (Schema::hasTable('admins')) {
+           // Only load admin relationship if admin table exists
+           if (Schema::hasTable('admin')) {
                $coursesWithAnalytics = $coursesWithAnalytics->with('createdByAdmin:id,name');
            }
            
@@ -424,14 +424,14 @@ class AdminController extends Controller
            $adminPerformance = collect([]);
            
            try {
-               // Check if admins table exists
-               if (Schema::hasTable('admins')) {
+               // Check if admin table exists
+               if (Schema::hasTable('admin')) {
                    $adminPerformance = Course::select('created_by_admin_id')
                        ->selectRaw('COUNT(DISTINCT courses.id) as total_courses')
                        ->selectRaw('SUM(CASE WHEN users.id IS NOT NULL THEN 1 ELSE 0 END) as total_leads')
                        ->selectRaw('SUM(CASE WHEN users.interested_in_training = "yes" THEN 1 ELSE 0 END) as interested_leads')
                        ->leftJoin('users', 'courses.id', '=', 'users.signup_source_course_id')
-                       ->leftJoin('admins', 'courses.created_by_admin_id', '=', 'admins.id')
+                       ->leftJoin('admin', 'courses.created_by_admin_id', '=', 'admin.id')
                        ->whereNotNull('courses.created_by_admin_id')
                        ->groupBy('courses.created_by_admin_id')
                        ->with('createdByAdmin:id,name')

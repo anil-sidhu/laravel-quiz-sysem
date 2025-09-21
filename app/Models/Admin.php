@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admin extends Authenticatable
 {
-    protected $table = "admins"; // Updated to standard Laravel naming
+    protected $table = "admin"; // Keep original table name
 
     protected $fillable = [
         'name',

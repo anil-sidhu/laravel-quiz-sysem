@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Only create admins table if it doesn't exist
-        if (!Schema::hasTable('admins')) {
-            Schema::create('admins', function (Blueprint $table) {
+        // Work with existing 'admin' table (without 's')
+        if (!Schema::hasTable('admin')) {
+            // Create admin table if it doesn't exist
+            Schema::create('admin', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
                 $table->string('email')->unique();
@@ -25,15 +26,15 @@ return new class extends Migration
                 $table->timestamps();
             });
         } else {
-            // If table exists, add missing columns (only basic tracking fields)
-            Schema::table('admins', function (Blueprint $table) {
-                if (!Schema::hasColumn('admins', 'role')) {
+            // If admin table exists, add missing columns (only basic tracking fields)
+            Schema::table('admin', function (Blueprint $table) {
+                if (!Schema::hasColumn('admin', 'role')) {
                     $table->string('role')->default('content_creator')->after('password');
                 }
-                if (!Schema::hasColumn('admins', 'is_active')) {
+                if (!Schema::hasColumn('admin', 'is_active')) {
                     $table->boolean('is_active')->default(true)->after('role');
                 }
-                if (!Schema::hasColumn('admins', 'last_login_at')) {
+                if (!Schema::hasColumn('admin', 'last_login_at')) {
                     $table->timestamp('last_login_at')->nullable()->after('is_active');
                 }
             });
