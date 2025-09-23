@@ -238,33 +238,6 @@
                 </div>
             </div>
 
-            <!-- Slide 2: Game Based Learning -->
-            <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
-                <div class="text-center">
-                    <h2 class="text-4xl font-bold mb-4 text-white drop-shadow-lg">Game Based Learning</h2>
-                    <p class="text-lg mb-8 text-white drop-shadow-md">A free strategy game, exclusively for Sharpenerians which uses the points you earn in studies.</p>
-                    
-                    <!-- Game Elements -->
-                    <div class="relative w-80 h-60 mx-auto">
-                        <!-- Building -->
-                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-40 bg-amber-600 rounded-t-lg">
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-red-600 rounded-full"></div>
-                            <div class="absolute top-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                        </div>
-                        
-                        <!-- Trees -->
-                        <div class="absolute bottom-0 left-8 w-6 h-16 bg-green-600 rounded-t-full"></div>
-                        <div class="absolute bottom-0 right-8 w-6 h-16 bg-green-600 rounded-t-full"></div>
-                        <div class="absolute bottom-0 left-16 w-4 h-12 bg-green-500 rounded-t-full"></div>
-                        <div class="absolute bottom-0 right-16 w-4 h-12 bg-green-500 rounded-t-full"></div>
-                        
-                        <!-- Cannons -->
-                        <div class="absolute bottom-0 left-4 w-8 h-6 bg-gray-600 rounded"></div>
-                        <div class="absolute bottom-0 right-4 w-8 h-6 bg-gray-600 rounded"></div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Slide 3: Company Logos -->
             <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
                 <div class="text-center mb-8">
