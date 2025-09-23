@@ -10,10 +10,77 @@
     <div class="bg-gray-100 flex flex-col items-center min-h-screen pt-5">
     <div class="w-full max-w-7xl mx-auto mt-8 px-4">
         <h1 class="text-xl sm:text-2xl text-green-900 font-bold mb-4">Users List</h1>
-        <form method="get" class="mb-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, mobile..." class="flex-1 sm:w-64 px-3 py-2 border border-gray-300 rounded-lg">
-            <button type="submit" class="bg-green-900 text-white px-4 py-2 rounded-lg whitespace-nowrap">Search</button>
-        </form>
+        
+        <!-- Advanced Filters Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Advanced Filters</h2>
+            <form method="get" class="space-y-4">
+                <!-- Search -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                        <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Search by name, mobile..." class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+                
+                <!-- Filter Row 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Sharpener Interest Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sharpener Job Guarantee Program</label>
+                        <select name="sharpener_interest" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option value="">All Users</option>
+                            <option value="yes" {{ ($sharpener_interest ?? '') === 'yes' ? 'selected' : '' }}>Interested (Yes)</option>
+                            <option value="no" {{ ($sharpener_interest ?? '') === 'no' ? 'selected' : '' }}>Not Interested (No)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Signup Date Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Signup Date</label>
+                        <select name="signup_date_filter" id="signupDateFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option value="">All Time</option>
+                            <option value="today" {{ ($signup_date_filter ?? '') === 'today' ? 'selected' : '' }}>Today</option>
+                            <option value="yesterday" {{ ($signup_date_filter ?? '') === 'yesterday' ? 'selected' : '' }}>Yesterday</option>
+                            <option value="last_month" {{ ($signup_date_filter ?? '') === 'last_month' ? 'selected' : '' }}>Last Month</option>
+                            <option value="custom" {{ ($signup_date_filter ?? '') === 'custom' ? 'selected' : '' }}>Custom Date Range</option>
+                        </select>
+                    </div>
+                    
+                    <!-- OTP Verification Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">OTP Verified</label>
+                        <select name="otp_verified" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option value="">All Users</option>
+                            <option value="yes" {{ ($otp_verified ?? '') === 'yes' ? 'selected' : '' }}>Verified (Yes)</option>
+                            <option value="no" {{ ($otp_verified ?? '') === 'no' ? 'selected' : '' }}>Not Verified (No)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Custom Date Range (Hidden by default) -->
+                <div id="customDateRange" class="grid grid-cols-1 md:grid-cols-2 gap-4" style="display: {{ ($signup_date_filter ?? '') === 'custom' ? 'block' : 'none' }}">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                        <input type="date" name="start_date" value="{{ $start_date ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                        <input type="date" name="end_date" value="{{ $end_date ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+                
+                <!-- Filter Buttons -->
+                <div class="flex flex-col sm:flex-row gap-2 pt-4">
+                    <button type="submit" class="bg-green-900 text-white px-6 py-2 rounded-lg hover:bg-green-800 transition duration-200">
+                        <i class="fas fa-filter mr-2"></i>Apply Filters
+                    </button>
+                    <a href="{{ route('dashboard') }}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-200 text-center">
+                        <i class="fas fa-times mr-2"></i>Clear Filters
+                    </a>
+                </div>
+            </form>
+        </div>
         <!-- Desktop Table View -->
         <div class="hidden lg:block overflow-x-auto rounded-lg shadow">
         <table class="min-w-full bg-white border border-gray-200">
@@ -134,5 +201,39 @@
         </div>
     </div>
 </div>
+
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+// Dynamic date range selection
+document.addEventListener('DOMContentLoaded', function() {
+    const signupDateFilter = document.getElementById('signupDateFilter');
+    const customDateRange = document.getElementById('customDateRange');
+    
+    if (signupDateFilter && customDateRange) {
+        signupDateFilter.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customDateRange.style.display = 'block';
+            } else {
+                customDateRange.style.display = 'none';
+            }
+        });
+    }
+});
+
+// Auto-submit form when filters change (optional)
+document.addEventListener('DOMContentLoaded', function() {
+    const filterSelects = document.querySelectorAll('select[name="sharpener_interest"], select[name="otp_verified"]');
+    
+    filterSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            // Optional: Auto-submit when these filters change
+            // this.form.submit();
+        });
+    });
+});
+</script>
+
 </body>
 </html> 

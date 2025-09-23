@@ -52,11 +52,63 @@ class AdminController extends Controller
         $admin = Session::get('admin');
         if($admin){
             $query = User::query();
-            // Only users interested in training or leads
-            $query->where(function($q) {
-                $q->where('interested_in_training', 'yes')
-                  ->orWhere('leads', 1);
-            });
+            
+            // Advanced Filters
+            // 1. Sharpener Job Guarantee Program Interest Filter
+            $sharpenerInterest = $request->input('sharpener_interest');
+            if ($sharpenerInterest !== null && $sharpenerInterest !== '') {
+                if ($sharpenerInterest === 'yes') {
+                    $query->where('interested_in_training', 'yes');
+                } elseif ($sharpenerInterest === 'no') {
+                    $query->where('interested_in_training', 'no');
+                }
+            } else {
+                // Default: Only users interested in training or leads
+                $query->where(function($q) {
+                    $q->where('interested_in_training', 'yes')
+                      ->orWhere('leads', 1);
+                });
+            }
+            
+            // 2. Signup Date Filter
+            $signupDateFilter = $request->input('signup_date_filter');
+            if ($signupDateFilter) {
+                $today = now()->format('Y-m-d');
+                $yesterday = now()->subDay()->format('Y-m-d');
+                $lastMonth = now()->subMonth()->format('Y-m-d');
+                
+                switch ($signupDateFilter) {
+                    case 'today':
+                        $query->whereDate('created_at', $today);
+                        break;
+                    case 'yesterday':
+                        $query->whereDate('created_at', $yesterday);
+                        break;
+                    case 'last_month':
+                        $query->whereDate('created_at', '>=', $lastMonth);
+                        break;
+                    case 'custom':
+                        $startDate = $request->input('start_date');
+                        $endDate = $request->input('end_date');
+                        if ($startDate) {
+                            $query->whereDate('created_at', '>=', $startDate);
+                        }
+                        if ($endDate) {
+                            $query->whereDate('created_at', '<=', $endDate);
+                        }
+                        break;
+                }
+            }
+            
+            // 3. OTP Verification Filter
+            $otpVerified = $request->input('otp_verified');
+            if ($otpVerified !== null && $otpVerified !== '') {
+                if ($otpVerified === 'yes') {
+                    $query->whereNotNull('mobile_verified_at');
+                } elseif ($otpVerified === 'no') {
+                    $query->whereNull('mobile_verified_at');
+                }
+            }
             
             // Group by mobile to show unique users only
             $query->select('*')
@@ -91,6 +143,11 @@ class AdminController extends Controller
                 "name" => $admin->name,
                 'users' => $users,
                 'search' => $search,
+                'sharpener_interest' => $sharpenerInterest,
+                'signup_date_filter' => $signupDateFilter,
+                'start_date' => $request->input('start_date'),
+                'end_date' => $request->input('end_date'),
+                'otp_verified' => $otpVerified,
                 'sort' => $sort,
                 'direction' => $direction
             ]);
