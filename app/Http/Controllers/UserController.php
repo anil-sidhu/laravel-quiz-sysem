@@ -510,6 +510,14 @@ if($mcqData){
       'password_reset_otp' => $otp,
       'password_reset_expires' => now()->addMinutes(5)
   ]);
+  
+  // Log for debugging
+  \Log::info('Password Reset OTP Generated', [
+      'mobile' => $request->mobile,
+      'otp' => $otp,
+      'otp_type' => gettype($otp),
+      'session_otp' => session('password_reset_otp')
+  ]);
 
   // Send OTP via SMS using Fast2SMS service
   try {
@@ -553,8 +561,20 @@ if($mcqData){
          return redirect('/user-forgot-password')->with('message-error', 'OTP expired. Please request a new one.');
      }
 
-     // Verify OTP
-     if ($request->otp !== session('password_reset_otp')) {
+     // Verify OTP (with debugging)
+     $enteredOtp = trim($request->otp);
+     $storedOtp = trim(session('password_reset_otp'));
+     
+     // Log for debugging
+     \Log::info('OTP Verification Debug', [
+         'entered_otp' => $enteredOtp,
+         'stored_otp' => $storedOtp,
+         'entered_type' => gettype($enteredOtp),
+         'stored_type' => gettype($storedOtp),
+         'mobile' => session('password_reset_mobile')
+     ]);
+     
+     if ($enteredOtp !== $storedOtp) {
          return back()->withErrors(['otp' => 'Invalid OTP. Please try again.']);
      }
 
