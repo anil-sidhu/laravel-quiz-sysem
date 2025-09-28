@@ -511,17 +511,16 @@ if($mcqData){
       'password_reset_expires' => now()->addMinutes(5)
   ]);
 
-  // Send OTP via SMS using existing SMS service
+  // Send OTP via SMS using Fast2SMS service
   try {
-      $sms = app(Fast2SMSService::class);
-      $message = "Your password reset OTP is: {$otp}. Valid for 5 minutes. Do not share this OTP with anyone.";
+      $sms = app(\App\Services\Fast2SMSService::class);
+      $result = $sms->sendOtp($request->mobile, $otp);
       
-      $result = $sms->sendSMS($request->mobile, $message);
-      
-      if ($result['success']) {
+      if (isset($result['return']) && $result['return'] === true) {
           return redirect('/user-forgot-password-verify')->with('message-success', 'OTP sent to your mobile number. Please verify to reset password.');
       } else {
-          return back()->withErrors(['mobile' => 'Failed to send OTP. Please try again.']);
+          $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to send OTP. Please try again.';
+          return back()->withErrors(['mobile' => $errorMessage]);
       }
   } catch (\Exception $e) {
       \Log::error('Password reset OTP send failed: ' . $e->getMessage());
@@ -578,22 +577,21 @@ if($mcqData){
          'password_reset_expires' => now()->addMinutes(5)
      ]);
 
-     // Send new OTP via SMS
-     try {
-         $sms = app(Fast2SMSService::class);
-         $message = "Your new password reset OTP is: {$otp}. Valid for 5 minutes. Do not share this OTP with anyone.";
-         
-         $result = $sms->sendSMS(session('password_reset_mobile'), $message);
-         
-         if ($result['success']) {
-             return back()->with('message-success', 'New OTP sent to your mobile number.');
-         } else {
-             return back()->with('message-error', 'Failed to send OTP. Please try again.');
-         }
-     } catch (\Exception $e) {
-         \Log::error('Password reset OTP resend failed: ' . $e->getMessage());
-         return back()->with('message-error', 'Failed to send OTP. Please try again.');
-     }
+  // Send new OTP via SMS using Fast2SMS service
+  try {
+      $sms = app(\App\Services\Fast2SMSService::class);
+      $result = $sms->sendOtp(session('password_reset_mobile'), $otp);
+      
+      if (isset($result['return']) && $result['return'] === true) {
+          return back()->with('message-success', 'New OTP sent to your mobile number.');
+      } else {
+          $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to send OTP. Please try again.';
+          return back()->with('message-error', $errorMessage);
+      }
+  } catch (\Exception $e) {
+      \Log::error('Password reset OTP resend failed: ' . $e->getMessage());
+      return back()->with('message-error', 'Failed to send OTP. Please try again.');
+  }
  }
 
  function userResetForgotPassword(){
