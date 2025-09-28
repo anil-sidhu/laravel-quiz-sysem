@@ -21,12 +21,8 @@
         @csrf
        
         <div>
-           
-            <input type="hidden"placeholder="Enter User email" value={{$email}} name="email"
-            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
-       @error('email')
-       <div class="text-red-500">{{$message}}</div>
-       @enderror
+            <input type="hidden" name="mobile" value="{{ session('password_reset_mobile') }}">
+            <p class="text-sm text-gray-600 mb-2">Setting password for: {{ session('password_reset_mobile') }}</p>
         </div>
 
         <div>

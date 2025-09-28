@@ -489,33 +489,151 @@ if($mcqData){
 
 
  function userForgotPassword(Request $request){
+  // Validate mobile number
+  $request->validate([
+      'mobile' => 'required|string|min:10|max:15'
+  ]);
 
-  $link = Crypt::encryptString($request->mobile);
-  $link = url('/user-forgot-password/'.$link);
- Mail::to($request->mobile)->send(new UserForgotPassword($link));
- return redirect('/')->with('message-success',"Please check email to set new password");
+  // Find user by mobile
+  $user = User::where('mobile', $request->mobile)->first();
+  
+  if (!$user) {
+      return back()->withErrors(['mobile' => 'Mobile number not found in our records.']);
+  }
+
+  // Generate OTP for password reset
+  $otp = rand(100000, 999999);
+  
+  // Store OTP in session with expiration (5 minutes)
+  session([
+      'password_reset_mobile' => $request->mobile,
+      'password_reset_otp' => $otp,
+      'password_reset_expires' => now()->addMinutes(5)
+  ]);
+
+  // Send OTP via SMS using existing SMS service
+  try {
+      $sms = app(Fast2SMSService::class);
+      $message = "Your password reset OTP is: {$otp}. Valid for 5 minutes. Do not share this OTP with anyone.";
+      
+      $result = $sms->sendSMS($request->mobile, $message);
+      
+      if ($result['success']) {
+          return redirect('/user-forgot-password-verify')->with('message-success', 'OTP sent to your mobile number. Please verify to reset password.');
+      } else {
+          return back()->withErrors(['mobile' => 'Failed to send OTP. Please try again.']);
+      }
+  } catch (\Exception $e) {
+      \Log::error('Password reset OTP send failed: ' . $e->getMessage());
+      return back()->withErrors(['mobile' => 'Failed to send OTP. Please try again.']);
+  }
  }
 
- function userResetForgotPassword($email){
-   $orgEmail = Crypt::decryptString($email);
-   return view('user-set-forgot-password',['email'=>$orgEmail]);
+ // Show OTP verification page for password reset
+ function showForgotPasswordOtpForm(){
+     if (!session('password_reset_mobile')) {
+         return redirect('/user-forgot-password')->with('message-error', 'Please request password reset first.');
+     }
+     return view('user-forgot-password-verify');
+ }
+
+ // Verify OTP for password reset
+ function verifyForgotPasswordOtp(Request $request){
+     $request->validate([
+         'otp' => 'required|string|size:6'
+     ]);
+
+     // Check if session data exists
+     if (!session('password_reset_mobile') || !session('password_reset_otp') || !session('password_reset_expires')) {
+         return redirect('/user-forgot-password')->with('message-error', 'Session expired. Please request password reset again.');
+     }
+
+     // Check if OTP is expired
+     if (now()->gt(session('password_reset_expires'))) {
+         session()->forget(['password_reset_mobile', 'password_reset_otp', 'password_reset_expires']);
+         return redirect('/user-forgot-password')->with('message-error', 'OTP expired. Please request a new one.');
+     }
+
+     // Verify OTP
+     if ($request->otp !== session('password_reset_otp')) {
+         return back()->withErrors(['otp' => 'Invalid OTP. Please try again.']);
+     }
+
+     // OTP verified, redirect to set new password
+     return redirect('/user-set-forgot-password')->with('message-success', 'OTP verified successfully. Please set your new password.');
+ }
+
+ // Resend OTP for password reset
+ function resendForgotPasswordOtp(){
+     if (!session('password_reset_mobile')) {
+         return redirect('/user-forgot-password')->with('message-error', 'Please request password reset first.');
+     }
+
+     // Generate new OTP
+     $otp = rand(100000, 999999);
+     
+     // Update session with new OTP
+     session([
+         'password_reset_otp' => $otp,
+         'password_reset_expires' => now()->addMinutes(5)
+     ]);
+
+     // Send new OTP via SMS
+     try {
+         $sms = app(Fast2SMSService::class);
+         $message = "Your new password reset OTP is: {$otp}. Valid for 5 minutes. Do not share this OTP with anyone.";
+         
+         $result = $sms->sendSMS(session('password_reset_mobile'), $message);
+         
+         if ($result['success']) {
+             return back()->with('message-success', 'New OTP sent to your mobile number.');
+         } else {
+             return back()->with('message-error', 'Failed to send OTP. Please try again.');
+         }
+     } catch (\Exception $e) {
+         \Log::error('Password reset OTP resend failed: ' . $e->getMessage());
+         return back()->with('message-error', 'Failed to send OTP. Please try again.');
+     }
+ }
+
+ function userResetForgotPassword(){
+   // Check if user has valid password reset session
+   if (!session('password_reset_mobile')) {
+       return redirect('/user-forgot-password')->with('message-error', 'Session expired. Please request password reset again.');
+   }
+   
+   return view('user-set-forgot-password');
  }
 
  function userSetForgotPassword(Request $request){
-
-  $validate = $request->validate([
-    'email'=>'required | email |',
-    'password'=>'required | min:3 | confirmed',
-  ]);
-
-  $user= User::where('email',$request->email)->first();
-  if($user){
-    $user->password=Hash::make($request->password);
-   if( $user->save()){
-    return redirect('user-login')->with('message-success',"New password is set, Please login with new Password");
-   }
+  // Check if user has valid password reset session
+  if (!session('password_reset_mobile')) {
+      return redirect('/user-forgot-password')->with('message-error', 'Session expired. Please request password reset again.');
   }
 
+  $validate = $request->validate([
+    'mobile' => 'required|string',
+    'password' => 'required|min:3|confirmed',
+  ]);
+
+  // Verify the mobile number matches the session
+  if ($request->mobile !== session('password_reset_mobile')) {
+      return back()->withErrors(['mobile' => 'Invalid mobile number.']);
+  }
+
+  // Find user by mobile
+  $user = User::where('mobile', $request->mobile)->first();
+  
+  if ($user) {
+      $user->password = Hash::make($request->password);
+      if ($user->save()) {
+          // Clear password reset session
+          session()->forget(['password_reset_mobile', 'password_reset_otp', 'password_reset_expires']);
+          return redirect('user-login')->with('message-success', 'New password is set successfully. Please login with your new password.');
+      }
+  }
+
+  return back()->withErrors(['password' => 'Failed to update password. Please try again.']);
  }
 
  function certificate(){

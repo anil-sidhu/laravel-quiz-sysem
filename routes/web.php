@@ -65,9 +65,14 @@ Route::post('user-login-verify', [UserController::class, 'verifyLoginOtp']);
 Route::post('user-login-verify/resend', [UserController::class, 'resendLoginOtp']);
 
 Route::get('verify-user/{email}',[UserController::class,'verifyUser']);
+
+// SMS-based Password Reset Routes
 Route::view('user-forgot-password','user-forgot-password');
 Route::post('user-forgot-password',[UserController::class,'userForgotPassword']);
-Route::get('user-forgot-password/{email}',[UserController::class,'userResetForgotPassword']);
+Route::get('user-forgot-password-verify',[UserController::class,'showForgotPasswordOtpForm']);
+Route::post('user-forgot-password-verify',[UserController::class,'verifyForgotPasswordOtp']);
+Route::post('user-forgot-password-resend',[UserController::class,'resendForgotPasswordOtp']);
+Route::get('user-set-forgot-password',[UserController::class,'userResetForgotPassword']);
 Route::post('user-set-forgot-password',[UserController::class,'userSetForgotPassword']);
 Route::view('tutorials','create-tutorial');
 
