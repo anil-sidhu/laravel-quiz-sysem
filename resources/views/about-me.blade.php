@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Anil Sidhu | Owner of Code step by step | who is Anil sidhu | About Anil sidhu</title>
     <meta name="description" content="Learn about Anil Sidhu, a Senior Software Engineer at Oracle with 9 years of full stack development experience. Expert in React, Angular, Node.js, Laravel, and more. Founder of TheCodingSkills.com, YouTube educator" />
-    <meta name="keywords" content="Anil Sidhu, Oracle, Senior Software Engineer, Full Stack Developer, React, Angular, Node.js, Laravel, TheCodingSkills, Sharpener Tech, JavaScript, Oracle JET, software engineer profile, web development, front end architecture, YouTube coding tutorials, tech educator" />
+    <meta name="keywords" content="Anil Sidhu, Oracle, Senior Software Engineer, Full Stack Developer, React, Angular, Node.js, Laravel, TheCodingSkills, JavaScript, Oracle JET, software engineer profile, web development, front end architecture, YouTube coding tutorials, tech educator" />
     @vite('resources/css/app.css')
 </head>
 <body>
@@ -93,8 +93,8 @@
             empowering aspiring developers with essential coding skills.
           </li>
           <li>
-            Anil also actively collaborates with <span class="font-semibold text-green-600">Sharpener Tech</span>,
-            contributing to their mission of enhancing tech education and career opportunities.
+            Through <span class="font-semibold text-green-600">The Coding Skills</span>, he offers quizzes, free courses,
+            and live instructor-led MERN and MEAN programs for developers who want structured mentorship.
           </li>
         </ul>
       </div>

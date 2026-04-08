@@ -11,7 +11,8 @@
         @else
         <a class="text-gray-700 hover:text-blue-500" href="/dashboard">Dashboard</a>
             <a class="text-gray-700 hover:text-blue-500" href="/admin-categories">Categories</a>
-            <a class="text-gray-700 hover:text-blue-500" href="/add-quiz">Quiz</a>
+            <a class="text-gray-700 hover:text-blue-500" href="/all-quizzes">All Quizzes</a>
+            <a class="text-gray-700 hover:text-blue-500" href="/add-quiz">Add Quiz</a>
             <a class="text-gray-700 hover:text-blue-500" href="/course-analytics">📊 Analytics</a>
             <a class="text-gray-700 hover:text-blue-500" href="">Welcome {{$name}}</a>
             <a class="text-gray-700 hover:text-blue-500" href="/admin-logout">Logout</a>

@@ -54,7 +54,7 @@ class AdminController extends Controller
             $query = User::query();
             
             // Advanced Filters
-            // 1. Sharpener Job Guarantee Program Interest Filter
+            // 1. Live training interest filter (interested_in_training)
             $sharpenerInterest = $request->input('sharpener_interest');
             if ($sharpenerInterest !== null && $sharpenerInterest !== '') {
                 if ($sharpenerInterest === 'yes') {
@@ -274,11 +274,60 @@ class AdminController extends Controller
     function quizList($id,$category){
         $admin = Session::get('admin');
        if($admin){
-        $quizData=Quiz::where('category_id',$id)->get();
-           return view('quiz-list',["name"=>$admin->name,"quizData"=>$quizData,'category'=>$category]);
+        $quizData=Quiz::where('category_id',$id)->withCount('Mcq')->get();
+           return view('quiz-list',["name"=>$admin->name,"quizData"=>$quizData,'category'=>$category,'category_id'=>$id]);
        }else{
            return redirect('admin-login');
        }
+    }
+
+    function deleteQuiz($id){
+        $admin = Session::get('admin');
+        if($admin){
+            $quiz = Quiz::find($id);
+            if($quiz){
+                // Delete all MCQs associated with this quiz first
+                Mcq::where('quiz_id', $id)->delete();
+                
+                // Delete the quiz
+                $quiz->delete();
+                
+                // Redirect back to previous page with success message
+                return redirect()->back()->with('message-success', 'Quiz deleted successfully');
+            }
+            return redirect('/admin-categories')->with('message-error', 'Quiz not found');
+        }else{
+            return redirect('admin-login');
+        }
+    }
+    
+    function deleteMcq($id){
+        $admin = Session::get('admin');
+        if($admin){
+            $mcq = Mcq::find($id);
+            if($mcq){
+                $quizId = $mcq->quiz_id;
+                $quiz = Quiz::find($quizId);
+                $quizName = $quiz ? $quiz->name : 'Unknown';
+                
+                $mcq->delete();
+                
+                return redirect('/show-quiz/'.$quizId.'/'.$quizName)->with('message-success', 'Question deleted successfully');
+            }
+            return redirect('/admin-categories')->with('message-error', 'Question not found');
+        }else{
+            return redirect('admin-login');
+        }
+    }
+    
+    function allQuizzes(){
+        $admin = Session::get('admin');
+        if($admin){
+            $quizzes = Quiz::with('category')->withCount('Mcq')->orderBy('created_at', 'desc')->get();
+            return view('all-quizzes', ["name" => $admin->name, "quizzes" => $quizzes]);
+        }else{
+            return redirect('admin-login');
+        }
     }
 
 

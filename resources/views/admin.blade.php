@@ -25,9 +25,9 @@
                 
                 <!-- Filter Row 1 -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Sharpener Interest Filter -->
+                    <!-- Live training interest filter -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Sharpener Job Guarantee Program</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Live instructor-led training interest</label>
                         <select name="sharpener_interest" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
                             <option value="">All Users</option>
                             <option value="yes" {{ ($sharpener_interest ?? '') === 'yes' ? 'selected' : '' }}>Interested (Yes)</option>
@@ -100,7 +100,7 @@
                         <a href="?sort=mobile_verified_at&direction={{ $sort == 'mobile_verified_at' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">OTP Verified @if($sort=='mobile_verified_at')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
                     <th class="p-2 border-b cursor-pointer w-[20%] text-center">
-                        <a href="?sort=interested_in_training&direction={{ $sort == 'interested_in_training' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Interested in Sharpener Job Guarantee Program @if($sort=='interested_in_training')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
+                        <a href="?sort=interested_in_training&direction={{ $sort == 'interested_in_training' && $direction == 'asc' ? 'desc' : 'asc' }}&{{ http_build_query(request()->except(['sort','direction','page'])) }}">Live training interest @if($sort=='interested_in_training')<span class="text-xs">{{ $direction == 'asc' ? '▲' : '▼' }}</span>@endif</a>
                     </th>
                     <th class="p-2 border-b cursor-pointer w-[12%] text-center">
                         User Status

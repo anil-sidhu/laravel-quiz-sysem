@@ -104,8 +104,8 @@
                     <!-- Slide 1: Alumni Testimonials -->
                     <div class="banner-slide active h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Sharpener Strong Alumni Base</h2>
-                            <p class="text-lg text-white drop-shadow-md">450+ Top companies where our students work</p>
+                            <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Live training with The Coding Skills</h2>
+                            <p class="text-lg text-white drop-shadow-md">Instructor-led MERN &amp; MEAN — schedules &amp; meeting links via SMS or WhatsApp</p>
                         </div>
                         
                         <!-- Stats Cards -->
@@ -120,7 +120,7 @@
                             </div>
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
                                 <div class="text-2xl font-bold text-gray-900">2500+</div>
-                                <div class="text-sm text-gray-700">Sharpenerians Placed</div>
+                                <div class="text-sm text-gray-700">Learners in programs</div>
                             </div>
                             <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
                                 <div class="text-2xl font-bold text-gray-900">100%</div>
@@ -215,8 +215,8 @@
                     <!-- Slide 3: Company Logos -->
                     <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
                         <div class="text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Sharpener has 1500+ companies tie-ups!</h2>
-                            <p class="text-lg mb-4 text-white drop-shadow-md">Your dream, our destination</p>
+                            <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Structured full-stack curriculum</h2>
+                            <p class="text-lg mb-4 text-white drop-shadow-md">From fundamentals to projects, mock interviews &amp; resume support</p>
                             
                             <!-- Features -->
                             <div class="flex flex-col items-center space-y-2 mb-8">
@@ -302,7 +302,6 @@
                 <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                     <button class="banner-dot w-3 h-3 rounded-full bg-white bg-opacity-50 active" data-slide="0"></button>
                     <button class="banner-dot w-3 h-3 rounded-full bg-white bg-opacity-50" data-slide="1"></button>
-                    <button class="banner-dot w-3 h-3 rounded-full bg-white bg-opacity-50" data-slide="2"></button>
                 </div>
             </div>
         <div class="p-[20px] flex-1"><div class="bg-white h-[100%] rounded-2xl p-4 sm:p-6 pt-[6px]">

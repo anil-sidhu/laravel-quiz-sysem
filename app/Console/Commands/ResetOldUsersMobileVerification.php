@@ -20,7 +20,7 @@ class ResetOldUsersMobileVerification extends Command
      *
      * @var string
      */
-    protected $description = 'Reset mobile verification for users registered before a specific date to force Sharpener Tech OTP verification';
+    protected $description = 'Reset mobile verification for users registered before a specific date to force SMS OTP verification on next login';
 
     /**
      * Execute the console command.
@@ -85,9 +85,7 @@ class ResetOldUsersMobileVerification extends Command
 
         $this->newLine();
         $this->info("=== Impact Analysis ===");
-        $this->info("These users will need to verify their mobile number on next login.");
-        $this->info("They will go through Sharpener Tech OTP verification process.");
-        $this->info("Sharpener Tech will receive their data for lead tracking.");
+        $this->info('These users will need SMS OTP verification on next login.');
 
         if ($dryRun) {
             $this->newLine();
@@ -126,7 +124,6 @@ class ResetOldUsersMobileVerification extends Command
         ]);
 
         $this->info("✅ Successfully reset mobile verification for {$updatedCount} users.");
-        $this->info("These users will now need to verify their mobile number on next login.");
-        $this->info("They will go through Sharpener Tech OTP verification process.");
+        $this->info('These users will now need SMS OTP verification on next login.');
     }
 }

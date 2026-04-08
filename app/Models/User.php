@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'mobile',
+        'country',
         'interested_in_training',
         'leads',
         'passing_year',
@@ -57,6 +58,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'signup_tracked_at' => 'datetime',
+            'otp_expires_at' => 'datetime',
         ];
     }
 

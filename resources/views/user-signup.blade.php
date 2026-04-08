@@ -158,8 +158,8 @@
             <!-- Slide 1: Alumni Testimonials -->
             <div class="banner-slide active h-full flex flex-col justify-center items-center text-gray-100 p-8">
                 <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Sharpener Strong Alumni Base</h2>
-                    <p class="text-lg text-white drop-shadow-md">450+ Top companies where our students work</p>
+                    <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Live training with The Coding Skills</h2>
+                    <p class="text-lg text-white drop-shadow-md">Instructor-led MERN &amp; MEAN — schedules &amp; meeting links via SMS or WhatsApp</p>
                 </div>
                 
                 <!-- Stats Cards -->
@@ -174,7 +174,7 @@
                     </div>
                     <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
                         <div class="text-2xl font-bold text-gray-900">2500+</div>
-                        <div class="text-sm text-gray-700">Sharpenerians Placed</div>
+                        <div class="text-sm text-gray-700">Learners in programs</div>
                     </div>
                     <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
                         <div class="text-2xl font-bold text-gray-900">100%</div>
@@ -241,8 +241,8 @@
             <!-- Slide 3: Company Logos -->
             <div class="banner-slide h-full flex flex-col justify-center items-center text-gray-100 p-8">
                 <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Sharpener has 1500+ companies tie-ups!</h2>
-                    <p class="text-lg mb-4 text-white drop-shadow-md">Your dream, our destination</p>
+                    <h2 class="text-3xl font-bold mb-2 text-white drop-shadow-lg">Structured full-stack curriculum</h2>
+                    <p class="text-lg mb-4 text-white drop-shadow-md">From fundamentals to projects, mock interviews &amp; resume support</p>
                     
                     <!-- Features -->
                     <div class="flex flex-col items-center space-y-2 mb-8">
@@ -304,7 +304,6 @@
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
             <button class="banner-dot w-3 h-3 rounded-full bg-white bg-opacity-50 active" data-slide="0"></button>
             <button class="banner-dot w-3 h-3 rounded-full bg-white bg-opacity-50" data-slide="1"></button>
-            <button class="banner-dot w-3 h-3 rounded-full bg-white bg-opacity-50" data-slide="2"></button>
         </div>
     </div>
 
@@ -350,11 +349,38 @@
             value="{{ old('mobile') }}" 
             autocomplete="off" 
             data-lpignore="true"
-            maxlength="10"
-            pattern="[6-9][0-9]{9}"
-            title="Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9">
+            maxlength="15"
+            pattern="[0-9]{7,15}"
+            title="Please enter a valid mobile number">
             <div id="mobileError" class="input-error" style="display: none;"></div>
        @error('mobile')
+       <div class="input-error">{{$message}}</div>
+       @enderror
+        </div>
+
+        <!-- Country Detection - Hidden by default, shown only if IP detection fails -->
+        <div class="mb-2" id="countryDetectedDiv">
+            <label class="text-gray-600 mb-1">Country (auto-detected)</label>
+            <div id="countryDisplay" class="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-xl text-gray-700">
+                <span id="countryLoading">Detecting...</span>
+                <span id="countryName" style="display: none;"></span>
+                <span id="otpStatus" class="text-xs ml-2" style="display: none;"></span>
+            </div>
+            <a href="javascript:void(0)" id="changeCountryLink" class="text-xs text-blue-600 hover:underline mt-1" style="display: none;" onclick="showCountryDropdown()">Change country</a>
+        </div>
+        
+        <div class="mb-2" id="countryDiv" style="display: none;">
+            <label for="country" class="text-gray-600 mb-1">Select Country</label>
+            <select id="country" name="country" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
+                <option value="India" selected>India</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="Bangladesh">Bangladesh</option>
+                <option value="Nepal">Nepal</option>
+                <option value="Sri Lanka">Sri Lanka</option>
+                <option value="Other">Other</option>
+            </select>
+            <div id="countryNote" class="text-xs text-gray-500 mt-1"></div>
+            @error('country')
        <div class="input-error">{{$message}}</div>
        @enderror
         </div>
@@ -387,7 +413,7 @@
         </div>
 
         <div>
-            <label for="interested_in_training" class="text-gray-600 mb-1">Interested in Sharpener’s Job Gurantee Program?</label>
+            <label for="interested_in_training" class="text-gray-600 mb-1">Interested in live instructor-led training?</label>
             <select id="interested_in_training" name="interested_in_training" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none">
                 <option value="">Select</option>
                 <option value="yes" {{ old('interested_in_training') == 'yes' ? 'selected' : '' }}>Yes, I am interested</option>
@@ -417,6 +443,74 @@
 </div>
 <x-footer-user></x-footer-user>
 <script>
+    // Global variable to store detected country
+    let detectedCountry = 'India'; // Default to India
+    let ipDetectionComplete = false;
+    
+    // IP Geolocation Detection on page load (using HTTPS-compatible API)
+    (function detectCountryFromIP() {
+        // Using ipapi.co which supports HTTPS on free tier
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                ipDetectionComplete = true;
+                detectedCountry = data.country_name || 'India';
+                
+                // Update UI
+                document.getElementById('countryLoading').style.display = 'none';
+                document.getElementById('countryName').textContent = detectedCountry;
+                document.getElementById('countryName').style.display = 'inline';
+                document.getElementById('changeCountryLink').style.display = 'inline';
+                
+                // Set country value - map to available options
+                const countrySelect = document.getElementById('country');
+                const validCountries = ['India', 'Pakistan', 'Bangladesh', 'Nepal', 'Sri Lanka'];
+                if (validCountries.includes(detectedCountry)) {
+                    countrySelect.value = detectedCountry;
+                } else {
+                    countrySelect.value = 'Other';
+                }
+                
+                // Show OTP status
+                const otpStatus = document.getElementById('otpStatus');
+                if (detectedCountry === 'India') {
+                    otpStatus.textContent = '(OTP verification required)';
+                    otpStatus.className = 'text-xs ml-2 text-orange-600';
+                } else {
+                    otpStatus.textContent = '(OTP verification not required)';
+                    otpStatus.className = 'text-xs ml-2 text-green-600';
+                }
+                otpStatus.style.display = 'inline';
+            })
+            .catch(error => {
+                console.error('IP detection failed:', error);
+                ipDetectionComplete = true;
+                // Show country dropdown as fallback
+                document.getElementById('countryDetectedDiv').style.display = 'none';
+                document.getElementById('countryDiv').style.display = 'block';
+                document.getElementById('countryNote').textContent = 'Please select your country';
+            });
+    })();
+    
+    // Function to show country dropdown manually
+    function showCountryDropdown() {
+        document.getElementById('countryDetectedDiv').style.display = 'none';
+        document.getElementById('countryDiv').style.display = 'block';
+        document.getElementById('countryNote').textContent = 'Select your country. India requires OTP verification.';
+    }
+    
+    // Update OTP note when country changes
+    document.getElementById('country').addEventListener('change', function() {
+        const countryNote = document.getElementById('countryNote');
+        if (this.value === 'India') {
+            countryNote.textContent = 'OTP verification required for Indian users';
+            countryNote.className = 'text-xs text-orange-600 mt-1';
+        } else {
+            countryNote.textContent = 'OTP verification not required for non-Indian users';
+            countryNote.className = 'text-xs text-green-600 mt-1';
+        }
+    });
+
     // Password visibility toggle
     function togglePassword(fieldId, el) {
         const input = document.getElementById(fieldId);
@@ -429,20 +523,20 @@
         }
     }
 
-    // Indian mobile number validation
-    function validateIndianMobile(mobile) {
-        const mobileRegex = /^[6-9]\d{9}$/;
-        return mobileRegex.test(mobile);
+    // Mobile number validation - simple validation for all countries
+    function validateMobile(mobile) {
+        // Accept any valid phone number (7-15 digits)
+        return /^\d{7,15}$/.test(mobile);
     }
 
-    // Mobile field validation
+    // Mobile field validation - simple validation only
     document.getElementById('mobile').addEventListener('input', function() {
         const mobile = this.value;
         const errorDiv = document.getElementById('mobileError');
         
         if (mobile.length > 0) {
-            if (!validateIndianMobile(mobile)) {
-                errorDiv.textContent = 'Please enter a valid Indian mobile number (should start with 6, 7, 8, or 9)';
+            if (!validateMobile(mobile)) {
+                errorDiv.textContent = 'Please enter a valid mobile number (7-15 digits)';
                 errorDiv.style.display = 'block';
                 this.style.borderColor = '#e3342f';
             } else {
@@ -459,14 +553,17 @@
     document.getElementById('signupForm').addEventListener('submit', function(e) {
         e.preventDefault(); // Prevent form from submitting normally
         
+        // Enable country field before submission (disabled fields don't get submitted)
+        document.getElementById('country').disabled = false;
+        
         var btn = document.getElementById('signupBtn');
         var spinner = document.getElementById('signupSpinner');
         var form = this;
         
         // Validate mobile number before submission
         const mobile = document.getElementById('mobile').value;
-        if (!validateIndianMobile(mobile)) {
-            alert('Please enter a valid Indian mobile number (should start with 6, 7, 8, or 9)');
+        if (!validateMobile(mobile)) {
+            alert('Please enter a valid mobile number (7-15 digits)');
             return;
         }
         
@@ -483,11 +580,37 @@
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                return response.json().catch(() => {
+                    // If JSON parsing fails, redirect to OTP page (backend likely succeeded)
+                    window.location.href = '/user-signup-verify';
+                    return null;
+                });
+            } else {
+                // Not JSON - might be HTML redirect or error
+                // If status is 200-299, assume success and redirect
+                if (response.ok) {
+                    window.location.href = '/user-signup-verify';
+                    return null;
+                }
+                return response.text().then(text => {
+                    throw new Error(text || 'Request failed');
+                });
+            }
+        })
         .then(data => {
+            // If data is null, we already redirected
+            if (!data) {
+                return;
+            }
+            
             if (data.success) {
                 // Show success message before redirect
                 const successMessage = data.message || 'Signup successful! Please verify your mobile number.';
@@ -534,6 +657,14 @@
         })
         .catch(error => {
             console.error('Error:', error);
+            
+            // If it's a JSON parse error, the backend likely succeeded
+            // (user created, OTP sent) - just redirect to OTP page
+            if (error.message && (error.message.includes('JSON') || error.message.includes('Unexpected token'))) {
+                window.location.href = '/user-signup-verify';
+                return;
+            }
+            
             alert('An error occurred. Please try again.');
             
             // Re-enable button

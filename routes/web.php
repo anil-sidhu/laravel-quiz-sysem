@@ -21,7 +21,10 @@ Route::post('user-signup-verify/resend', [UserController::class, 'resendSignupOt
 
 Route::get('categories-list',[UserController::class,'categories']);
 Route::get('certificate',[UserController::class,'certificate']);
+Route::get('verify',[UserController::class,'showVerifyCertificate']);
+Route::post('verify',[UserController::class,'verifyCertificate']);
 Route::get('courses',[UserController::class,'courses']);
+Route::get('live-training/{slug}', [UserController::class, 'liveTrainingProgram'])->name('live-training.show');
 Route::get('course-details/{c_id}/{c_title}/',[UserController::class,'courseDetails']);
 Route::get('topic/{c_id}/{t_id}/{t_title}/',[UserController::class,'topic']);
 Route::get('anil-sidhu', function() {
@@ -101,6 +104,9 @@ Route::middleware('CheckAdminAuth')->group(function(){
     Route::get('end-quiz',[AdminController::class,'endQuiz']);
     Route::get('show-quiz/{id}/{quizName}',[AdminController::class,'showQuiz']);
     Route::get('quiz-list/{id}/{category}',[AdminController::class,'quizList']);
+    Route::get('delete-quiz/{id}',[AdminController::class,'deleteQuiz']);
+    Route::get('delete-mcq/{id}',[AdminController::class,'deleteMcq']);
+    Route::get('all-quizzes',[AdminController::class,'allQuizzes']);
     Route::get('add-course',[AdminController::class,'addCourseView']);
     Route::post('add-course',[AdminController::class,'addCourse']);
     Route::get('add-topic',[AdminController::class,'addTopicView']);
@@ -187,26 +193,6 @@ Route::get('/clear-view-cache', function () {
         return '<h1>View Cache Clear Failed!</h1><pre>' . $e->getMessage() . '</pre>';
     }
 });
-
-// Debug route for Sharpener Tech API testing
-Route::get('/test-sharpener-api', function () {
-    try {
-        $sharpenerService = app(\App\Services\SharpenerTechService::class);
-        $result = $sharpenerService->testApiConnection();
-        
-        return response()->json($result);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage(),
-            'message' => 'API test failed with exception'
-        ]);
-    }
-});
-
-// Sharpener Dashboard Route
-Route::post('/open-sharpener-dashboard', [UserController::class, 'openSharpenerDashboard'])->name('open.sharpener.dashboard');
-
 
 
 

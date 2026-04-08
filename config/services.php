@@ -35,9 +35,4 @@ return [
         ],
     ],
 
-    'sharpener' => [
-        'base_url' => env('SHARPENER_BASE_URL', 'https://api.sharpener.tech/api'),
-        'api_key' => env('SHARPENER_API_KEY'),
-    ],
-
 ];

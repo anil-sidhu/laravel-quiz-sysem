@@ -113,11 +113,36 @@
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                // If not JSON, try to parse as text first
+                return response.text().then(text => {
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        // If parsing fails but response is OK, redirect (backend likely succeeded)
+                        if (response.ok) {
+                            window.location.href = '/';
+                            return null;
+                        }
+                        throw new Error('Invalid response format');
+                    }
+                });
+            }
+        })
         .then(data => {
+            // If data is null, we already redirected
+            if (!data) {
+                return;
+            }
             console.log('OTP Verification Response:', data); // Debug log
             if (data.success) {
                 // Show success message before redirect
@@ -165,6 +190,14 @@
         })
         .catch(error => {
             console.error('Error:', error);
+            
+            // If it's a JSON parse error, the backend likely succeeded
+            // Redirect to home page as fallback
+            if (error.message && (error.message.includes('JSON') || error.message.includes('Unexpected token'))) {
+                window.location.href = '/';
+                return;
+            }
+            
             alert('An error occurred. Please try again.');
             
             // Re-enable button

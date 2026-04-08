@@ -22,3 +22,5 @@ yarn-error.log
 /.zed
 *.zip
 .env copy
+.DS_Store
+**/.DS_Store

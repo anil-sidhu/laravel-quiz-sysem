@@ -24,7 +24,8 @@ use App\Mail\VerifyUser;
 use App\Mail\UserForgotPassword;
 use App\Models\Tutorial;
 use App\Models\Course;
-use App\Services\SharpenerTechService;
+use App\Models\Certificate;
+use App\Services\SelfHostedSmsOtpService;
 
 
 class UserController extends Controller
@@ -36,7 +37,29 @@ class UserController extends Controller
        $quizData=Quiz::withCount('Records')->orderBy('records_count','desc')->take(12)->get();
        $courses=Course::orderBy('id','desc')->paginate(12);
 
-        return view('welcome',['categories'=>$categories,'quizData'=>$quizData,'courses'=>$courses]);
+        return view('welcome', [
+            'categories' => $categories,
+            'quizData' => $quizData,
+            'courses' => $courses,
+            'trainingPrograms' => config('training_programs.programs', []),
+        ]);
+    }
+
+    /**
+     * Public page for a single live / instructor-led program (curriculum + enroll CTAs).
+     */
+    public function liveTrainingProgram(string $slug)
+    {
+        $programs = config('training_programs.programs', []);
+        $program = collect($programs)->firstWhere('slug', $slug);
+        if (! $program) {
+            abort(404);
+        }
+
+        return view('live-training-program', [
+            'program' => $program,
+            'allPrograms' => $programs,
+        ]);
     }
 
     function categories(){
@@ -127,19 +150,20 @@ class UserController extends Controller
         'source_type' => $sourceType
       ]);
       
+      // Simple mobile validation - accept 7-15 digits for all countries
       $validate = $request->validate([
         'name'=>'required | min:3',
-        // 'email'=>'required | email | unique:users',
         'password'=>'required | min:3',
-        'mobile'   => 'required|numeric|digits:10|unique:users|regex:/^[6-9]\d{9}$/',
+        'mobile'   => ['required', 'numeric', 'digits_between:7,15', 'unique:users'],
         'interested_in_training' => 'required|in:yes,no',
+        'country' => 'nullable|in:India,Pakistan,Bangladesh,Nepal,Sri Lanka,Other',
       ], [
         'mobile.unique' => 'Mobile number already in use. Please log in if you\'re an existing user.',
-        'mobile.regex' => 'Please enter a valid Indian mobile number.'
+        'mobile.digits_between' => 'Please enter a valid mobile number (7-15 digits).'
       ]);
 
-      // All users need phone verification for Sharpener Tech integration
-      $needsPhoneVerification = true;
+      $shouldBypassOtp = $this->shouldBypassOtp($request->country);
+      $needsPhoneVerification = !$shouldBypassOtp;
 
       $userData = [
         'name'=>$request->name,
@@ -147,6 +171,7 @@ class UserController extends Controller
         'mobile'=>$request->mobile,
         'password'=>Hash::make($request->password),
         'interested_in_training'=>$request->interested_in_training,
+        'country' => $request->country ?? 'India',
         // 'leads'=>$request->has('leads') ? true : false,
         'passing_year' => $request->passing_year,
         // Course tracking fields
@@ -156,20 +181,48 @@ class UserController extends Controller
         'signup_tracked_at' => now(),
       ];
 
+      // Auto-verify and skip OTP when bypass is enabled (global or non-India)
+      if ($shouldBypassOtp) {
+        $userData['mobile_verified_at'] = now();
+        $user = User::create($userData);
+        
+        // Log user in directly
+        Session::put('user', $user);
+        
+        // Set remember me cookie
+        $rememberToken = Str::random(60);
+        $user->remember_token = $rememberToken;
+        $user->save();
+        Cookie::queue('remember_token', $rememberToken, 2628000);
+        
+        Log::info('User signed up — mobile auto-verified (OTP bypass)', [
+          'user_id' => $user->id,
+          'mobile' => $user->mobile,
+          'country' => $user->country,
+          'bypass_all_otp' => config('sms.bypass_all_otp', true),
+        ]);
+        
+        if ($request->ajax()) {
+          return response()->json([
+            'success' => true,
+            'message' => 'Signup successful!',
+            'redirect' => $redirectUrl
+          ])->withCookie('remember_token', $rememberToken, 2628000);
+        }
+        
+        return redirect($redirectUrl);
+      }
+
       if ($needsPhoneVerification) {
-        // Create user without OTP (Sharpener Tech will handle OTP generation)
         $user = User::create($userData);
 
-        // Send OTP via Sharpener Tech
         try {
-          $sms = app(\App\Services\SharpenerTechService::class);
-          $result = $sms->sendOtp($user->mobile, $user->name);
-          
-          // Check if OTP was sent successfully
+          $otpService = app(SelfHostedSmsOtpService::class);
+          $result = $otpService->sendOtpForUser($user);
+
           if (isset($result['status']) && $result['status'] !== 'success') {
-            // If OTP sending failed, delete the user and show error
             $user->delete();
-            $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to send OTP. Please try again.';
+            $errorMessage = $result['message'] ?? 'Failed to send OTP. Please try again.';
             if ($request->ajax()) {
               return response()->json([
                 'success' => false,
@@ -179,8 +232,8 @@ class UserController extends Controller
             return redirect('/user-signup')->with('message-error', $errorMessage);
           }
         } catch (\Exception $e) {
-          // If OTP sending failed, delete the user and show error
           $user->delete();
+          Log::error('Signup OTP send failed', ['error' => $e->getMessage()]);
           if ($request->ajax()) {
             return response()->json([
               'success' => false,
@@ -283,10 +336,10 @@ class UserController extends Controller
       }
       
       $validate = $request->validate([
-        'mobile'   => 'required|numeric|digits:10|regex:/^[6-9]\d{9}$/',
+        'mobile'   => ['required', 'numeric', 'digits_between:7,15'],
         'password'=>'required',
       ], [
-        'mobile.regex' => 'Please enter a valid Indian mobile number.'
+        'mobile.digits_between' => 'Please enter a valid mobile number.'
       ]);
 
      $user= User::where('mobile',$request->mobile)->first();
@@ -303,15 +356,15 @@ class UserController extends Controller
      // Check if user needs mobile verification but hasn't completed it
      $needsVerification = is_null($user->mobile_verified_at);
      
-     if($needsVerification){
-       // Send OTP via Sharpener Tech (they handle OTP generation)
+     $shouldBypassOtp = $this->shouldBypassOtp($user->country);
+     
+     if($needsVerification && !$shouldBypassOtp){
        try {
-         $sms = app(\App\Services\SharpenerTechService::class);
-         $result = $sms->sendOtp($user->mobile, $user->name);
-         
-         // Check if OTP was sent successfully
+         $otpService = app(SelfHostedSmsOtpService::class);
+         $result = $otpService->sendOtpForUser($user);
+
          if (isset($result['status']) && $result['status'] !== 'success') {
-           $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to send OTP. Please try again.';
+           $errorMessage = $result['message'] ?? 'Failed to send OTP. Please try again.';
            if ($request->ajax()) {
              return response()->json([
                'success' => false,
@@ -321,6 +374,7 @@ class UserController extends Controller
            return redirect('/user-login')->with('message-error', $errorMessage);
          }
        } catch (\Exception $e) {
+         Log::error('Login OTP send failed', ['error' => $e->getMessage(), 'user_id' => $user->id]);
          if ($request->ajax()) {
            return response()->json([
              'success' => false,
@@ -346,6 +400,16 @@ class UserController extends Controller
        }
 
        return redirect('/user-login-verify')->with('message-info', 'Please verify your mobile number to complete login.');
+     } elseif($needsVerification && $shouldBypassOtp) {
+       $user->mobile_verified_at = now();
+       $user->save();
+       
+       Log::info('Login — mobile auto-verified (OTP bypass)', [
+         'user_id' => $user->id,
+         'mobile' => $user->mobile,
+         'country' => $user->country,
+         'bypass_all_otp' => config('sms.bypass_all_otp', true),
+       ]);
      }
 
       if($user){
@@ -655,26 +719,255 @@ if($mcqData){
  }
 
  function certificate(){
-  $data=[];
+    // Check if user is logged in
+    if (!Session::has('user')) {
+        return redirect('/user-login')->with('message-error', 'Please login to view your certificate.');
+    }
+    
+    // Check if quiz session exists
+    if (!Session::has('currentQuiz')) {
+        return redirect('/')->with('message-error', 'No quiz data found. Please complete a quiz first.');
+    }
+    
+    $user = Session::get('user');
+    $currentQuiz = Session::get('currentQuiz');
+    $quizName = str_replace('-', ' ', $currentQuiz['quizName']);
+    
+    // Check if certificate already exists for this user and quiz
+    $certificate = Certificate::existsForUserAndQuiz($user->id, $quizName);
+    
+    if (!$certificate) {
+        // Generate new certificate
+        $certificate = Certificate::create([
+            'certificate_id' => Certificate::generateUniqueId(),
+            'user_id' => $user->id,
+            'student_name' => $user->name,
+            'quiz_name' => $quizName,
+            'score' => $currentQuiz['score'] ?? 100, // Default to 100 if not set
+            'issued_at' => now(),
+        ]);
+    }
+    
+    // Generate SVG with replaced placeholders
+    $svgContent = $this->generateCertificateSVG($certificate);
+    
+    return view('certificate', [
+        'certificate' => $certificate,
+        'svgContent' => $svgContent,
+    ]);
+ }
 
-  $data['quiz']= str_replace('-',' ',Session::get('currentQuiz')['quizName']);
-  $data['name']= Session::get('user')['name'];
-  return  view('certificate',['data'=>$data]);
+ /**
+  * Generate certificate SVG with placeholders replaced
+  */
+ private function generateCertificateSVG(Certificate $certificate): string
+ {
+    $svgPath = public_path('img/certificate_main_final.svg');
+    
+    if (!file_exists($svgPath)) {
+        return '<svg><text>Certificate template not found</text></svg>';
+    }
+    
+    $svgContent = file_get_contents($svgPath);
+    
+    // The SVG has character-level x-positioning which breaks with simple replacement.
+    // We need to replace the entire tspan content while preserving basic positioning.
+    
+    // ========== STUDENT NAME ==========
+    // Replace student name tspan and center it by changing transform position
+    // Original: transform="matrix(1,0,0,-1,228.77,413.33)" - left aligned
+    // Change to center position (~350) for centering
+    $svgContent = preg_replace(
+        '/<text([^>]*?)transform="matrix\(1,0,0,-1,228\.77,413\.33\)"([^>]*)><tspan([^>]*?)x="[^"]*"([^>]*)>\{\{STUDENT<\/tspan><\/text>/',
+        '<text$1transform="matrix(1,0,0,-1,350,413.33)" text-anchor="middle"$2><tspan$3x="0"$4>' . htmlspecialchars($certificate->student_name) . '</tspan></text>',
+        $svgContent
+    );
+    
+    // Hide the underscore text element after student name (at position 446.59,413.33)
+    $svgContent = preg_replace(
+        '/<text([^>]*?)transform="matrix\(1,0,0,-1,446\.59,413\.33\)"([^>]*)><tspan([^>]*)>_<\/tspan><\/text>/',
+        '<text$1transform="matrix(1,0,0,-1,446.59,413.33)" style="display:none"$2><tspan$3></tspan></text>',
+        $svgContent
+    );
+    
+    // Hide the NAME}} tspan after student name (at position 467.35,413.33)
+    $svgContent = preg_replace(
+        '/<text([^>]*?)transform="matrix\(1,0,0,-1,467\.35,413\.33\)"([^>]*)><tspan([^>]*?)x="[^"]*"([^>]*)>NAME\}\}<\/tspan><\/text>/',
+        '<text$1transform="matrix(1,0,0,-1,467.35,413.33)" style="display:none"$2><tspan$3x="0"$4></tspan></text>',
+        $svgContent
+    );
+    
+    // ========== QUIZ NAME ==========
+    // Replace "has excelled in our {{QUIZ" with full quiz name
+    $svgContent = preg_replace(
+        '/<tspan([^>]*?)x="[^"]*"([^>]*)>has excelled in our \{\{QUIZ<\/tspan>/',
+        '<tspan$1x="0"$2>has excelled in our ' . htmlspecialchars($certificate->quiz_name) . '</tspan>',
+        $svgContent
+    );
+    
+    // Hide the underscore text element after quiz name (at position 510.86,356.62)
+    $svgContent = preg_replace(
+        '/<text([^>]*?)transform="matrix\(1,0,0,-1,510\.86,356\.62\)"([^>]*)><tspan([^>]*)>_<\/tspan><\/text>/',
+        '<text$1transform="matrix(1,0,0,-1,510.86,356.62)" style="display:none"$2><tspan$3></tspan></text>',
+        $svgContent
+    );
+    
+    // Hide the NAME}} tspan after quiz (at position 518.3,356.62)
+    $svgContent = preg_replace(
+        '/<text([^>]*?)transform="matrix\(1,0,0,-1,518\.3,356\.62\)"([^>]*)><tspan([^>]*?)x="[^"]*"([^>]*)>NAME\}\}\s*<\/tspan><\/text>/',
+        '<text$1transform="matrix(1,0,0,-1,518.3,356.62)" style="display:none"$2><tspan$3x="0"$4></tspan></text>',
+        $svgContent
+    );
+    
+    // Hide "Development quiz" text (at position 333.36,325.66)
+    $svgContent = preg_replace(
+        '/<text([^>]*?)transform="matrix\(1,0,0,-1,333\.36,325\.66\)"([^>]*)><tspan([^>]*?)x="[^"]*"([^>]*)>Development quiz\s*<\/tspan><\/text>/',
+        '<text$1transform="matrix(1,0,0,-1,333.36,325.66)" style="display:none"$2><tspan$3x="0"$4></tspan></text>',
+        $svgContent
+    );
+    
+    // ========== DATE ==========
+    // Replace date (format: "Date: {{DATE}}")
+    $svgContent = preg_replace(
+        '/<tspan([^>]*?)x="[^"]*"([^>]*)>Date: \{\{DATE\}\}<\/tspan>/',
+        '<tspan$1x="0"$2>Date: ' . $certificate->issued_at->format('M d, Y') . '</tspan>',
+        $svgContent
+    );
+    
+    // ========== CERTIFICATE ID ==========
+    // Replace certificate ID (format: "No: {{CERTIFICATE_ID}}")
+    $svgContent = preg_replace(
+        '/<tspan([^>]*?)x="[^"]*"([^>]*)>No: \{\{CERTIFICATE_ID\}\}<\/tspan>/',
+        '<tspan$1x="0"$2>No: ' . $certificate->certificate_id . '</tspan>',
+        $svgContent
+    );
+    
+    return $svgContent;
  }
 
  function downloadCertificate(){
-  $data=[];
-  $data['quiz']= str_replace('-',' ',Session::get('currentQuiz')['quizName']);
-  $data['name']= Session::get('user')['name'];
-  $html=  view('download-certificate',['data'=>$data])->render();
-  return response(
-    Browsershot::html($html)->pdf()
-  )->withHeaders(
-    [
-      'Content-Type'=>"application/pdf",
-      'Content-disposition'=>"attachment;filename=certificate.pdf"
-    ]
-    );
+    // Check if user is logged in
+    if (!Session::has('user')) {
+        return redirect('/user-login')->with('message-error', 'Please login to download your certificate.');
+    }
+    
+    // Check if quiz session exists
+    if (!Session::has('currentQuiz')) {
+        return redirect('/')->with('message-error', 'No quiz data found. Please complete a quiz first.');
+    }
+    
+    $user = Session::get('user');
+    $currentQuiz = Session::get('currentQuiz');
+    $quizName = str_replace('-', ' ', $currentQuiz['quizName']);
+    
+    // Get or create certificate
+    $certificate = Certificate::existsForUserAndQuiz($user->id, $quizName);
+    
+    if (!$certificate) {
+        $certificate = Certificate::create([
+            'certificate_id' => Certificate::generateUniqueId(),
+            'user_id' => $user->id,
+            'student_name' => $user->name,
+            'quiz_name' => $quizName,
+            'score' => $currentQuiz['score'] ?? 100,
+            'issued_at' => now(),
+        ]);
+    }
+    
+    // Generate SVG content
+    $svgContent = $this->generateCertificateSVG($certificate);
+    
+    // Create HTML wrapper for PDF
+    $html = '<!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body { margin: 0; padding: 0; }
+            .certificate-container { width: 100%; height: 100%; }
+            svg { width: 100%; height: auto; }
+        </style>
+    </head>
+    <body>
+        <div class="certificate-container">' . $svgContent . '</div>
+    </body>
+    </html>';
+    
+    // Use DomPDF to generate PDF
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
+    $pdf->setPaper('A4', 'landscape');
+    $pdf->setOptions([
+        'isHtml5ParserEnabled' => true,
+        'isRemoteEnabled' => true,
+        'defaultFont' => 'Arial',
+        'isPhpEnabled' => true,
+        'isJavascriptEnabled' => false,
+    ]);
+    
+    $filename = 'certificate_' . $certificate->certificate_id . '.pdf';
+    return $pdf->download($filename);
+ }
+
+ /**
+  * Show certificate verification page
+  */
+ public function showVerifyCertificate()
+ {
+    return view('verify-certificate');
+ }
+
+ /**
+  * Verify a certificate by its ID
+  */
+ public function verifyCertificate(Request $request)
+ {
+    $request->validate([
+        'certificate_id' => 'required|string|max:20',
+    ]);
+    
+    $certificateId = strtoupper(trim($request->certificate_id));
+    $certificate = Certificate::findByCertificateId($certificateId);
+    
+    if ($request->ajax()) {
+        if ($certificate) {
+            return response()->json([
+                'success' => true,
+                'certificate' => [
+                    'id' => $certificate->certificate_id,
+                    'student_name' => $certificate->student_name,
+                    'quiz_name' => $certificate->quiz_name,
+                    'score' => $certificate->score,
+                    'issued_at' => $certificate->issued_at->format('F d, Y'),
+                ],
+            ]);
+        }
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Certificate not found. Please check the ID and try again.',
+        ], 404);
+    }
+    
+    return view('verify-certificate', [
+        'certificate' => $certificate,
+        'searched' => true,
+        'searchedId' => $certificateId,
+    ]);
+ }
+
+ /**
+  * Check if user should bypass OTP verification.
+  * When config sms.bypass_all_otp is true (default), everyone skips OTP until SMS API is ready.
+  * When false: only India requires OTP; all other countries bypass (legacy behaviour).
+  *
+  * @param string|null $country Country name (detected via IP or selected by user)
+  */
+ private function shouldBypassOtp($country = null): bool
+ {
+     if (config('sms.bypass_all_otp', true)) {
+         return true;
+     }
+
+     return $country !== 'India';
  }
 
  function topic($c_id,$t_id,$title){
@@ -722,53 +1015,68 @@ if($mcqData){
             }
             return redirect('/user-signup')->with('message-error', 'Session expired. Please sign up again.');
         }
-        // Limit attempts
-        $attempts = session('signup_otp_attempts', 0) + 1;
-        session(['signup_otp_attempts' => $attempts]);
-        if ($attempts > 5) {
-            session()->forget(['signup_user_id', 'signup_otp_attempts']);
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Too many attempts. Please sign up again.'
-                ], 429);
-            }
-            return redirect('/user-signup')->with('message-error', 'Too many attempts. Please sign up again.');
-        }
-        // Verify OTP using Sharpener Tech API
-        try {
-            $sms = app(\App\Services\SharpenerTechService::class);
-            // Check if user is interested in training
-            $interestShown = ($user->interested_in_training === 'yes');
-            
-            Log::info('Sharpener Tech OTP Verification - Interest Tracking', [
-                'user_id' => $user->id,
-                'mobile' => $user->mobile,
-                'name' => $user->name,
-                'interested_in_training' => $user->interested_in_training,
-                'interestShown' => $interestShown,
-                'verification_type' => request()->is('user-signup-verify') ? 'signup' : 'login'
-            ]);
-            
-            $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name, [], $interestShown);
-            
-            // Check if Sharpener Tech API failed
-            if (isset($result['status']) && $result['status'] !== 'success') {
-                $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
-                if ($request->ajax()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => $errorMessage
-                    ], 422);
-                }
-                return back()->with('message-error', $errorMessage)->withInput();
-            }
-            
-            // Mark as verified
+        $shouldBypassOtp = $this->shouldBypassOtp($user->country);
+        
+        if ($shouldBypassOtp) {
             $user->mobile_verified_at = now();
             $user->otp_code = null;
             $user->otp_expires_at = null;
             $user->save();
+            
+            Log::info('Signup verify — mobile auto-verified (OTP bypass)', [
+                'user_id' => $user->id,
+                'mobile' => $user->mobile,
+                'country' => $user->country,
+                'bypass_all_otp' => config('sms.bypass_all_otp', true),
+            ]);
+        } else {
+            // SMS OTP path (India when bypass_all_otp is false)
+            $attempts = session('signup_otp_attempts', 0) + 1;
+            session(['signup_otp_attempts' => $attempts]);
+            if ($attempts > 5) {
+                session()->forget(['signup_user_id', 'signup_otp_attempts']);
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Too many attempts. Please sign up again.'
+                    ], 429);
+                }
+                return redirect('/user-signup')->with('message-error', 'Too many attempts. Please sign up again.');
+            }
+            try {
+                $otpService = app(SelfHostedSmsOtpService::class);
+                $result = $otpService->verifyOtpForUser($user, (string) $request->otp);
+
+                if (isset($result['status']) && $result['status'] !== 'success') {
+                    $errorMessage = $result['message'] ?? 'Invalid or expired OTP.';
+                    if ($request->ajax()) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => $errorMessage
+                        ], 422);
+                    }
+                    return back()->with('message-error', $errorMessage)->withInput();
+                }
+
+                $user->mobile_verified_at = now();
+                $user->otp_code = null;
+                $user->otp_expires_at = null;
+                $user->save();
+            } catch (\Exception $e) {
+                Log::error('OTP verification error', [
+                    'error' => $e->getMessage(),
+                    'user_id' => $user->id,
+                    'mobile' => $user->mobile
+                ]);
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'OTP verification failed. Please try again.'
+                    ], 500);
+                }
+                return back()->with('message-error', 'OTP verification failed. Please try again.')->withInput();
+            }
+        }
 
             // Log admin attribution for analytics (no payment system)
             if ($user->signup_source_course_id) {
@@ -811,15 +1119,6 @@ if($mcqData){
                 ]);
             }
             return redirect($redirectUrl)->with('message-success', 'Mobile verified and signup complete!');
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to verify OTP. Please try again.'
-                ], 500);
-            }
-            return back()->with('message-error', 'Failed to verify OTP. Please try again.')->withInput();
-        }
     }
 
     // Resend OTP
@@ -834,11 +1133,10 @@ if($mcqData){
             return redirect('/user-signup');
         }
         try {
-            $sms = app(\App\Services\SharpenerTechService::class);
-            $result = $sms->sendOtp($user->mobile, $user->name);
-            // Check for Sharpener Tech API specific error responses
+            $otpService = app(SelfHostedSmsOtpService::class);
+            $result = $otpService->sendOtpForUser($user);
             if (isset($result['status']) && $result['status'] !== 'success') {
-                $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to resend OTP. Please try again later.';
+                $errorMessage = $result['message'] ?? 'Failed to resend OTP. Please try again later.';
                 if ($request->ajax()) {
                     return response($errorMessage, 500);
                 }
@@ -848,7 +1146,6 @@ if($mcqData){
             if ($request->ajax()) {
                 return response('Failed to resend OTP. Please try again later.', 500);
             }
-            // Optionally handle SMS failure
         }
         session(['signup_otp_attempts' => 0]);
         if ($request->ajax()) {
@@ -883,53 +1180,67 @@ if($mcqData){
             }
             return redirect('/user-login')->with('message-error', 'Session expired. Please login again.');
         }
-        // Limit attempts
-        $attempts = session('login_otp_attempts', 0) + 1;
-        session(['login_otp_attempts' => $attempts]);
-        if ($attempts > 5) {
-            session()->forget(['login_user_id', 'login_otp_attempts', 'login_redirect_url']);
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Too many attempts. Please login again.'
-                ], 429);
-            }
-            return redirect('/user-login')->with('message-error', 'Too many attempts. Please login again.');
-        }
-        // Verify OTP using Sharpener Tech API
-        try {
-            $sms = app(\App\Services\SharpenerTechService::class);
-            // Check if user is interested in training
-            $interestShown = ($user->interested_in_training === 'yes');
-            
-            Log::info('Sharpener Tech OTP Verification - Interest Tracking', [
-                'user_id' => $user->id,
-                'mobile' => $user->mobile,
-                'name' => $user->name,
-                'interested_in_training' => $user->interested_in_training,
-                'interestShown' => $interestShown,
-                'verification_type' => request()->is('user-signup-verify') ? 'signup' : 'login'
-            ]);
-            
-            $result = $sms->verifyOtp($user->mobile, $request->otp, $user->name, [], $interestShown);
-            
-            // Check if Sharpener Tech API failed
-            if (isset($result['status']) && $result['status'] !== 'success') {
-                $errorMessage = isset($result['message']) ? $result['message'] : 'Invalid or expired OTP.';
-                if ($request->ajax()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => $errorMessage
-                    ], 422);
-                }
-                return back()->with('message-error', $errorMessage)->withInput();
-            }
-            
-            // Mark as verified
+        $shouldBypassOtp = $this->shouldBypassOtp($user->country);
+        
+        if ($shouldBypassOtp) {
             $user->mobile_verified_at = now();
             $user->otp_code = null;
             $user->otp_expires_at = null;
             $user->save();
+            
+            Log::info('Login OTP verify — mobile auto-verified (OTP bypass)', [
+                'user_id' => $user->id,
+                'mobile' => $user->mobile,
+                'country' => $user->country,
+                'bypass_all_otp' => config('sms.bypass_all_otp', true),
+            ]);
+        } else {
+            $attempts = session('login_otp_attempts', 0) + 1;
+            session(['login_otp_attempts' => $attempts]);
+            if ($attempts > 5) {
+                session()->forget(['login_user_id', 'login_otp_attempts', 'login_redirect_url']);
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Too many attempts. Please login again.'
+                    ], 429);
+                }
+                return redirect('/user-login')->with('message-error', 'Too many attempts. Please login again.');
+            }
+            try {
+                $otpService = app(SelfHostedSmsOtpService::class);
+                $result = $otpService->verifyOtpForUser($user, (string) $request->otp);
+
+                if (isset($result['status']) && $result['status'] !== 'success') {
+                    $errorMessage = $result['message'] ?? 'Invalid or expired OTP.';
+                    if ($request->ajax()) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => $errorMessage
+                        ], 422);
+                    }
+                    return back()->with('message-error', $errorMessage)->withInput();
+                }
+
+                $user->mobile_verified_at = now();
+                $user->otp_code = null;
+                $user->otp_expires_at = null;
+                $user->save();
+            } catch (\Exception $e) {
+                Log::error('OTP verification error during login', [
+                    'error' => $e->getMessage(),
+                    'user_id' => $user->id,
+                    'mobile' => $user->mobile
+                ]);
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'OTP verification failed. Please try again.'
+                    ], 500);
+                }
+                return back()->with('message-error', 'OTP verification failed. Please try again.')->withInput();
+            }
+        }
 
             // Log admin attribution for analytics (no payment system)
             if ($user->signup_source_course_id) {
@@ -961,15 +1272,6 @@ if($mcqData){
                 ]);
             }
             return redirect($redirectUrl)->with('message-success', 'Mobile verified and login complete!');
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to verify OTP. Please try again.'
-                ], 500);
-            }
-            return back()->with('message-error', 'Failed to verify OTP. Please try again.')->withInput();
-        }
     }
 
     // Resend OTP for login
@@ -984,11 +1286,10 @@ if($mcqData){
             return redirect('/user-login');
         }
         try {
-            $sms = app(\App\Services\SharpenerTechService::class);
-            $result = $sms->sendOtp($user->mobile, $user->name);
-            // Check for Sharpener Tech API specific error responses
+            $otpService = app(SelfHostedSmsOtpService::class);
+            $result = $otpService->sendOtpForUser($user);
             if (isset($result['status']) && $result['status'] !== 'success') {
-                $errorMessage = isset($result['message']) ? $result['message'] : 'Failed to resend OTP. Please try again later.';
+                $errorMessage = $result['message'] ?? 'Failed to resend OTP. Please try again later.';
                 if ($request->ajax()) {
                     return response($errorMessage, 500);
                 }
@@ -998,68 +1299,12 @@ if($mcqData){
             if ($request->ajax()) {
                 return response('Failed to resend OTP. Please try again later.', 500);
             }
-            // Optionally handle SMS failure
         }
         session(['login_otp_attempts' => 0]);
         if ($request->ajax()) {
             return response('OTP resent successfully.', 200);
         }
         return back()->with('message-success', 'OTP resent successfully.');
-    }
-
-    /**
-     * Open Sharpener Dashboard for authenticated user
-     */
-    public function openSharpenerDashboard(Request $request)
-    {
-        // Check if user is logged in
-        if (!session()->has('user')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Please login first to access the dashboard'
-            ], 401);
-        }
-
-        $user = session('user');
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found'
-            ], 404);
-        }
-
-        // Call Sharpener Tech API
-        $sharpenerService = new SharpenerTechService();
-        $result = $sharpenerService->openDashboard(
-            $user->mobile,
-            'Web',
-            [
-                'utmSource' => 'thecodingskills',
-                'utmMedium' => 'web',
-                'utmCampaign' => 'quiz_system',
-                'utmTerm' => 'programming_courses',
-                'utmContent' => 'dashboard_access'
-            ]
-        );
-
-        if ($result['success']) {
-            // For AJAX requests, return success with redirect URL
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Redirecting to dashboard...',
-                    'redirect_url' => 'https://student.sharpener.tech/dashboard#authToken=' . $result['token']
-                ]);
-            }
-            
-            // For non-AJAX requests, redirect directly
-            return redirect('https://student.sharpener.tech/dashboard#authToken=' . $result['token']);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => $result['message'] ?? 'Failed to access dashboard'
-        ], 400);
     }
 
 }
